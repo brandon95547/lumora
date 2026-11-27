@@ -2,14 +2,12 @@
 // per song. Between landings a ball flies a parabola, so a frame depends only on its time.
 // World units: about one ball across. x runs forward along the run, y downward, z to the side.
 //
-// A run follows all the notes ('both') or one hand's ('right', 'left'; see shared/hands.js). Every run
+// A run follows all the notes ('both') or one hand's ('right', 'left'; each note's `hand`, see shared/hands.js). Every run
 // shares one timeline, so the two hands' fireballs travel forward side by side.
 //
 // Two layouts: 'run' weaves its ledges through space, one hand above the other; 'nave' sends the
 // hands down either side of a cathedral nave, each placed across by pitch (lower notes further out),
 // so the left hand burns on the left and the right hand on the right.
-
-import { assignHands } from '../../hands.js';
 
 const MIN_GAP = 0.11; // notes closer than this share one landing
 const STEP = 5; // forward distance per landing, at least
@@ -82,13 +80,12 @@ const runs = new WeakMap();
 export function runOf(scene, hand = 'both', layout = 'run') {
   let cached = runs.get(scene);
   if (!cached) {
-    const hands = assignHands(scene.items);
-    runs.set(scene, (cached = { xAt: timelineOf(scene), handOf: (note) => hands[note.index] }));
+    runs.set(scene, (cached = { xAt: timelineOf(scene) }));
   }
   const key = `${layout}:${hand}`;
   if (cached[key]) return cached[key];
   const lane = LANES[hand];
-  const groups = landingsOf(hand === 'both' ? scene.items : scene.items.filter((n) => cached.handOf(n) === hand));
+  const groups = landingsOf(hand === 'both' ? scene.items : scene.items.filter((n) => n.hand === hand));
   const pitches = groups.map((g) => g.top).sort((a, b) => a - b);
   const middle = pitches.length ? pitches[pitches.length >> 1] : 60;
   const landings = groups.map((g, i) => {

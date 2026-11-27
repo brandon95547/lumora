@@ -2,7 +2,7 @@
   "name": "lumora",
   "version": "0.1.0",
   "private": true,
-  "description": "Turns a piano recording into a lit-up musical staff animation, exported as a 9:16 or 16:9 video.",
+  "description": "Turns a piano song (MIDI or MusicXML) into a lit-up musical staff animation, exported as a 9:16 or 16:9 video.",
   "type": "module",
   "engines": {
     "node": ">=22.12"
@@ -20,7 +20,6 @@
     "check": "npm run lint && npm run format:check && npm test && npm run build && npm run check:budgets"
   },
   "dependencies": {
-    "@spotify/basic-pitch": "1.0.1",
     "@tonejs/midi": "2.0.28",
     "mediabunny": "1.66.5",
     "react": "19.3.1",

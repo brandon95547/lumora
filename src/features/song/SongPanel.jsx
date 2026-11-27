@@ -1,32 +1,30 @@
-// Where a song comes in: one drop zone for recordings and MIDI files, and what was found in it.
+// Where a song comes in: one drop zone for MIDI files and MusicXML scores, and what was found in it.
 import { useState } from 'react';
-import { Choice } from '../../shared/ui/Choice.jsx';
 import { Icon } from '../../shared/ui/Icon.jsx';
 import { Panel } from '../../shared/ui/Panel.jsx';
 import { clock } from '../../shared/ui/time.js';
-import { SENSITIVITY } from './sensitivity.js';
 
 const KEY_NAMES = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
 const SOURCE = {
   demo: 'Demo notes',
-  audio: 'Notes found in the recording',
   midi: 'Notes from the MIDI file',
+  score: 'Notes from the score',
 };
 
+/** Where the hands came from: all from the file, some, or all worked out from the notes. */
+function handsFrom(notes) {
+  const known = notes.filter((n) => n.hand).length;
+  if (known === notes.length) return 'From the file';
+  if (known) return 'From the file, the rest worked out from the notes';
+  return 'Worked out from the notes';
+}
+
 function Status({ song }) {
-  if (song.status === 'decoding' || song.status === 'loading')
-    return <p className="text-sm text-muted">Reading the file…</p>;
-  if (song.status === 'transcribing')
+  if (song.status === 'reading' || song.status === 'loading')
     return (
-      <div className="flex flex-col gap-2" role="status">
-        <p className="text-sm text-muted">
-          Listening for notes… {Math.round(song.progress * 100)}%
-          {song.slow && ' (slower mode: this browser’s graphics weren’t available)'}
-        </p>
-        <div className="h-1.5 overflow-hidden rounded-full bg-raised">
-          <div className="h-full origin-left bg-accent" style={{ transform: `scaleX(${song.progress})` }} />
-        </div>
-      </div>
+      <p className="text-sm text-muted" role="status">
+        Reading the file…
+      </p>
     );
   if (song.status === 'error')
     return (
@@ -37,9 +35,9 @@ function Status({ song }) {
   return null;
 }
 
-export function SongPanel({ song, scene, sensitivity, onFiles, onSensitivity }) {
+export function SongPanel({ song, scene, onFiles }) {
   const [over, setOver] = useState(false);
-  const busy = song.status === 'decoding' || song.status === 'transcribing';
+  const busy = song.status === 'reading';
 
   return (
     <Panel title="Song">
@@ -58,11 +56,13 @@ export function SongPanel({ song, scene, sensitivity, onFiles, onSensitivity }) 
       >
         <Icon name="upload" className="size-6 text-accent" />
         <span className="font-semibold">Drop a song here, or choose a file</span>
-        <span className="text-caption text-faint">MP3, WAV, M4A or MIDI. Add a MIDI file too for exact notes.</span>
+        <span className="text-caption text-faint">
+          A MIDI file, or a MusicXML score exported from MuseScore or any notation app.
+        </span>
         <input
           type="file"
           multiple
-          accept="audio/*,.mid,.midi"
+          accept=".mid,.midi,.kar,.musicxml,.mxl,.xml"
           className="sr-only"
           disabled={busy}
           onChange={(e) => {
@@ -80,6 +80,8 @@ export function SongPanel({ song, scene, sensitivity, onFiles, onSensitivity }) 
           <dd>
             {scene.items.length} · {SOURCE[song.notesFrom]}
           </dd>
+          <dt className="text-faint">Hands</dt>
+          <dd>{handsFrom(song.notes)}</dd>
           <dt className="text-faint">Key</dt>
           <dd>
             {KEY_NAMES[scene.key.tonic]} {scene.key.mode}
@@ -87,10 +89,6 @@ export function SongPanel({ song, scene, sensitivity, onFiles, onSensitivity }) 
           <dt className="text-faint">Length</dt>
           <dd>{clock(scene.duration)}</dd>
         </dl>
-      )}
-
-      {song.notesFrom === 'audio' && (
-        <Choice label="Notes to find" options={SENSITIVITY} value={sensitivity} onChange={onSensitivity} />
       )}
     </Panel>
   );

@@ -34,4 +34,16 @@ describe('assignHands', () => {
     const notes = [70, 72, 74, 72, 70, 67].map((p, i) => note(p, i * 0.4));
     expect(new Set(assignHands(notes))).toEqual(new Set(['right']));
   });
+
+  it('keeps the hands the file gave, and follows them for the notes it didn’t', () => {
+    // The file puts a melody below middle C in the right hand; the last two notes have no hand.
+    const notes = [];
+    for (let i = 0; i < 6; i++) {
+      notes.push({ ...note(36, i * 0.5), hand: 'left' }, { ...note(57 - (i % 2), i * 0.5), hand: 'right' });
+    }
+    notes.push(note(36, 3), note(56, 3));
+    const hands = assignHands(notes);
+    expect(hands.slice(0, 12)).toEqual(notes.slice(0, 12).map((n) => n.hand));
+    expect(hands.slice(12)).toEqual(['left', 'right']);
+  });
 });

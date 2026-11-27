@@ -2,6 +2,9 @@
 
 Date: 2026-11-26
 
+The **Notes** part is replaced by [ADR 7](0007-notes-from-scores-not-recordings.md): songs now come
+in as MIDI or MusicXML, not recordings.
+
 ## Context
 
 Lumora turns a piano recording into an animated staff and a video file. Three jobs are heavy:

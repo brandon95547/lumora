@@ -1,6 +1,6 @@
 # Lumora
 
-Drop in a piano song and watch it light up a musical staff: every note glows on its line or space
+Drop in a piano song (a MIDI file or a MusicXML score) and watch it light up a musical staff: every note glows on its line or space
 as it plays. Pick an animation style and a color scheme, then make an MP4 in 9:16 (TikTok, Reels,
 Shorts) or 16:9 (YouTube).
 
@@ -17,10 +17,18 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
 
 ## Use it
 
-1. **Song.** Drop an MP3, WAV or M4A. Lumora listens for the notes (a few seconds per minute of
-   music). If it finds too many or too few, change **Notes to find**. For exact notes, drop a MIDI
-   file too, with the recording or after it. A MIDI file on its own plays with a built-in piano
-   voice.
+1. **Song.** Drop a MIDI file (`.mid`, `.midi`, `.kar`) or a MusicXML score (`.musicxml`, `.mxl`,
+   `.xml`). Every notation app exports MusicXML: in MuseScore it is File → Export → MusicXML. The
+   song plays with a built-in piano voice, so the lights and the sound always match. Recordings
+   (MP3, WAV…) aren't read.
+
+   A score's piano staves say which hand plays each note: the upper staff the right hand, the lower
+   the left. A score with a piano and other parts (a vocal line) is read for the piano alone.
+   Repeats and first and second endings play as written; D.C., D.S. and codas play straight
+   through. A MIDI file says the hands when its tracks are named for them ("RH", "Left") or it has
+   exactly two tracks, the higher one the right hand. The Song panel says where the hands came
+   from.
+
 2. **Look.** Choose a style, **Staff**, **Piano** or **Fire**, and one of its animations. Then **2D** or
    **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a gentle drift
    keeps the camera alive. Then choose colors, the video's shape and its title.
@@ -62,10 +70,12 @@ finale burns hottest: bigger flames, a longer trail, more embers, a hotter sky. 
 side-on; in 3D the run winds through space: Chase, Side, High, Low. Ember gives classic fire;
 Midnight burns blue, Aurora green.
 
-**Which hand plays a note** is worked out from the music (`src/shared/hands.js`), not from a fixed
-line at middle C: each hand's position is followed through the song, and every chord is divided
-between the hands by how close each note is to where that hand has just been, how far a hand can
-stretch and how many notes it can hold. A left hand that climbs above middle C stays the left hand.
+**Which hand plays a note** comes from the file when it says (a score's staff, a MIDI track).
+Otherwise it is worked out from the music (`src/shared/hands.js`), not from a fixed line at middle
+C: each hand's position is followed through the song, and every chord is divided between the hands
+by how close each note is to where that hand has just been, how far a hand can stretch and how many
+notes it can hold. A left hand that climbs above middle C stays the left hand. The hands decide the
+two colors of a two-color palette in every style, and the two fires in Two Hands and Gothic.
 
 In **Gothic** the camera looks down a cathedral nave (the Nave angle). The left hand's crimson
 hellfire runs down the left aisle and the right hand's teal soulfire down the right, each placed
@@ -94,7 +104,7 @@ and say why in the commit.
 | Path                        | What it is                                                              |
 | --------------------------- | ----------------------------------------------------------------------- |
 | `src/App.jsx`               | The one screen: preview, and the Song, Look and Video panels.           |
-| `src/features/song/`        | Reading files, finding notes (Basic Pitch in a worker), MIDI, demo.     |
+| `src/features/song/`        | Reading MIDI and MusicXML (each loaded when first used), demo, synth.   |
 | `src/features/look/`        | Style, color, shape and title choices.                                  |
 | `src/features/player/`      | The live preview and its transport.                                     |
 | `src/features/export/`      | Rendering and encoding the MP4 (loaded when first used).                |
@@ -123,7 +133,6 @@ camera angles and `render`, added to `kinds.js`.
 
 ## Credits
 
-- Note finding: [Basic Pitch](https://github.com/spotify/basic-pitch-ts) by Spotify (Apache-2.0).
 - Music glyphs: [Bravura](https://github.com/steinbergmedia/bravura) by Steinberg (SIL OFL 1.1).
 - Video encoding: [Mediabunny](https://mediabunny.dev) (MPL-2.0).
 - Icons: [Lucide](https://lucide.dev) shapes (ISC).

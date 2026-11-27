@@ -1,7 +1,8 @@
-// Which hand plays each note. A fixed line at middle C gets it wrong whenever a hand crosses it,
-// so instead each hand's position is followed through the song: every chord is divided between
+// Which hand plays each note. A note whose file said (a score's staff, a MIDI track) keeps that
+// hand. The rest are worked out: a fixed line at middle C gets it wrong whenever a hand crosses it,
+// so instead each hand's position is followed through the song, and every chord is divided between
 // the hands by how close each note is to where that hand has just been, how far a hand can stretch,
-// and how many notes one hand can hold.
+// and how many notes one hand can hold. Notes with a known hand move that hand too.
 import { HAND_SPLIT } from './notes.js';
 
 const CHORD = 0.05; // notes starting this close together are one chord
@@ -35,20 +36,30 @@ export function assignHands(notes) {
       const idle = Math.max(0, time - last[hand] - 1);
       at[hand] += (HOME[hand] - at[hand]) * Math.min(1, idle * DRIFT);
     }
-    const chord = [];
-    for (let k = i; k < j; k++) chord.push(k);
-    chord.sort((a, b) => notes[a].pitch - notes[b].pitch);
-    const pitches = chord.map((k) => notes[k].pitch);
-    // Try every way of giving the lowest notes to the left hand and the rest to the right.
+    const known = { left: [], right: [] };
+    const free = [];
+    for (let k = i; k < j; k++) {
+      if (notes[k].hand) known[notes[k].hand].push(notes[k].pitch);
+      else free.push(k);
+    }
+    free.sort((a, b) => notes[a].pitch - notes[b].pitch);
+    const freePitches = free.map((k) => notes[k].pitch);
+    const sorted = (list) => list.sort((a, b) => a - b);
+    const handsAt = (split) => ({
+      left: sorted([...known.left, ...freePitches.slice(0, split)]),
+      right: sorted([...known.right, ...freePitches.slice(split)]),
+    });
+    // Try every way of giving the lowest free notes to the left hand and the rest to the right.
     let best = 0;
     let bestCost = Infinity;
-    for (let split = 0; split <= pitches.length; split++) {
-      const c = cost(pitches.slice(0, split), at.left) + cost(pitches.slice(split), at.right);
+    for (let split = 0; split <= free.length; split++) {
+      const { left, right } = handsAt(split);
+      const c = cost(left, at.left) + cost(right, at.right);
       if (c < bestCost) [best, bestCost] = [split, c];
     }
-    chord.forEach((k, n) => (hands[k] = n < best ? 'left' : 'right'));
-    const left = pitches.slice(0, best);
-    const right = pitches.slice(best);
+    for (let k = i; k < j; k++) if (notes[k].hand) hands[k] = notes[k].hand;
+    free.forEach((k, n) => (hands[k] = n < best ? 'left' : 'right'));
+    const { left, right } = handsAt(best);
     if (left.length) [at.left, last.left] = [at.left + (mean(left) - at.left) * FOLLOW, time];
     if (right.length) [at.right, last.right] = [at.right + (mean(right) - at.right) * FOLLOW, time];
     // Hands don't pass through each other.

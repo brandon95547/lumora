@@ -20,7 +20,7 @@ const START_LOOK = {
 };
 
 export function App() {
-  const { song, sensitivity, loadFiles, setSensitivity } = useSong();
+  const { song, loadFiles } = useSong();
   const [choices, setChoices] = useState(START_LOOK);
   // A new song brings its own title; an edit holds until the next song.
   const [titleEdit, setTitleEdit] = useState({ song: null, value: '' });
@@ -58,13 +58,7 @@ export function App() {
         <Player audio={song.audio} scene={scene} draw={draw} />
       </main>
       <aside className="flex w-full flex-col gap-4 lg:w-[26rem] lg:shrink-0">
-        <SongPanel
-          song={song}
-          scene={scene}
-          sensitivity={sensitivity}
-          onFiles={loadFiles}
-          onSensitivity={setSensitivity}
-        />
+        <SongPanel song={song} scene={scene} onFiles={loadFiles} />
         <LookPanel look={look} scene={scene} onChange={setLook} />
         <ExportPanel scene={scene} audio={song.audio} look={frameLook} format={format} disabled={!ready} />
       </aside>

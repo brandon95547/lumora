@@ -1,4 +1,5 @@
 // A song's notes placed on the grand staff for one format: computed once, then read every frame.
+import { assignHands } from '../hands.js';
 import { firstStartingAt } from '../notes.js';
 import { layoutFor, staffY } from './staff/layout.js';
 import { estimateKey, ledgerLines, placePitch } from './staff/pitch.js';
@@ -27,12 +28,14 @@ function offsetSeconds(items, radius) {
 export function prepareScene(notes, format, duration) {
   const layout = layoutFor(format);
   const key = estimateKey(notes);
+  const hands = assignHands(notes); // once per song: every style reads `hand` from here
   const items = notes.map((note, index) => {
     const place = placePitch(note.pitch, key.preferFlats);
     return {
       ...note,
       ...place,
       index,
+      hand: hands[index],
       dx: 0,
       y: staffY(layout, place.clef, place.offset),
       ledgers: ledgerLines(place.offset).map((o) => staffY(layout, place.clef, o)),

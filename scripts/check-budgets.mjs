@@ -6,10 +6,10 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 
-const LIMITS = { initialJs: 350, initialCss: 60, lazyChunk: 100, worker: 320 };
+const LIMITS = { initialJs: 350, initialCss: 60, lazyChunk: 100 };
 const GROWTH = 10;
 // Must never be in the first screen's JS.
-const ON_DEMAND = ['src/features/export/exportVideo.js', 'src/features/song/midi.js'];
+const ON_DEMAND = ['src/features/export/exportVideo.js', 'src/features/song/midi.js', 'src/features/song/musicxml.js'];
 
 const dist = new URL('../dist/', import.meta.url);
 const manifest = JSON.parse(readFileSync(new URL('.vite/manifest.json', dist)));
@@ -30,15 +30,12 @@ const sizes = {
 };
 for (const [key, chunk] of Object.entries(manifest)) {
   if (!initial.has(key) && chunk.file.endsWith('.js')) sizes[`lazy:${key}`] = kb(chunk.file);
-  for (const asset of chunk.assets ?? []) {
-    if (/\.worker-.*\.js$/.test(asset)) sizes[`worker:${asset.replace(/-[\w-]+\.js$/, '')}`] = kb(asset);
-  }
 }
 
 const failures = [];
 for (const key of ON_DEMAND) if (initial.has(key)) failures.push(`${key} is loaded with the first screen`);
 for (const [name, size] of Object.entries(sizes)) {
-  const limit = name.startsWith('lazy:') ? LIMITS.lazyChunk : name.startsWith('worker:') ? LIMITS.worker : LIMITS[name];
+  const limit = name.startsWith('lazy:') ? LIMITS.lazyChunk : LIMITS[name];
   if (size > limit) failures.push(`${name}: ${size.toFixed(1)} KB is over its ${limit} KB limit`);
 }
 

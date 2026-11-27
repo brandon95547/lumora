@@ -1,4 +1,4 @@
-// Color schemes. `lit` holds two colors (treble hand, bass hand) or twelve (one per pitch class).
+// Color schemes. `lit` holds two colors (right hand, left hand) or twelve (one per pitch class).
 // `blend` is how glows mix: 'lighter' adds light on dark grounds; light grounds paint over.
 
 export const PALETTES = [
@@ -81,5 +81,5 @@ export const paletteById = (id) => PALETTES.find((p) => p.id === id) ?? PALETTES
 
 /** The lit color of a note: by pitch class when the palette has twelve, else by hand. */
 export function litColor(palette, note) {
-  return palette.lit.length === 12 ? palette.lit[note.pitch % 12] : palette.lit[note.clef === 'treble' ? 0 : 1];
+  return palette.lit.length === 12 ? palette.lit[note.pitch % 12] : palette.lit[note.hand === 'right' ? 0 : 1];
 }

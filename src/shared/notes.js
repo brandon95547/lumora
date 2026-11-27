@@ -1,12 +1,14 @@
 // The one shape every part of the app uses for a note:
-// { pitch: MIDI number, start: seconds, end: seconds, velocity: 0–1 }.
+// { pitch: MIDI number, start: seconds, end: seconds, velocity: 0–1, hand?: 'left' | 'right' }.
+// `hand` is there only when the file said which hand plays the note (a score's staff, a MIDI track).
 
-/** Pitches from middle C up are played by the right hand (the treble staff), the rest by the left. */
+/** Pitches from middle C up go on the treble staff, the rest on the bass staff; also where the hands start. */
 export const HAND_SPLIT = 60;
 
 const PIANO_LOW = 21; // A0
 const PIANO_HIGH = 108; // C8
 const SHORTEST = 0.03;
+const HANDS = new Set(['left', 'right']);
 
 /** Keeps the notes a piano can play, drops empty ones, and sorts them by start (then pitch). */
 export function normalizeNotes(raw) {
@@ -17,6 +19,7 @@ export function normalizeNotes(raw) {
       start: Math.max(0, n.start),
       end: Math.max(n.start + SHORTEST, n.end),
       velocity: Math.min(1, Math.max(0, n.velocity ?? 0.8)),
+      ...(HANDS.has(n.hand) && { hand: n.hand }),
     }))
     .sort((a, b) => a.start - b.start || a.pitch - b.pitch);
 }

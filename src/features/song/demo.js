@@ -19,11 +19,18 @@ export function demoNotes() {
   BARS.forEach((bar, b) => {
     for (let i = 0; i < 4; i++) {
       const start = 0.4 + (b * 4 + i) * BEAT;
-      notes.push({ pitch: bar.bass[i], start, end: start + BEAT * 1.8, velocity: 0.55 });
-      notes.push({ pitch: bar.tune[i], start, end: start + BEAT * 0.95, velocity: i === 0 ? 0.95 : 0.75 });
+      notes.push({ pitch: bar.bass[i], start, end: start + BEAT * 1.8, velocity: 0.55, hand: 'left' });
+      notes.push({
+        pitch: bar.tune[i],
+        start,
+        end: start + BEAT * 0.95,
+        velocity: i === 0 ? 0.95 : 0.75,
+        hand: 'right',
+      });
     }
   });
   const end = 0.4 + BARS.length * 4 * BEAT;
-  for (const pitch of [36, 48, 64, 67, 72]) notes.push({ pitch, start: end, end: end + 2.2, velocity: 0.8 });
+  for (const pitch of [36, 48, 64, 67, 72])
+    notes.push({ pitch, start: end, end: end + 2.2, velocity: 0.8, hand: pitch < 60 ? 'left' : 'right' });
   return notes;
 }
