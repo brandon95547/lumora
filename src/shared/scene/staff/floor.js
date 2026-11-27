@@ -75,7 +75,7 @@ export function floorView(layout, camera, t) {
 
 /** The 2D floor: looked at from straight above, the staff where the flat staff is. */
 export function floorFlatView(layout) {
-  const view = flatView(layout, 'scroll');
+  const view = flatView(layout);
   return { ...view, fade: fadeOf(view, layout.space) };
 }
 

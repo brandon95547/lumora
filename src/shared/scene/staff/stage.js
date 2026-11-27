@@ -1,10 +1,8 @@
-// The staff itself — lines, system barline, brace and clefs — and the ground it stands on.
+// The staff itself — lines, system barline, brace and clefs — and the horizon behind the floor.
 // Drawn through a view, so the same code draws the flat staff and the one seen in 3D.
 import { GLYPHS } from './glyphs.js';
-import { cachedLayer, paintBackground } from '../backdrop.js';
 import { withAlpha } from '../sprites.js';
 import { onPlane, strokeWorld } from '../view.js';
-import { flatView } from './view.js';
 
 const paths = new Map();
 /** A Bravura glyph as a Path2D, in staff spaces. */
@@ -47,14 +45,6 @@ export function drawStaff(ctx, view, layout, palette) {
   drawGlyph(ctx, view, 'fClef', left + space * 0.6, layout.bottomLine.bass - 3 * space, space, palette.ink, 0.85);
 }
 
-/** The still part of a flat frame: background and staff, drawn once per format and palette. */
-export function flatBackdrop(layout, palette, motion) {
-  return cachedLayer(`staff:${layout.width}x${layout.height}:${palette.id}:${motion}`, layout, (ctx) => {
-    paintBackground(ctx, layout, palette);
-    drawStaff(ctx, flatView(layout, motion), layout, palette);
-  });
-}
-
 /** Where the floor's far edge meets the sky: a soft band of light at `far`, a projected point. */
 export function drawHorizon(ctx, layout, palette, far) {
   if (!far) return;
@@ -69,24 +59,4 @@ export function drawHorizon(ctx, layout, palette, far) {
   ctx.fillStyle = g;
   ctx.fillRect(-r, -r, 2 * r, 2 * r);
   ctx.restore();
-}
-
-/**
- * A grid on the floor. Its cross lines keep time with the music in scrolling styles,
- * so the ground moves with the notes.
- */
-export function drawFloor(ctx, view, layout, palette, floorY, t, motion) {
-  const { space } = layout;
-  const color = palette.staff;
-  const width = Math.max(1.5, space * 0.04);
-  const zNear = -space * 30;
-  const zFar = layout.width * 3;
-  for (let z = zNear; z <= zFar; z += space * 5) {
-    strokeWorld(ctx, view, [view.staffLeft - space * 20, floorY, z], [view.noteRight, floorY, z], width, color, 0.35);
-  }
-  const step = motion === 'scroll' ? layout.pixelsPerSecond * 0.5 : space * 5;
-  const shift = motion === 'scroll' ? (t * layout.pixelsPerSecond) % step : 0;
-  for (let x = view.staffLeft - shift; x <= view.noteRight; x += step) {
-    strokeWorld(ctx, view, [x, floorY, zNear], [x, floorY, zFar], width, color, 0.35);
-  }
 }

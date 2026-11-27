@@ -2,6 +2,9 @@
 
 Date: 2026-11-26
 
+Replaced by [ADR 12](0012-one-animation-per-style.md): Live and the grand piano's case were removed;
+Falling Notes draws the keys alone.
+
 Replaces the framing part of ADR 0003.
 
 ## Context

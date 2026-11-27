@@ -117,7 +117,6 @@ export const falling = {
   id: 'piano-falling',
   name: 'Falling Notes',
   description: 'Bars of light run to the keys and press them as they land.',
-  falling: true,
   draw(ctx, scene, t, palette, view, model) {
     const { layout } = scene;
     const runway = runwayOf(scene);
@@ -125,7 +124,6 @@ export const falling = {
     drawRunway(ctx, view, model, runway, palette);
     const landing = drawBars(ctx, view, scene, model, runway, palette, t);
     drawInstrument(ctx, view, model, keysDown(scene, t), palette, {
-      fallboard: false,
       tint: 0.6,
       light: 0.5,
       lightAtBack: true,

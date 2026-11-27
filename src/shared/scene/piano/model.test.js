@@ -47,7 +47,7 @@ describe('piano scene', () => {
   });
 
   it('looks straight down in 2D, with the keys across the frame', () => {
-    const view = pianoView(portrait, null, 0, false);
+    const view = pianoView(portrait, null, 0);
     const model = pianoOf(portrait);
     const left = view.project(model.span.center - model.span.whites / 2, 0, 3);
     const right = view.project(model.span.center + model.span.whites / 2, 0, 3);

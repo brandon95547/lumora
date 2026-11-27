@@ -2,6 +2,9 @@
 
 Date: 2026-11-27
 
+The **Gothic** part is removed by [ADR 12](0012-one-animation-per-style.md); hands from the music
+still hold.
+
 ## Context
 
 Two Hands split the notes at middle C, which is wrong whenever a hand crosses it. A gothic fire

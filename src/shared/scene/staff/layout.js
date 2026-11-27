@@ -34,8 +34,6 @@ export function layoutFor({ width, height }) {
     // Scrolling styles: notes travel right to left and light at the playhead.
     playheadX,
     pixelsPerSecond: portrait ? 260 : 330,
-    // Page styles: a page of notes is laid out, then lit as the sweep passes.
-    pageSeconds: portrait ? 3.6 : 6,
     // The title sits at the top: its top edge here, at this size (Medium; the size menu scales it).
     titleTop: height * (portrait ? 0.11 : 0.085),
     titleSize: portrait ? 92 : 76,

@@ -56,8 +56,8 @@ export function LookPanel({ look, onChange }) {
             options={kind.animations.map((a) => ({ id: a.id, label: a.name }))}
             value={look.animationId}
             onChange={(id) => {
-              // An animation with its own best angle (Gothic looks down the nave), or its own set of
-              // angles (Marble Walk's floor), starts there; otherwise the camera stays where it is.
+              // An animation with its own best angle, or its own set of angles (Marble Walk's floor),
+              // starts there; otherwise the camera stays where it is.
               const next = animationById(id);
               const fresh = next.defaultAngle || rigOf(kind, next) !== rig;
               onChange({ ...look, animationId: id, camera: fresh ? defaultCamera(kind, next) : look.camera });

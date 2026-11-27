@@ -38,7 +38,7 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
    look-ahead limiter keeping peaks under **−1 dBTP**. The Song panel shows the result, and the
    video carries it.
 
-2. **Style.** Choose **Staff**, **Piano** or **Fire**, and one of its animations from the menu. Then
+2. **Style.** Choose **Staff** (Marble Walk) or **Piano** (Falling Notes). Then
    **2D** or **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a
    gentle drift keeps the camera alive. **Save this angle** keeps the camera as it is under a name,
    in this browser, beside the ready-made angles.
@@ -72,56 +72,17 @@ every 3 seconds per ball) a beam of light shoots up through the ball. Its own an
 Overhead.
 In 2D you look straight down at the floor.
 
-In the other animations the staff stands upright in 3D on a reflective floor whose grid moves with
-the music, and lit notes become glass balls sending up beams of light. Angles: Front, Angled, Low,
-Lane.
-
-| Animation     | What it does                                                      |
-| ------------- | ----------------------------------------------------------------- |
-| Marble Walk   | Balls hop along a marble floor and catch fire; ghosts fly by.     |
-| Glow Lane     | Notes glide toward a playhead and flare as they sound.            |
-| Ripple Pages  | A page of notes waits on the staff; each one ripples as it plays. |
-| Constellation | Played notes turn to stars and join into constellations.          |
-| Ribbon        | Every note draws a ribbon of light as long as it is held.         |
-
-**Piano:** a grand piano plays the song. In Live it is the whole instrument: a lacquered case
-with its curved side, the lid propped open, the gold plate and strings inside, music desk, legs and
-pedals, on a lit stage. Its 88 keys are solid and tip down when played. In 2D the camera looks
-straight down at the keys the song uses, like a lesson video; in 3D it films from an angle:
-Concert (the whole piano, from the audience), Side, Player or Overhead. Distance runs from the whole
-instrument to close on the keys; close in, the camera follows the music along the keyboard.
-
-| Animation     | What it does                                               |
-| ------------- | ---------------------------------------------------------- |
-| Live          | A grand piano playing itself, as if filmed in concert.     |
-| Falling Notes | Bars of light run to the keys and press them as they land. |
-
-**Fire:** the music as fire. In Fireball Run a ball of flame bounces from ledge to ledge, landing
-exactly on every note (a chord or a quick run is one landing; higher notes sit on higher ledges).
-Each landing throws up a pillar of flame and sparks and leaves the stone glowing like lava. The
-fire follows the music's energy, cooling in quiet passages and growing across the song, so the
-finale burns hottest: bigger flames, a longer trail, more embers, a hotter sky. 2D follows it
-side-on; in 3D the run winds through space: Chase, Side, High, Low. Ember gives classic fire;
-Midnight burns blue, Aurora green.
+**Piano:** in **Falling Notes** bars of light run to a grand piano's 88 keys and press them as they
+land; the keys are solid and tip down when played. In 2D the camera looks straight down at the keys
+the song uses, like a lesson video; in 3D it films from an angle (Player, Side or Overhead)
+and follows the music along the keyboard.
 
 **Which hand plays a note** comes from the file when it says (a score's staff, a MIDI track).
 Otherwise it is worked out from the music (`src/shared/hands.js`), not from a fixed line at middle
 C: each hand's position is followed through the song, and every chord is divided between the hands
 by how close each note is to where that hand has just been, how far a hand can stretch and how many
 notes it can hold. A left hand that climbs above middle C stays the left hand. The hands decide the
-two colors of a two-color palette in every style, and the two fires in Two Hands and Gothic.
-
-In **Gothic** the camera looks down a cathedral nave (the Nave angle). The left hand's crimson
-hellfire runs down the left aisle and the right hand's teal soulfire down the right, each placed
-across its aisle by pitch, lower notes further out. The fire is the only warm light on the stone;
-candles kindle as it passes, the rose window burns brighter with the music, and the mightiest
-landings call down lightning and scatter bats.
-
-| Animation    | What it does                                                                                            |
-| ------------ | ------------------------------------------------------------------------------------------------------- |
-| Fireball Run | A fireball bounces on every note, and burns brighter as the song builds.                                |
-| Two Hands    | The right hand's fireball burns teal-blue, the left hand's in the palette's fire, each in its own lane. |
-| Gothic       | Teal and crimson fire race down a moonlit cathedral nave, each hand on its own side.                    |
+two colors of a two-color palette, and which ball a note belongs to in Marble Walk.
 
 ## Check it
 
@@ -144,8 +105,8 @@ and say why in the commit.
 | `src/features/export/`          | Rendering and encoding the MP4 (loaded when first used).                |
 | `src/shared/scene/`             | What every scene shares: views and the camera, palettes, `renderFrame`. |
 | `src/shared/scene/kinds.js`     | The styles (Staff, Piano) and their animations.                         |
-| `src/shared/scene/staff/`       | The staff: pitch math, layout, glyphs, its animations.                  |
-| `src/shared/scene/piano/`       | The piano: keyboard geometry, the instrument, its animations.           |
+| `src/shared/scene/staff/`       | The staff: pitch math, layout, glyphs, the marble floor, Marble Walk.   |
+| `src/shared/scene/piano/`       | The piano: keyboard geometry, the keys, Falling Notes.                  |
 | `src/shared/ui/`                | Buttons, choices, panels, icons.                                        |
 | `scripts/build-instruments.mjs` | Builds `public/instruments/<id>/` from a sample library (macOS).        |
 | `scripts/build-glyphs.mjs`      | Writes `src/shared/scene/staff/glyphs.js` from the Bravura font.        |
@@ -154,16 +115,15 @@ and say why in the commit.
 
 Features import only `src/shared/`, never each other; ESLint enforces it.
 
-An animation with `stage: 'floor'` is drawn on the marble floor (`staff/floor.js`) and gives a
-`drawRaised` for what shows in the polish. An animation may carry its own camera `rig` (angles and
-slider ranges), as Marble Walk does; otherwise it uses its style's.
+Marble Walk is drawn on the marble floor (`staff/floor.js`) and gives a `drawRaised` for what shows
+in the polish. An animation may carry its own camera `rig` (angles and slider ranges), as Marble Walk
+does; otherwise it uses its style's.
 
-**A new animation** is one file in its style's folder (`src/shared/scene/staff/`, `piano/` or `fire/`),
-listed in that folder's `index.js`. A staff animation has `id`, `name`, `description`, `motion`
-(`'scroll'` or `'page'`) and `draw(ctx, scene, t, palette, view)`, and draws only with the helpers
-in `staff/common.js`; a piano animation has `falling` and `draw(ctx, scene, t, palette, view, model)`
-and draws the instrument with `piano/instrument.js`. Both work in 2D and 3D because every helper
-projects through the view. Keep it a pure function of `t`.
+**A new animation** is one file in its style's folder (`src/shared/scene/staff/` or `piano/`),
+listed in that folder's `index.js`, with `id`, `name`, `description` and `draw`. A staff animation
+draws with the helpers in `staff/common.js`; a piano animation gets the model too,
+`draw(ctx, scene, t, palette, view, model)`, and draws the keys with `piano/instrument.js`. Both
+work in 2D and 3D because every helper projects through the view. Keep it a pure function of `t`.
 
 **A new style** is a folder beside `staff/` and `piano/` whose `index.js` gives its animations,
 camera angles and `render`, added to `kinds.js`.

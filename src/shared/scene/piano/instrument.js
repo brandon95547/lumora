@@ -1,13 +1,11 @@
 // Draws the grand piano's keyboard as a camera sees it: ivory and ebony keys as solid blocks that tip
-// down when played, the felt behind them, the lacquered fallboard (which mirrors the keys), the key
-// slip in front and the cheek blocks at each end. Faces turned away from the camera are skipped.
+// down when played, the key slip in front and the cheek blocks at each end. Faces turned away from the camera are skipped.
 import { litColor } from '../palettes.js';
 import { glowSprite } from '../sprites.js';
-import { facesCamera, fillPolygon, mirrored } from '../view.js';
+import { facesCamera, fillPolygon } from '../view.js';
 import { KEY } from './keyboard.js';
 
 const L = KEY.length;
-const FALLBOARD_Z = L + 0.55;
 const CHEEK = 1.7; // width of each end block
 
 const IVORY = { front: '#d9d2c3', side: '#c3bba9', near: '#fdfbf6', far: '#e6e0d3' };
@@ -201,60 +199,13 @@ function drawKeyLights(ctx, view, model, down, palette, strength, atBack) {
 }
 
 /**
- * The whole instrument. `fallboard`: draw the lacquered panel behind the keys and the keys' reflection
- * in it (Live), or leave the space open for falling notes. `tint` and `light`: how strongly played
- * keys take on the palette's color and glow.
+ * The keyboard, open behind for the falling notes. `tint` and `light`: how strongly played keys take
+ * on the palette's color and glow.
  */
-export function drawInstrument(
-  ctx,
-  view,
-  model,
-  down,
-  palette,
-  { fallboard, fallboardTop = -2.6, tint, light, lightAtBack = false },
-) {
+export function drawInstrument(ctx, view, model, down, palette, { tint, light, lightAtBack = false }) {
   const W = model.whites;
   const left = -CHEEK - 0.05;
   const right = W + CHEEK + 0.05;
-
-  if (fallboard) {
-    const panel = [
-      [right, fallboardTop, FALLBOARD_Z],
-      [left, fallboardTop, FALLBOARD_Z],
-      [left, 0.02, FALLBOARD_Z],
-      [right, 0.02, FALLBOARD_Z],
-    ];
-    const points = fillPolygon(ctx, view, panel, (pts) => {
-      const g = ctx.createLinearGradient(0, pts[0].y, 0, pts[2].y);
-      g.addColorStop(0, '#1a1a1f');
-      g.addColorStop(0.55, '#0b0b0d');
-      g.addColorStop(1, '#040405');
-      return g;
-    });
-    if (points && view.depth) {
-      ctx.save();
-      ctx.beginPath();
-      points.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
-      ctx.clip();
-      const reflection = mirrored(view, 'z', FALLBOARD_Z, 0.17);
-      drawKeys(ctx, reflection, model, down, palette, tint);
-      drawKeyLights(ctx, reflection, model, down, palette, light * 0.6, lightAtBack);
-      ctx.restore();
-    }
-    // The red felt strip between the keys and the fallboard.
-    face(
-      ctx,
-      view,
-      [
-        [0, -0.01, L],
-        [W, -0.01, L],
-        [W, -0.01, FALLBOARD_Z],
-        [0, -0.01, FALLBOARD_Z],
-      ],
-      [0, -1, 0],
-      '#5e1520',
-    );
-  }
 
   // The dark bed the keys sit in, seen through the gaps.
   face(
@@ -273,7 +224,7 @@ export function drawInstrument(
 
   // Key slip in front; cheek blocks at the ends.
   box(ctx, view, [left, right], [KEY.nose * 0.9, 1.6], [-0.65, -0.04], LACQUER);
-  const back = fallboard ? FALLBOARD_Z + 0.3 : L + 0.3;
+  const back = L + 0.3;
   box(ctx, view, [left, -0.06], [-0.6, 1.6], [-0.65, back], LACQUER);
   box(ctx, view, [W + 0.06, right], [-0.6, 1.6], [-0.65, back], LACQUER);
 

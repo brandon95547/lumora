@@ -2,7 +2,6 @@
 // cameras that look at it.
 import { notesBetween } from '../scene.js';
 import { aim, perspective } from '../view.js';
-import { CASE } from './grand.js';
 import { HIGHEST, KEY, keysBetween, LOWEST, rangeFor, whiteIndex } from './keyboard.js';
 
 const models = new WeakMap();
@@ -85,22 +84,19 @@ export function runwayOf(scene) {
 }
 
 const DEG = Math.PI / 180;
-const mix = (a, b, k) => a + (b - a) * k;
+// How much of the keyboard a zoom of 1 frames, in white keys: a grand piano's width.
+const FRAME = 55.6;
 
 /**
  * The camera on the piano. With no camera (2D) it looks straight down at the keys the song uses,
- * like an overhead lesson shot. In 3D, `zoom` 1 frames the whole instrument across; closer in,
- * the camera turns its attention from the piano to the keys and follows the music along them.
- * `falling` keeps the keys low in the frame, leaving room for the notes coming in.
+ * like an overhead lesson shot. In 3D it follows the music along the keys; `zoom` 1 frames a grand
+ * piano's width of them. The keys sit low in the frame, leaving room for the notes coming in.
  */
-export function pianoView(scene, camera, t, falling) {
+export function pianoView(scene, camera, t) {
   const { layout } = scene;
   const model = pianoOf(scene);
-  const runway = falling ? runwayOf(scene) : null;
-  const keysY = falling
-    ? runway.keyFront - KEY.length * model.flatFit
-    : layout.height * (layout.portrait ? 0.56 : 0.58);
-  const keysZ = falling ? KEY.length : KEY.length * 0.45;
+  const keysY = runwayOf(scene).keyFront - KEY.length * model.flatFit;
+  const keysZ = KEY.length;
   if (!camera) {
     return perspective({
       pivot: [model.span.center, 0, keysZ],
@@ -116,19 +112,12 @@ export function pianoView(scene, camera, t, falling) {
   const { yaw, pitch } = aim(camera, t);
   // A phone frame is narrow: the same angle comes 30% closer so the piano fills it.
   const zoom = camera.zoom * (layout.portrait ? 1.3 : 1);
-  const framed = CASE.width / zoom;
-  const close = falling ? 1 : Math.max(0, Math.min(1, (camera.zoom - 0.8) / 0.6));
-  const x = mix(CASE.centerX, followX(scene, t, framed), close);
+  const framed = FRAME / zoom;
   return perspective({
-    pivot: [x, 0, mix(CASE.centerZ, keysZ, close)],
-    // Turned, the keyboard end swings toward the camera; wide shots shift over to keep it in frame.
-    anchor: [
-      layout.width * (0.5 + mix(-0.2 * Math.sin(yaw), 0, close)),
-      mix(layout.height * (layout.portrait ? 0.58 : 0.62), keysY, close),
-    ],
-    // Close shots stand near (strong perspective); wide ones stand back so the whole piano fits.
-    distance: Math.max(30, framed * mix(2.4, 1.3, close)),
-    zoom: ((layout.width * 0.92) / CASE.width) * zoom,
+    pivot: [followX(scene, t, framed), 0, keysZ],
+    anchor: [layout.width / 2, keysY],
+    distance: Math.max(30, framed * 1.3),
+    zoom: ((layout.width * 0.92) / FRAME) * zoom,
     yaw,
     pitch,
     fogFrom: 2.2,

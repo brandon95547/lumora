@@ -82,8 +82,6 @@ export const marbleWalk = {
   id: 'marble-walk',
   name: 'Marble Walk',
   description: 'A ball for each hand hops along a marble floor, catching fire as the song builds; ghosts drift by.',
-  motion: 'scroll',
-  stage: 'floor',
   rig: FLOOR_RIG,
   draw(ctx, scene, t, palette, view) {
     const { layout } = scene;

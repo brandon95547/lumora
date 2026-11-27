@@ -2,6 +2,9 @@
 
 Date: 2026-11-27
 
+The Fire style is removed by [ADR 12](0012-one-animation-per-style.md). Its song energy and
+flames live on in Marble Walk.
+
 ## Context
 
 A third style: fire. A fireball bounces on every note, like the "MIDI ball" videos, and the fire
