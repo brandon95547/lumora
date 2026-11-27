@@ -1,0 +1,7 @@
+{
+  "initialJs": 81.8,
+  "initialCss": 4.2,
+  "worker:assets/transcribe.worker": 271.1,
+  "lazy:src/features/export/exportVideo.js": 60.1,
+  "lazy:src/features/song/midi.js": 8.8
+}

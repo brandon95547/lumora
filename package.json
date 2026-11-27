@@ -1,0 +1,44 @@
+{
+  "name": "lumora",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Turns a piano recording into a lit-up musical staff animation, exported as a 9:16 or 16:9 video.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "glyphs": "node scripts/build-glyphs.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "check:budgets": "node scripts/check-budgets.mjs",
+    "check": "npm run lint && npm run format:check && npm test && npm run build && npm run check:budgets"
+  },
+  "dependencies": {
+    "@spotify/basic-pitch": "1.0.1",
+    "@tonejs/midi": "2.0.28",
+    "mediabunny": "1.66.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@tailwindcss/vite": "4.3.5",
+    "@vexflow-fonts/bravura": "1.0.2",
+    "@vitejs/plugin-react": "6.3.0",
+    "eslint": "10.14.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.14.0",
+    "jsdom": "31.0.0",
+    "opentype.js": "2.0.0",
+    "prettier": "3.10.1",
+    "tailwindcss": "4.3.5",
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
+  }
+}
