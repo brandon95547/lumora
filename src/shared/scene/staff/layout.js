@@ -37,7 +37,7 @@ export function layoutFor({ width, height }) {
     // Page styles: a page of notes is laid out, then lit as the sweep passes.
     pageSeconds: portrait ? 3.6 : 6,
     // The title sits at the top: its top edge here, at this size (Medium; the size menu scales it).
-    titleTop: height * (portrait ? 0.065 : 0.05),
+    titleTop: height * (portrait ? 0.085 : 0.065),
     titleSize: portrait ? 92 : 76,
   };
 }
