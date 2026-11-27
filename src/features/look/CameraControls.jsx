@@ -10,6 +10,8 @@ export function CameraControls({ kind, camera, onChange }) {
   const set = (key) => (value) => onChange({ ...camera, [key]: value });
   const [turnMin, turnMax] = kind.turnRange;
   const [tiltMin, tiltMax] = kind.tiltRange;
+  const [near, far] = kind.zoomRange;
+  const third = (far - near) / 3;
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-line bg-surface p-3.5">
       <Choice
@@ -26,11 +28,11 @@ export function CameraControls({ kind, camera, onChange }) {
       <Slider
         label="Distance"
         value={camera.zoom}
-        min={0.6}
-        max={1.5}
+        min={near}
+        max={far}
         step={0.02}
         onChange={set('zoom')}
-        format={(v) => (v >= 1.05 ? 'Close' : v <= 0.75 ? 'Far' : 'Middle')}
+        format={(v) => (v >= far - third ? 'Close' : v <= near + third ? 'Far' : 'Middle')}
       />
       <Switch label="Gentle camera drift" checked={camera.drift} onChange={set('drift')} />
     </div>

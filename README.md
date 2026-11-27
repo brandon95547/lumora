@@ -42,11 +42,12 @@ Front, Angled, Low, Lane.
 | Constellation | Played notes turn to stars and join into constellations.          |
 | Ribbon        | Every note draws a ribbon of light as long as it is held.         |
 
-**Piano:** a grand piano's keys play the song. Keys are solid and tip down when played; behind
-them are the red felt and a lacquered fallboard that mirrors them. In 2D the camera looks straight
-down, like a lesson video; in 3D it films from an angle: Player, Side, Low, Overhead. A 16:9 video
-frames the five or more octaves the song uses; a 9:16 one stays close, about two octaves wide, and
-glides along the keys with the music.
+**Piano:** a grand piano plays the song. In Live it is the whole instrument: a lacquered case
+with its curved side, the lid propped open, the gold plate and strings inside, music desk, legs and
+pedals, on a lit stage. Its 88 keys are solid and tip down when played. In 2D the camera looks
+straight down at the keys the song uses, like a lesson video; in 3D it films from an angle:
+Concert (the whole piano, from the audience), Side, Player or Overhead. Distance runs from the whole
+instrument to close on the keys; close in, the camera follows the music along the keyboard.
 
 | Animation     | What it does                                               |
 | ------------- | ---------------------------------------------------------- |

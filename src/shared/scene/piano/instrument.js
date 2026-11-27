@@ -205,15 +205,22 @@ function drawKeyLights(ctx, view, model, down, palette, strength, atBack) {
  * in it (Live), or leave the space open for falling notes. `tint` and `light`: how strongly played
  * keys take on the palette's color and glow.
  */
-export function drawInstrument(ctx, view, model, down, palette, { fallboard, tint, light, lightAtBack = false }) {
+export function drawInstrument(
+  ctx,
+  view,
+  model,
+  down,
+  palette,
+  { fallboard, fallboardTop = -2.6, tint, light, lightAtBack = false },
+) {
   const W = model.whites;
   const left = -CHEEK - 0.05;
   const right = W + CHEEK + 0.05;
 
   if (fallboard) {
     const panel = [
-      [right, -2.6, FALLBOARD_Z],
-      [left, -2.6, FALLBOARD_Z],
+      [right, fallboardTop, FALLBOARD_Z],
+      [left, fallboardTop, FALLBOARD_Z],
       [left, 0.02, FALLBOARD_Z],
       [right, 0.02, FALLBOARD_Z],
     ];

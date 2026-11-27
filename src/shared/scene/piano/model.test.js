@@ -18,9 +18,10 @@ describe('piano scene', () => {
   const portrait = prepareScene(notes, { width: 1080, height: 1920 }, 3);
   const landscape = prepareScene(notes, { width: 1920, height: 1080 }, 3);
 
-  it('frames what the song plays: three octaves in 9:16, five in 16:9', () => {
-    expect(pianoOf(portrait).whites).toBe(22);
-    expect(pianoOf(landscape).whites).toBe(36);
+  it('has all 88 keys, and knows the span the song plays', () => {
+    expect(pianoOf(portrait).whites).toBe(52);
+    expect(pianoOf(portrait).span.whites).toBe(22);
+    expect(pianoOf(landscape).span.whites).toBe(36);
   });
 
   it('knows which keys are down', () => {
@@ -38,19 +39,19 @@ describe('piano scene', () => {
       12,
     );
     const model = pianoOf(wide);
-    expect(model.framed).toBeLessThan(model.whites);
-    expect(followX(wide, 0)).toBeLessThan(followX(wide, 10));
-    expect(followX(wide, 0)).toBeGreaterThanOrEqual(model.framed / 2);
-    expect(followX(wide, 10)).toBeLessThanOrEqual(model.whites - model.framed / 2);
-    expect(followX(wide, 5)).toBeCloseTo(followX(wide, 5)); // same time, same place
+    const framed = 15;
+    expect(followX(wide, 0, framed)).toBeLessThan(followX(wide, 10, framed));
+    expect(followX(wide, 0, framed)).toBeGreaterThanOrEqual(framed / 2);
+    expect(followX(wide, 10, framed)).toBeLessThanOrEqual(model.whites - framed / 2);
+    expect(followX(wide, 5, framed)).toBe(followX(wide, 5, framed)); // same time, same place
   });
 
   it('looks straight down in 2D, with the keys across the frame', () => {
     const view = pianoView(portrait, null, 0, false);
     const model = pianoOf(portrait);
-    const left = view.project(0, 0, 3);
-    const right = view.project(model.framed, 0, 3);
+    const left = view.project(model.span.center - model.span.whites / 2, 0, 3);
+    const right = view.project(model.span.center + model.span.whites / 2, 0, 3);
     expect(right.x - left.x).toBeGreaterThan(1000);
-    expect(view.project(5, 0, 0).y).toBeGreaterThan(view.project(5, 0, 6).y); // key fronts nearer the bottom
+    expect(view.project(25, 0, 0).y).toBeGreaterThan(view.project(25, 0, 6).y); // key fronts nearer the bottom
   });
 });

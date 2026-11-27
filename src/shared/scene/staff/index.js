@@ -43,5 +43,6 @@ export const staffKind = {
   defaultAngle: 'angled',
   turnRange: [-70, 70],
   tiltRange: [-10, 35],
+  zoomRange: [0.6, 1.4],
   render,
 };

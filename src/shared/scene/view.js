@@ -108,8 +108,11 @@ export function onPlane(ctx, view, x, y) {
   return true;
 }
 
-/** Fills a flat polygon given by world corners; skipped if any corner is behind the camera. */
-export function fillPolygon(ctx, view, corners, fill, alpha = 1) {
+/**
+ * Fills a flat polygon given by world corners; skipped if any corner is behind the camera.
+ * `seal` also strokes its edge in the same color, so neighboring faces meet without a hairline.
+ */
+export function fillPolygon(ctx, view, corners, fill, alpha = 1, seal = false) {
   const points = corners.map((c) => view.project(...c));
   if (points.some((p) => !p)) return null;
   const fog = Math.min(...points.map((p) => p.fog));
@@ -121,6 +124,12 @@ export function fillPolygon(ctx, view, corners, fill, alpha = 1) {
   points.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
   ctx.closePath();
   ctx.fill();
+  if (seal) {
+    ctx.strokeStyle = ctx.fillStyle;
+    ctx.lineWidth = 1.2;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+  }
   return points;
 }
 

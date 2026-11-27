@@ -1,8 +1,9 @@
-// Live: the piano as if filmed in concert — keys going down under the music, a hint of colored light
-// on each one played, the fallboard mirroring the keys, and soft stage lights out of focus behind.
+// Live: a grand piano as if filmed in concert — lid up, keys going down under the music, a hint of
+// colored light on each one played, and soft stage lights out of focus behind.
 import { drawAmbient } from '../ambient.js';
 import { noise } from '../envelope.js';
 import { glowSprite } from '../sprites.js';
+import { CASE, drawGrand } from './grand.js';
 import { drawInstrument } from './instrument.js';
 import { keysDown } from './model.js';
 
@@ -31,6 +32,14 @@ export const live = {
     const { layout } = scene;
     drawBokeh(ctx, layout, palette, t);
     drawAmbient(ctx, scene, t, palette, layout.width / 2, layout.height * 0.55);
-    drawInstrument(ctx, view, model, keysDown(scene, t), palette, { fallboard: true, tint: 0.22, light: 0.55 });
+    const down = keysDown(scene, t);
+    drawGrand(ctx, view, palette, () =>
+      drawInstrument(ctx, view, model, down, palette, {
+        fallboard: true,
+        fallboardTop: CASE.rimTop,
+        tint: 0.22,
+        light: 0.55,
+      }),
+    );
   },
 };
