@@ -1,11 +1,12 @@
-// How the video looks: animation style, 2D or 3D (and the camera), colors, shape and title.
+// How the video looks: the style (Staff or Piano) and its animation, 2D or 3D (and the camera),
+// colors, shape and title.
 import { FORMATS } from '../../shared/scene/formats.js';
 import { PALETTES } from '../../shared/scene/palettes.js';
-import { STYLES } from '../../shared/scene/styles/index.js';
+import { animationById, defaultCamera, KINDS } from '../../shared/scene/kinds.js';
 import { Choice } from '../../shared/ui/Choice.jsx';
 import { Panel } from '../../shared/ui/Panel.jsx';
 import { CameraControls } from './CameraControls.jsx';
-import { StyleThumb } from './StyleThumb.jsx';
+import { AnimationThumb } from './AnimationThumb.jsx';
 
 const VIEWS = [
   { id: '2d', label: '2D' },
@@ -31,25 +32,37 @@ function Swatch({ palette }) {
 
 export function LookPanel({ look, scene, onChange }) {
   const set = (key) => (value) => onChange({ ...look, [key]: value });
+  const { kind } = animationById(look.animationId);
   const camera = look.view === '3d' ? look.camera : null;
+  // A new style starts on its first animation, with its own camera.
+  const setKind = (id) => {
+    const next = KINDS.find((k) => k.id === id);
+    onChange({ ...look, animationId: next.animations[0].id, camera: defaultCamera(next) });
+  };
   return (
     <Panel title="Look">
       <Choice
+        label="Style"
+        options={KINDS.map((k) => ({ id: k.id, label: k.name }))}
+        value={kind.id}
+        onChange={setKind}
+      />
+      <Choice
         label="Animation"
         variant="cards"
-        options={STYLES}
-        value={look.styleId}
-        onChange={set('styleId')}
-        render={(style) => (
+        options={kind.animations}
+        value={look.animationId}
+        onChange={set('animationId')}
+        render={(animation) => (
           <>
-            <StyleThumb style={style} scene={scene} paletteId={look.paletteId} camera={camera} />
-            <span className="block px-3 pt-2 text-sm font-semibold">{style.name}</span>
-            <span className="block px-3 pb-3 text-caption text-faint">{style.description}</span>
+            <AnimationThumb animation={animation} scene={scene} paletteId={look.paletteId} camera={camera} />
+            <span className="block px-3 pt-2 text-sm font-semibold">{animation.name}</span>
+            <span className="block px-3 pb-3 text-caption text-faint">{animation.description}</span>
           </>
         )}
       />
       <Choice label="View" options={VIEWS} value={look.view} onChange={set('view')} />
-      {camera && <CameraControls camera={camera} onChange={set('camera')} />}
+      {camera && <CameraControls kind={kind} camera={camera} onChange={set('camera')} />}
       <Choice
         label="Colors"
         variant="cards"

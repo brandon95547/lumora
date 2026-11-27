@@ -18,6 +18,6 @@ jobs:
       - run: npm run format:check
       - run: npm test
       - name: Music glyphs are up to date
-        run: npm run glyphs && git diff --exit-code src/shared/scene/glyphs.js
+        run: npm run glyphs && git diff --exit-code src/shared/scene/staff/glyphs.js
       - run: npm run build
       - run: npm run check:budgets

@@ -21,22 +21,37 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
    music). If it finds too many or too few, change **Notes to find**. For exact notes, drop a MIDI
    file too, with the recording or after it. A MIDI file on its own plays with a built-in piano
    voice.
-2. **Look.** Choose an animation, then **2D** or **3D**. In 3D, pick a camera angle (Front, Angled,
-   Low or Lane) and fine-tune it with Turn, Tilt and Distance; a gentle drift keeps the camera
-   alive. Then choose colors, the video's shape and its title.
+2. **Look.** Choose a style, **Staff** or **Piano**, and one of its animations. Then **2D** or
+   **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a gentle drift
+   keeps the camera alive. Then choose colors, the video's shape and its title.
 3. **Video.** Choose 30 or 60 fps and press **Make the video**. It renders faster than real time;
    then download the MP4.
 
 Space plays and pauses the preview.
 
-### Animations
+### Styles and animations
 
-| Style         | What it does                                                      |
+**Staff:** the song lights up a grand staff. In 3D the staff stands on a reflective floor whose
+grid moves with the music, and lit notes become glass balls sending up beams of light. Angles:
+Front, Angled, Low, Lane.
+
+| Animation     | What it does                                                      |
 | ------------- | ----------------------------------------------------------------- |
 | Glow Lane     | Notes glide toward a playhead and flare as they sound.            |
 | Ripple Pages  | A page of notes waits on the staff; each one ripples as it plays. |
 | Constellation | Played notes turn to stars and join into constellations.          |
 | Ribbon        | Every note draws a ribbon of light as long as it is held.         |
+
+**Piano:** a grand piano's keys play the song. Keys are solid and tip down when played; behind
+them are the red felt and a lacquered fallboard that mirrors them. In 2D the camera looks straight
+down, like a lesson video; in 3D it films from an angle: Player, Side, Low, Overhead. A 16:9 video
+frames the five or more octaves the song uses; a 9:16 one stays close, about two octaves wide, and
+glides along the keys with the music.
+
+| Animation     | What it does                                               |
+| ------------- | ---------------------------------------------------------- |
+| Live          | A grand piano playing itself, as if filmed in concert.     |
+| Falling Notes | Bars of light run to the keys and press them as they land. |
 
 ## Check it
 
@@ -50,26 +65,33 @@ and say why in the commit.
 
 ## How it is put together
 
-| Path                        | What it is                                                          |
-| --------------------------- | ------------------------------------------------------------------- |
-| `src/App.jsx`               | The one screen: preview, and the Song, Look and Video panels.       |
-| `src/features/song/`        | Reading files, finding notes (Basic Pitch in a worker), MIDI, demo. |
-| `src/features/look/`        | Style, color, shape and title choices.                              |
-| `src/features/player/`      | The live preview and its transport.                                 |
-| `src/features/export/`      | Rendering and encoding the MP4 (loaded when first used).            |
-| `src/shared/scene/`         | The animation: staff math, layout, palettes, styles, `renderFrame`. |
-| `src/shared/ui/`            | Buttons, choices, panels, icons.                                    |
-| `scripts/build-glyphs.mjs`  | Writes `src/shared/scene/glyphs.js` from the Bravura font.          |
-| `scripts/check-budgets.mjs` | Size budgets, checked in CI against `budgets.json`.                 |
-| `docs/adr/`                 | Decisions and why.                                                  |
+| Path                        | What it is                                                              |
+| --------------------------- | ----------------------------------------------------------------------- |
+| `src/App.jsx`               | The one screen: preview, and the Song, Look and Video panels.           |
+| `src/features/song/`        | Reading files, finding notes (Basic Pitch in a worker), MIDI, demo.     |
+| `src/features/look/`        | Style, color, shape and title choices.                                  |
+| `src/features/player/`      | The live preview and its transport.                                     |
+| `src/features/export/`      | Rendering and encoding the MP4 (loaded when first used).                |
+| `src/shared/scene/`         | What every scene shares: views and the camera, palettes, `renderFrame`. |
+| `src/shared/scene/kinds.js` | The styles (Staff, Piano) and their animations.                         |
+| `src/shared/scene/staff/`   | The staff: pitch math, layout, glyphs, its animations.                  |
+| `src/shared/scene/piano/`   | The piano: keyboard geometry, the instrument, its animations.           |
+| `src/shared/ui/`            | Buttons, choices, panels, icons.                                        |
+| `scripts/build-glyphs.mjs`  | Writes `src/shared/scene/staff/glyphs.js` from the Bravura font.        |
+| `scripts/check-budgets.mjs` | Size budgets, checked in CI against `budgets.json`.                     |
+| `docs/adr/`                 | Decisions and why.                                                      |
 
 Features import only `src/shared/`, never each other; ESLint enforces it.
 
-**A new animation style** is one file in `src/shared/scene/styles/` with `id`, `name`,
-`description`, `motion` (`'scroll'` or `'page'`) and `draw(ctx, scene, t, palette, view)`, added to
-`styles/index.js`. Draw only with the helpers in `styles/common.js` (they project through the view,
-so the style works in 2D and 3D), use the envelopes in `envelope.js`, and keep it a pure function
-of `t`.
+**A new animation** is one file in its style's folder (`src/shared/scene/staff/` or `piano/`),
+listed in that folder's `index.js`. A staff animation has `id`, `name`, `description`, `motion`
+(`'scroll'` or `'page'`) and `draw(ctx, scene, t, palette, view)`, and draws only with the helpers
+in `staff/common.js`; a piano animation has `falling` and `draw(ctx, scene, t, palette, view, model)`
+and draws the instrument with `piano/instrument.js`. Both work in 2D and 3D because every helper
+projects through the view. Keep it a pure function of `t`.
+
+**A new style** is a folder beside `staff/` and `piano/` whose `index.js` gives its animations,
+camera angles and `render`, added to `kinds.js`.
 
 **A new color scheme** is one entry in `src/shared/scene/palettes.js`.
 

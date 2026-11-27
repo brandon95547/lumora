@@ -1,4 +1,4 @@
 dist/
 node_modules/
 package-lock.json
-src/shared/scene/glyphs.js
+src/shared/scene/staff/glyphs.js

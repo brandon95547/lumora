@@ -1,7 +1,7 @@
 // A song's notes placed on the grand staff for one format: computed once, then read every frame.
 import { firstStartingAt } from '../notes.js';
-import { layoutFor, staffY } from './layout.js';
-import { estimateKey, ledgerLines, placePitch } from './pitch.js';
+import { layoutFor, staffY } from './staff/layout.js';
+import { estimateKey, ledgerLines, placePitch } from './staff/pitch.js';
 
 const CHORD_WINDOW = 0.035; // onsets this close are drawn as one chord
 

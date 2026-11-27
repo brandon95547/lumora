@@ -1,49 +1,42 @@
 import { describe, expect, it } from 'vitest';
-import { layoutFor } from './layout.js';
-import { cameraView, flatView, mirrored, segment } from './view.js';
+import { mirrored, perspective, segment } from './view.js';
 
-const layout = layoutFor({ width: 1920, height: 1080 });
-const camera = { turn: 34, tilt: 12, zoom: 1, drift: false };
-
-describe('flatView', () => {
-  it('leaves the 2D picture as laid out', () => {
-    expect(flatView(layout).project(300, 400)).toEqual({ x: 300, y: 400, s: 1, fog: 1 });
-  });
+const view = perspective({
+  pivot: [0, 0, 0],
+  anchor: [500, 500],
+  distance: 2000,
+  zoom: 1,
+  yaw: 0.5,
+  pitch: 0.2,
 });
 
-describe('cameraView', () => {
-  const view = cameraView(layout, camera, 0);
-
-  it('sends music still to come into the distance', () => {
-    const now = view.project(layout.playheadX + 10, 500);
-    const later = view.project(layout.playheadX + 1500, 500);
-    expect(later.s).toBeLessThan(now.s);
-    expect(later.fog).toBeLessThanOrEqual(now.fog);
+describe('perspective', () => {
+  it('draws the pivot at the anchor, at the zoom', () => {
+    expect(view.project(0, 0, 0)).toMatchObject({ x: 500, y: 500, s: 1 });
   });
 
-  it('keeps higher notes above lower ones', () => {
-    expect(view.project(layout.playheadX, 300).y).toBeLessThan(view.project(layout.playheadX, 600).y);
+  it('makes things further away smaller and hazier', () => {
+    const near = view.project(0, 0, -200);
+    const far = view.project(0, 0, 4000);
+    expect(far.s).toBeLessThan(near.s);
+    expect(far.fog).toBeLessThanOrEqual(near.fog);
+  });
+
+  it('keeps higher things above lower ones', () => {
+    expect(view.project(0, -100).y).toBeLessThan(view.project(0, 100).y);
   });
 
   it('drops points behind the camera, and cuts segments there', () => {
-    const behind = layout.playheadX - 20000;
-    expect(view.project(behind, 500)).toBeNull();
-    const cut = segment(view, [behind, 500, 0], [layout.playheadX, 500, 0]);
+    const [ex, ey, ez] = view.eye;
+    const behind = [ex - (0 - ex) * 0.5, ey - (0 - ey) * 0.5, ez - (0 - ez) * 0.5];
+    expect(view.project(...behind)).toBeNull();
+    const cut = segment(view, behind, [0, 0, 0]);
     expect(cut[0]).not.toBeNull();
     expect(cut[1]).not.toBeNull();
   });
 
-  it('mirrors below the floor for reflections', () => {
-    const floor = 900;
-    const reflection = mirrored(view, floor, 0.3);
-    expect(reflection.project(layout.playheadX, 700)).toEqual(view.project(layout.playheadX, 1100));
-    expect(reflection.opacity).toBeCloseTo(0.3);
-  });
-
-  it('draws the same frame for the same time', () => {
-    const drifting = { ...camera, drift: true };
-    expect(cameraView(layout, drifting, 4).project(800, 500)).toEqual(
-      cameraView(layout, drifting, 4).project(800, 500),
-    );
+  it('mirrors across a floor or an upright panel', () => {
+    expect(mirrored(view, 'y', 300, 0.3).project(10, 100, 0)).toEqual(view.project(10, 500, 0));
+    expect(mirrored(view, 'z', 50, 0.3).project(10, 0, 20)).toEqual(view.project(10, 0, 80));
   });
 });

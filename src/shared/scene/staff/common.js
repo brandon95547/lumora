@@ -2,8 +2,8 @@
 // Every helper draws through the view, so a style written once is drawn in 2D and in 3D.
 import { notesBetween } from '../scene.js';
 import { glowSprite, sphereSprite } from '../sprites.js';
-import { drawGlyph, strokeWorld } from '../staff.js';
-import { onPlane } from '../view.js';
+import { drawGlyph } from './stage.js';
+import { onPlane, strokeWorld } from '../view.js';
 
 /** Scrolling: notes travel right to left and reach the playhead as they sound. */
 export function scrollPlacement(scene, t, view) {

@@ -1,4 +1,4 @@
-// A still of a style, drawn from the song's own notes, so the cards show what you'll get.
+// A still of an animation, drawn from the song's own notes, so the cards show what you'll get.
 import { useEffect, useRef } from 'react';
 import { paletteById } from '../../shared/scene/palettes.js';
 import { renderFrame } from '../../shared/scene/render.js';
@@ -17,7 +17,7 @@ function busyMoment(scene) {
   return best + 0.12;
 }
 
-export function StyleThumb({ style, scene, paletteId, camera }) {
+export function AnimationThumb({ animation, scene, paletteId, camera }) {
   const canvas = useRef(null);
   const { width, height } = scene.layout;
   useEffect(() => {
@@ -27,8 +27,8 @@ export function StyleThumb({ style, scene, paletteId, camera }) {
     el.height = Math.round(height * scale);
     const ctx = el.getContext('2d');
     ctx.setTransform(scale, 0, 0, scale, 0, 0);
-    renderFrame(ctx, scene, { t: busyMoment(scene), style, palette: paletteById(paletteId), title: '', camera });
-  }, [style, scene, paletteId, camera, width, height]);
+    renderFrame(ctx, scene, { t: busyMoment(scene), animation, palette: paletteById(paletteId), title: '', camera });
+  }, [animation, scene, paletteId, camera, width, height]);
   return (
     <canvas
       ref={canvas}

@@ -9,27 +9,26 @@ import { formatById } from './shared/scene/formats.js';
 import { paletteById } from './shared/scene/palettes.js';
 import { renderFrame } from './shared/scene/render.js';
 import { prepareScene } from './shared/scene/scene.js';
-import { styleById } from './shared/scene/styles/index.js';
-import { DEFAULT_CAMERA } from './shared/scene/view.js';
+import { animationById, defaultCamera, KINDS } from './shared/scene/kinds.js';
 
 const START_LOOK = {
-  styleId: 'glow-lane',
+  animationId: KINDS[0].animations[0].id,
   paletteId: 'midnight',
   formatId: 'portrait',
   view: '2d',
-  camera: DEFAULT_CAMERA,
+  camera: defaultCamera(KINDS[0]),
 };
 
 export function App() {
   const { song, sensitivity, loadFiles, setSensitivity } = useSong();
-  const [style, setStyle] = useState(START_LOOK);
+  const [choices, setChoices] = useState(START_LOOK);
   // A new song brings its own title; an edit holds until the next song.
   const [titleEdit, setTitleEdit] = useState({ song: null, value: '' });
   const title = titleEdit.song === song.title ? titleEdit.value : song.title;
-  const look = useMemo(() => ({ ...style, title }), [style, title]);
+  const look = useMemo(() => ({ ...choices, title }), [choices, title]);
   const setLook = useCallback(
     ({ title: next, ...rest }) => {
-      setStyle(rest);
+      setChoices(rest);
       if (next !== title) setTitleEdit({ song: song.title, value: next });
     },
     [title, song.title],
@@ -39,7 +38,7 @@ export function App() {
   const scene = useMemo(() => prepareScene(song.notes, format, song.audio?.duration), [song.notes, song.audio, format]);
   const frameLook = useMemo(
     () => ({
-      style: styleById(look.styleId),
+      animation: animationById(look.animationId),
       palette: paletteById(look.paletteId),
       title: look.title,
       camera: look.view === '3d' ? look.camera : null,
