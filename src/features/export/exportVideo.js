@@ -15,6 +15,17 @@ import { makeCanvas } from '../../shared/scene/sprites.js';
 
 const YIELD_EVERY = 4; // frames between pauses that let the page repaint its progress
 
+/**
+ * Lets the page repaint its progress. A message to ourselves, not setTimeout, which browsers slow
+ * to once a second in a background tab, so an export keeps its speed when you switch tabs.
+ */
+const nextTask = () =>
+  new Promise((resolve) => {
+    const channel = new MessageChannel();
+    channel.port1.onmessage = () => resolve();
+    channel.port2.postMessage(null);
+  });
+
 export class ExportError extends Error {
   name = 'ExportError';
 }
@@ -53,7 +64,7 @@ export async function exportVideo({ scene, audio, look, fps, onProgress, signal 
       await video.add(t, 1 / fps);
       if (i % YIELD_EVERY === 0) {
         onProgress(i / frames);
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await nextTask();
       }
     }
     await audioDone;
