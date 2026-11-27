@@ -104,7 +104,8 @@ export function drawGlow(ctx, view, palette, x, y, size, color, alpha) {
   const s = size * p.s * view.glow;
   ctx.drawImage(glowSprite(color), p.x - s / 2, p.y - s / 2, s, s);
   if (view.depth && view.opacity === 1 && p.a > 0.25) {
-    const top = view.project(x, y - size * 3.5);
+    // Up is off the page on the upright staff, off the ground on the floor.
+    const top = view.project(...(view.rise ? view.rise(x, y, size * 3.5) : [x, y - size * 3.5]));
     if (top) {
       const beam = ctx.createLinearGradient(p.x, p.y, top.x, top.y);
       beam.addColorStop(0, color);
@@ -120,6 +121,21 @@ export function drawGlow(ctx, view, palette, x, y, size, color, alpha) {
     }
   }
   ctx.globalCompositeOperation = 'source-over';
+}
+
+/** A filled disc lying on the staff, foreshortened in 3D: a lit note on the floor. */
+export function drawSpot(ctx, view, x, y, r, color, alpha) {
+  const p = at(view, x, y, alpha);
+  if (!p) return;
+  ctx.save();
+  if (onPlane(ctx, view, x, y)) {
+    ctx.globalAlpha = p.a;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
 }
 
 /** A bar along the staff from x0 to x1 at height y, with round ends. */

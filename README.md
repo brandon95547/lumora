@@ -39,12 +39,23 @@ Space plays and pauses the preview.
 
 ### Styles and animations
 
-**Staff:** the song lights up a grand staff. In 3D the staff stands on a reflective floor whose
-grid moves with the music, and lit notes become glass balls sending up beams of light. Angles:
-Front, Angled, Low, Lane.
+**Staff:** the song lights up a grand staff.
+
+In **Marble Walk** (the first animation, and where Lumora opens) the staff lies on a dark,
+polished marble floor and runs on ahead like a road. A glass ball for each hand hops along it,
+landing on every note as it sounds (a chord is one landing, on the right hand's top note or the left
+hand's bottom note), with its shadow and reflection on the floor below. The floor's tiles, the
+staff and the lit notes travel toward the camera with the music, so the balls seem to walk across
+the floor. The clefs pass by as the song begins. Its own angles: Walk, Behind, Beside, Overhead.
+In 2D you look straight down at the floor.
+
+In the other animations the staff stands upright in 3D on a reflective floor whose grid moves with
+the music, and lit notes become glass balls sending up beams of light. Angles: Front, Angled, Low,
+Lane.
 
 | Animation     | What it does                                                      |
 | ------------- | ----------------------------------------------------------------- |
+| Marble Walk   | A ball for each hand hops along a staff laid on a marble floor.   |
 | Glow Lane     | Notes glide toward a playhead and flare as they sound.            |
 | Ripple Pages  | A page of notes waits on the staff; each one ripples as it plays. |
 | Constellation | Played notes turn to stars and join into constellations.          |
@@ -118,6 +129,10 @@ and say why in the commit.
 | `docs/adr/`                 | Decisions and why.                                                      |
 
 Features import only `src/shared/`, never each other; ESLint enforces it.
+
+An animation with `stage: 'floor'` is drawn on the marble floor (`staff/floor.js`) and gives a
+`drawRaised` for what shows in the polish. An animation may carry its own camera `rig` (angles and
+slider ranges), as Marble Walk does; otherwise it uses its style's.
 
 **A new animation** is one file in its style's folder (`src/shared/scene/staff/`, `piano/` or `fire/`),
 listed in that folder's `index.js`. A staff animation has `id`, `name`, `description`, `motion`

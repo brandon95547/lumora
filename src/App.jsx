@@ -15,7 +15,7 @@ const START_LOOK = {
   animationId: KINDS[0].animations[0].id,
   paletteId: 'midnight',
   formatId: 'portrait',
-  view: '2d',
+  view: '3d', // the first animation, Marble Walk, is meant to be seen on its floor
   camera: defaultCamera(KINDS[0]),
 };
 

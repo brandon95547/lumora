@@ -2,7 +2,7 @@
 // colors, shape and title.
 import { FORMATS } from '../../shared/scene/formats.js';
 import { PALETTES } from '../../shared/scene/palettes.js';
-import { animationById, defaultCamera, KINDS } from '../../shared/scene/kinds.js';
+import { animationById, defaultCamera, KINDS, rigOf } from '../../shared/scene/kinds.js';
 import { Choice } from '../../shared/ui/Choice.jsx';
 import { Panel } from '../../shared/ui/Panel.jsx';
 import { CameraControls } from './CameraControls.jsx';
@@ -32,8 +32,13 @@ function Swatch({ palette }) {
 
 export function LookPanel({ look, scene, onChange }) {
   const set = (key) => (value) => onChange({ ...look, [key]: value });
-  const { kind } = animationById(look.animationId);
+  const current = animationById(look.animationId);
+  const { kind } = current;
+  const rig = rigOf(kind, current);
   const camera = look.view === '3d' ? look.camera : null;
+  // Each card shows its animation through the camera it would get.
+  const thumbCamera = (animation) =>
+    camera && (rigOf(kind, animation) === rig ? camera : defaultCamera(kind, animation));
   // A new style starts on its first animation, with its own camera.
   const setKind = (id) => {
     const next = KINDS.find((k) => k.id === id);
@@ -53,20 +58,27 @@ export function LookPanel({ look, scene, onChange }) {
         options={kind.animations}
         value={look.animationId}
         onChange={(id) => {
-          // An animation with its own best angle (Gothic looks down the nave) starts there.
+          // An animation with its own best angle (Gothic looks down the nave), or its own set of
+          // angles (Marble Walk's floor), starts there; otherwise the camera stays where it is.
           const next = animationById(id);
-          onChange({ ...look, animationId: id, camera: next.defaultAngle ? defaultCamera(kind, next) : look.camera });
+          const fresh = next.defaultAngle || rigOf(kind, next) !== rig;
+          onChange({ ...look, animationId: id, camera: fresh ? defaultCamera(kind, next) : look.camera });
         }}
         render={(animation) => (
           <>
-            <AnimationThumb animation={animation} scene={scene} paletteId={look.paletteId} camera={camera} />
+            <AnimationThumb
+              animation={animation}
+              scene={scene}
+              paletteId={look.paletteId}
+              camera={thumbCamera(animation)}
+            />
             <span className="block px-3 pt-2 text-sm font-semibold">{animation.name}</span>
             <span className="block px-3 pb-3 text-caption text-faint">{animation.description}</span>
           </>
         )}
       />
       <Choice label="View" options={VIEWS} value={look.view} onChange={set('view')} />
-      {camera && <CameraControls kind={kind} camera={camera} onChange={set('camera')} />}
+      {camera && <CameraControls rig={rig} camera={camera} onChange={set('camera')} />}
       <Choice
         label="Colors"
         variant="cards"

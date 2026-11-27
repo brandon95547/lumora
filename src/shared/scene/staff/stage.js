@@ -28,6 +28,7 @@ export function drawGlyph(ctx, view, name, x, y, scale, color, alpha) {
   ctx.restore();
 }
 
+/** The staff from `view.staffLeft`; without its brace and clefs where the view says `clefs: false`. */
 export function drawStaff(ctx, view, layout, palette) {
   const { space } = layout;
   const width = Math.max(2, space * 0.06);
@@ -38,6 +39,7 @@ export function drawStaff(ctx, view, layout, palette) {
       strokeWorld(ctx, view, [left, y, 0], [view.noteRight, y, 0], width, palette.staff, 1);
     }
   }
+  if (view.clefs === false) return;
   strokeWorld(ctx, view, [left, layout.grandTop, 0], [left, layout.grandBottom, 0], width, palette.staff, 1);
   const braceScale = (layout.grandBottom - layout.grandTop) / 4;
   drawGlyph(ctx, view, 'brace', view.staffLeft, layout.grandBottom, braceScale, palette.staff, 1);
@@ -53,9 +55,8 @@ export function flatBackdrop(layout, palette, motion) {
   });
 }
 
-/** Where the floor's far edge meets the sky: a soft band of light. */
-export function drawHorizon(ctx, view, layout, palette, floorY) {
-  const far = view.project((view.noteLeft + view.noteRight) / 2, floorY, layout.width * 3);
+/** Where the floor's far edge meets the sky: a soft band of light at `far`, a projected point. */
+export function drawHorizon(ctx, layout, palette, far) {
   if (!far) return;
   ctx.save();
   ctx.translate(layout.width / 2, far.y);

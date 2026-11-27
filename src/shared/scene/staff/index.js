@@ -1,4 +1,5 @@
-// Staff: the song lights up a grand staff, flat or seen in 3D on a reflective floor.
+// Staff: the song lights up a grand staff, flat or seen in 3D: laid on a marble floor (Marble Walk),
+// or standing upright on a reflective floor (the others).
 import { drawAmbient } from '../ambient.js';
 import { mirrored } from '../view.js';
 import { constellation } from './constellation.js';
@@ -6,10 +7,13 @@ import { glowLane } from './glowLane.js';
 import { ribbon } from './ribbon.js';
 import { ripple } from './ripple.js';
 import { depthBackdrop } from '../backdrop.js';
+import { renderFloor } from './floor.js';
 import { drawFloor, drawHorizon, drawStaff, flatBackdrop } from './stage.js';
 import { cameraView, flatView, STAFF_ANGLES } from './view.js';
+import { marbleWalk } from './walk.js';
 
 function render(ctx, scene, t, animation, palette, camera) {
+  if (animation.stage === 'floor') return renderFloor(ctx, scene, t, animation, palette, camera);
   const { layout } = scene;
   const centerY = (layout.grandTop + layout.grandBottom) / 2;
   if (!camera) {
@@ -22,7 +26,7 @@ function render(ctx, scene, t, animation, palette, camera) {
   const view = cameraView(layout, camera, t, animation.motion);
   const floorY = layout.grandBottom + layout.space * 2;
   ctx.drawImage(depthBackdrop(layout, palette), 0, 0);
-  drawHorizon(ctx, view, layout, palette, floorY);
+  drawHorizon(ctx, layout, palette, view.project((view.noteLeft + view.noteRight) / 2, floorY, layout.width * 3));
   drawAmbient(ctx, scene, t, palette, layout.width / 2, centerY);
   if (view.eye[1] < floorY) {
     drawFloor(ctx, view, layout, palette, floorY, t, animation.motion);
@@ -38,7 +42,7 @@ export const staffKind = {
   id: 'staff',
   name: 'Staff',
   description: 'Notes light up on a grand staff.',
-  animations: [glowLane, ripple, constellation, ribbon],
+  animations: [marbleWalk, glowLane, ripple, constellation, ribbon],
   angles: STAFF_ANGLES,
   defaultAngle: 'angled',
   turnRange: [-70, 70],

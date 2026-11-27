@@ -1,4 +1,4 @@
-// Where the 3D camera stands: one of the kind's ready-made angles, or turned, tilted and moved in by hand.
+// Where the 3D camera stands: one of the animation's ready-made angles, or turned, tilted and moved in by hand.
 import { angleOf } from '../../shared/scene/kinds.js';
 import { Choice } from '../../shared/ui/Choice.jsx';
 import { Slider } from '../../shared/ui/Slider.jsx';
@@ -6,20 +6,20 @@ import { Switch } from '../../shared/ui/Switch.jsx';
 
 const degrees = (v) => `${v}°`;
 
-export function CameraControls({ kind, camera, onChange }) {
+export function CameraControls({ rig, camera, onChange }) {
   const set = (key) => (value) => onChange({ ...camera, [key]: value });
-  const [turnMin, turnMax] = kind.turnRange;
-  const [tiltMin, tiltMax] = kind.tiltRange;
-  const [near, far] = kind.zoomRange;
+  const [turnMin, turnMax] = rig.turnRange;
+  const [tiltMin, tiltMax] = rig.tiltRange;
+  const [near, far] = rig.zoomRange;
   const third = (far - near) / 3;
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-line bg-surface p-3.5">
       <Choice
         label="Angle"
-        options={kind.angles}
-        value={angleOf(kind, camera)}
+        options={rig.angles}
+        value={angleOf(rig, camera)}
         onChange={(id) => {
-          const { turn, tilt, zoom } = kind.angles.find((a) => a.id === id);
+          const { turn, tilt, zoom } = rig.angles.find((a) => a.id === id);
           onChange({ ...camera, turn, tilt, zoom });
         }}
       />
