@@ -22,6 +22,21 @@ function handsFrom(notes) {
   return 'Worked out from the notes';
 }
 
+/** The Song section's header line: what is loaded and on what, or how loading is going. */
+function summaryOf(song, instrument) {
+  if (song.status === 'error') return song.error;
+  if (song.status === 'reading' || song.status === 'loading') return 'Reading the file…';
+  if (song.status === 'voicing') return voicingLine(song, instrument);
+  return `${song.title || 'Untitled'} · ${instrument.label}`;
+}
+
+/** What the sound is doing while it is made, for the header and the progress bar alike. */
+function voicingLine(song, instrument) {
+  if (song.step === 'master') return 'Mastering the sound to −14 LUFS…';
+  const percent = `${Math.round(song.progress * 100)}%`;
+  return song.step === 'instrument' ? `Loading the ${instrument.label}… ${percent}` : `Preparing the sound… ${percent}`;
+}
+
 function Status({ song, instrument }) {
   if (song.status === 'reading' || song.status === 'loading')
     return (
@@ -32,11 +47,7 @@ function Status({ song, instrument }) {
   if (song.status === 'voicing')
     return (
       <div className="flex flex-col gap-2" role="status">
-        <p className="text-sm text-muted">
-          {song.step === 'master'
-            ? 'Mastering the sound to −14 LUFS…'
-            : `${song.step === 'instrument' ? `Loading the ${instrument.label}…` : 'Preparing the sound…'} ${Math.round(song.progress * 100)}%`}
-        </p>
+        <p className="text-sm text-muted">{voicingLine(song, instrument)}</p>
         <div className="h-1.5 overflow-hidden rounded-full bg-raised">
           <div
             className="h-full origin-left bg-accent transition-transform"
@@ -60,7 +71,7 @@ export function SongPanel({ song, scene, onFiles, instrumentId, onInstrument }) 
   const busy = song.status === 'reading' || song.status === 'voicing';
 
   return (
-    <Panel title="Song">
+    <Panel title="Song" open summary={summaryOf(song, instrument)}>
       <label
         onDragOver={(e) => {
           e.preventDefault();

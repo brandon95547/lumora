@@ -1,6 +1,7 @@
 // Making the video file: frame rate, progress, and the download.
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '../../shared/ui/Button.jsx';
+import { FORMATS } from '../../shared/scene/formats.js';
 import { Choice } from '../../shared/ui/Choice.jsx';
 import { Icon } from '../../shared/ui/Icon.jsx';
 import { Panel } from '../../shared/ui/Panel.jsx';
@@ -13,7 +14,7 @@ const FRAME_RATES = [
 const fileName = (title, format) =>
   `${(title || 'lumora').replace(/[^\w\s-]/g, '').trim() || 'lumora'} ${format.label.replace(':', 'x')}.mp4`;
 
-export function ExportPanel({ scene, audio, look, format, disabled }) {
+export function ExportPanel({ scene, audio, look, format, onFormat, name, disabled }) {
   const [fps, setFps] = useState(30);
   const [job, setJob] = useState(null); // { progress } while running
   const [result, setResult] = useState(null); // { url, name, size }
@@ -37,7 +38,7 @@ export function ExportPanel({ scene, audio, look, format, disabled }) {
         signal: abort.current.signal,
         onProgress: (progress) => setJob({ progress }),
       });
-      setResult({ url: URL.createObjectURL(blob), name: fileName(look.title, format), size: blob.size });
+      setResult({ url: URL.createObjectURL(blob), name: fileName(name, format), size: blob.size });
     } catch (e) {
       if (e.name !== 'AbortError') {
         console.error(e);
@@ -49,7 +50,27 @@ export function ExportPanel({ scene, audio, look, format, disabled }) {
   };
 
   return (
-    <Panel title="Video">
+    <Panel
+      title="Video"
+      summary={
+        job
+          ? `Making the video… ${Math.round(job.progress * 100)}%`
+          : result
+            ? `Ready to download · ${result.name}`
+            : `${format.label} · ${fps} fps`
+      }
+    >
+      <Choice
+        label="Shape"
+        options={FORMATS}
+        value={format.id}
+        onChange={onFormat}
+        render={(f) => (
+          <>
+            {f.label} <span className="text-faint">{f.hint}</span>
+          </>
+        )}
+      />
       <Choice label="Smoothness" options={FRAME_RATES} value={fps} onChange={setFps} />
       <p className="text-sm text-faint">
         MP4 · {format.width} × {format.height} · made on this computer, nothing is uploaded.

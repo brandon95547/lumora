@@ -1,6 +1,7 @@
 // The few icons the app uses (Lucide shapes, ISC license), drawn inline.
 const PATHS = {
   play: <polygon points="6 3 20 12 6 21 6 3" />,
+  chevron: <path d="m6 9 6 6 6-6" />,
   bookmark: <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />,
   trash: (
     <>

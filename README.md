@@ -38,13 +38,20 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
    look-ahead limiter keeping peaks under **−1 dBTP**. The Song panel shows the result, and the
    video carries it.
 
-2. **Look.** Choose a style, **Staff**, **Piano** or **Fire**, and one of its animations. Then **2D** or
-   **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a gentle drift
-   keeps the camera alive. **Save this angle** keeps the camera as it is under a name, in this
-   browser, beside the ready-made angles. Then choose colors, the video's shape and its title: the title sits at the top in a **Title
-   font** (Grenze Gotisch, Fraktur, Pirata One, New Rocker or Clean) and **Title size**.
-3. **Video.** Choose 30 or 60 fps and press **Make the video**. It renders faster than real time;
-   then download the MP4.
+2. **Style.** Choose **Staff**, **Piano** or **Fire**, and one of its animations from the menu. Then
+   **2D** or **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a
+   gentle drift keeps the camera alive. **Save this angle** keeps the camera as it is under a name,
+   in this browser, beside the ready-made angles.
+3. **Colors.** Pick a color scheme from the menu.
+4. **Title.** Type the title shown at the top of the video (none until you type one; it stays as you
+   change songs), then its **Title font** (Grenze Gotisch, Fraktur, Pirata One, New Rocker or Clean)
+   and **Title size**.
+5. **Video.** Choose the shape (9:16 or 16:9) and 30 or 60 fps, and press **Make the video**. It
+   renders faster than real time; then download the MP4, named after the title (or the song's file
+   when there is none).
+
+The options are in one accordion: opening a section closes the others, and each section's header
+sums up what is set inside it.
 
 Space plays and pauses the preview.
 
@@ -132,7 +139,7 @@ and say why in the commit.
 | ------------------------------- | ----------------------------------------------------------------------- |
 | `src/App.jsx`                   | The one screen: preview, and the Song, Look and Video panels.           |
 | `src/features/song/`            | Reading MIDI and MusicXML (each loaded when first used), demo, synth.   |
-| `src/features/look/`            | Style, color, shape and title choices.                                  |
+| `src/features/look/`            | The Style, Colors and Title sections, and saved camera angles.          |
 | `src/features/player/`          | The live preview and its transport.                                     |
 | `src/features/export/`          | Rendering and encoding the MP4 (loaded when first used).                |
 | `src/shared/scene/`             | What every scene shares: views and the camera, palettes, `renderFrame`. |

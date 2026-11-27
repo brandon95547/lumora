@@ -17,6 +17,7 @@ const START_LOOK = {
   paletteId: 'midnight',
   formatId: 'portrait',
   view: '3d', // the first animation, Marble Walk, is meant to be seen on its floor
+  title: '', // typed by the person; it stays as songs change
   titleFontId: 'grenze',
   titleSizeId: 'large',
   camera: defaultCamera(KINDS[0]),
@@ -24,18 +25,7 @@ const START_LOOK = {
 
 export function App() {
   const { song, loadFiles, instrumentId, setInstrument } = useSong();
-  const [choices, setChoices] = useState(START_LOOK);
-  // A new song brings its own title; an edit holds until the next song.
-  const [titleEdit, setTitleEdit] = useState({ song: null, value: '' });
-  const title = titleEdit.song === song.title ? titleEdit.value : song.title;
-  const look = useMemo(() => ({ ...choices, title }), [choices, title]);
-  const setLook = useCallback(
-    ({ title: next, ...rest }) => {
-      setChoices(rest);
-      if (next !== title) setTitleEdit({ song: song.title, value: next });
-    },
-    [title, song.title],
-  );
+  const [look, setLook] = useState(START_LOOK);
 
   // The title's face is drawn once its file has arrived; the clean face stands in until then, so
   // the preview and the video never draw a face the canvas doesn't have.
@@ -85,8 +75,16 @@ export function App() {
           instrumentId={instrumentId}
           onInstrument={setInstrument}
         />
-        <LookPanel look={look} scene={scene} onChange={setLook} />
-        <ExportPanel scene={scene} audio={song.audio} look={frameLook} format={format} disabled={!ready} />
+        <LookPanel look={look} onChange={setLook} />
+        <ExportPanel
+          scene={scene}
+          audio={song.audio}
+          look={frameLook}
+          format={format}
+          onFormat={(formatId) => setLook((l) => ({ ...l, formatId }))}
+          name={look.title || song.title}
+          disabled={!ready}
+        />
       </aside>
     </div>
   );
