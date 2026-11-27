@@ -17,7 +17,7 @@ function busyMoment(scene) {
   return best + 0.12;
 }
 
-export function StyleThumb({ style, scene, paletteId }) {
+export function StyleThumb({ style, scene, paletteId, camera }) {
   const canvas = useRef(null);
   const { width, height } = scene.layout;
   useEffect(() => {
@@ -27,8 +27,8 @@ export function StyleThumb({ style, scene, paletteId }) {
     el.height = Math.round(height * scale);
     const ctx = el.getContext('2d');
     ctx.setTransform(scale, 0, 0, scale, 0, 0);
-    renderFrame(ctx, scene, { t: busyMoment(scene), style, palette: paletteById(paletteId), title: '' });
-  }, [style, scene, paletteId, width, height]);
+    renderFrame(ctx, scene, { t: busyMoment(scene), style, palette: paletteById(paletteId), title: '', camera });
+  }, [style, scene, paletteId, camera, width, height]);
   return (
     <canvas
       ref={canvas}

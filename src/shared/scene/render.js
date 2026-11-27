@@ -1,8 +1,10 @@
 // Draws one frame of the animation at time t. Pure: the same inputs always give the same picture.
-import { backdrop } from './backdrop.js';
+// With a camera the frame is drawn in 3D: a floor with a grid, reflections, and the staff in perspective.
 import { burst } from './envelope.js';
 import { notesBetween } from './scene.js';
 import { withAlpha } from './sprites.js';
+import { depthBackdrop, drawFloor, drawHorizon, drawStaff, flatBackdrop } from './staff.js';
+import { cameraView, flatView, mirrored } from './view.js';
 
 /** How much is being played right now, 0–1, for the background's breathing light. */
 function activity(scene, t) {
@@ -49,15 +51,39 @@ function drawProgress(ctx, layout, palette, t, duration) {
   ctx.fillRect(x0, y, w * Math.min(1, Math.max(0, t / duration)), 4);
 }
 
-export function renderFrame(ctx, scene, { t, style, palette, title }) {
+/** The 3D stage: floor, the reflection of everything above it, then the staff and notes. */
+function drawDepth(ctx, scene, t, style, palette, camera) {
+  const { layout } = scene;
+  const view = cameraView(layout, camera, t, style.motion);
+  const floorY = layout.grandBottom + layout.space * 2;
+  ctx.drawImage(depthBackdrop(layout, palette), 0, 0);
+  drawHorizon(ctx, view, layout, palette, floorY);
+  drawAmbient(ctx, layout, palette, activity(scene, t));
+  if (view.cameraY < floorY) {
+    drawFloor(ctx, view, layout, palette, floorY, t, style.motion);
+    const reflection = mirrored(view, floorY, palette.blend === 'lighter' ? 0.24 : 0.14);
+    drawStaff(ctx, reflection, layout, palette);
+    style.draw(ctx, scene, t, palette, reflection);
+  }
+  drawStaff(ctx, view, layout, palette);
+  return view;
+}
+
+export function renderFrame(ctx, scene, { t, style, palette, title, camera }) {
   const { layout } = scene;
   ctx.save();
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = 'source-over';
-  ctx.drawImage(backdrop(layout, palette), 0, 0);
-  drawAmbient(ctx, layout, palette, activity(scene, t));
+  let view;
+  if (camera) {
+    view = drawDepth(ctx, scene, t, style, palette, camera);
+  } else {
+    ctx.drawImage(flatBackdrop(layout, palette, style.motion), 0, 0);
+    drawAmbient(ctx, layout, palette, activity(scene, t));
+    view = flatView(layout, style.motion);
+  }
   drawTitle(ctx, layout, palette, title);
-  style.draw(ctx, scene, t, palette);
+  style.draw(ctx, scene, t, palette, view);
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = 'source-over';
   drawProgress(ctx, layout, palette, t, scene.duration);

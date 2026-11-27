@@ -1,10 +1,16 @@
-// How the video looks: animation style, colors, shape and title.
+// How the video looks: animation style, 2D or 3D (and the camera), colors, shape and title.
 import { FORMATS } from '../../shared/scene/formats.js';
 import { PALETTES } from '../../shared/scene/palettes.js';
 import { STYLES } from '../../shared/scene/styles/index.js';
 import { Choice } from '../../shared/ui/Choice.jsx';
 import { Panel } from '../../shared/ui/Panel.jsx';
+import { CameraControls } from './CameraControls.jsx';
 import { StyleThumb } from './StyleThumb.jsx';
+
+const VIEWS = [
+  { id: '2d', label: '2D' },
+  { id: '3d', label: '3D' },
+];
 
 function Swatch({ palette }) {
   const dots = palette.lit.length === 12 ? palette.lit.filter((_, i) => i % 3 === 0) : palette.lit;
@@ -25,6 +31,7 @@ function Swatch({ palette }) {
 
 export function LookPanel({ look, scene, onChange }) {
   const set = (key) => (value) => onChange({ ...look, [key]: value });
+  const camera = look.view === '3d' ? look.camera : null;
   return (
     <Panel title="Look">
       <Choice
@@ -35,12 +42,14 @@ export function LookPanel({ look, scene, onChange }) {
         onChange={set('styleId')}
         render={(style) => (
           <>
-            <StyleThumb style={style} scene={scene} paletteId={look.paletteId} />
+            <StyleThumb style={style} scene={scene} paletteId={look.paletteId} camera={camera} />
             <span className="block px-3 pt-2 text-sm font-semibold">{style.name}</span>
             <span className="block px-3 pb-3 text-caption text-faint">{style.description}</span>
           </>
         )}
       />
+      <Choice label="View" options={VIEWS} value={look.view} onChange={set('view')} />
+      {camera && <CameraControls camera={camera} onChange={set('camera')} />}
       <Choice
         label="Colors"
         variant="cards"

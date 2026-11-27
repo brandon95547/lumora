@@ -21,7 +21,9 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
    music). If it finds too many or too few, change **Notes to find**. For exact notes, drop a MIDI
    file too, with the recording or after it. A MIDI file on its own plays with a built-in piano
    voice.
-2. **Look.** Choose an animation, colors, the video's shape and its title.
+2. **Look.** Choose an animation, then **2D** or **3D**. In 3D, pick a camera angle (Front, Angled,
+   Low or Lane) and fine-tune it with Turn, Tilt and Distance; a gentle drift keeps the camera
+   alive. Then choose colors, the video's shape and its title.
 3. **Video.** Choose 30 or 60 fps and press **Make the video**. It renders faster than real time;
    then download the MP4.
 
@@ -64,8 +66,10 @@ and say why in the commit.
 Features import only `src/shared/`, never each other; ESLint enforces it.
 
 **A new animation style** is one file in `src/shared/scene/styles/` with `id`, `name`,
-`description` and `draw(ctx, scene, t, palette)`, added to `styles/index.js`. Use the helpers in
-`styles/common.js` and the envelopes in `envelope.js`, and keep it a pure function of `t`.
+`description`, `motion` (`'scroll'` or `'page'`) and `draw(ctx, scene, t, palette, view)`, added to
+`styles/index.js`. Draw only with the helpers in `styles/common.js` (they project through the view,
+so the style works in 2D and 3D), use the envelopes in `envelope.js`, and keep it a pure function
+of `t`.
 
 **A new color scheme** is one entry in `src/shared/scene/palettes.js`.
 

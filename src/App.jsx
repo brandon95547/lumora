@@ -10,8 +10,15 @@ import { paletteById } from './shared/scene/palettes.js';
 import { renderFrame } from './shared/scene/render.js';
 import { prepareScene } from './shared/scene/scene.js';
 import { styleById } from './shared/scene/styles/index.js';
+import { DEFAULT_CAMERA } from './shared/scene/view.js';
 
-const START_LOOK = { styleId: 'glow-lane', paletteId: 'midnight', formatId: 'portrait' };
+const START_LOOK = {
+  styleId: 'glow-lane',
+  paletteId: 'midnight',
+  formatId: 'portrait',
+  view: '2d',
+  camera: DEFAULT_CAMERA,
+};
 
 export function App() {
   const { song, sensitivity, loadFiles, setSensitivity } = useSong();
@@ -31,7 +38,12 @@ export function App() {
   const format = formatById(look.formatId);
   const scene = useMemo(() => prepareScene(song.notes, format, song.audio?.duration), [song.notes, song.audio, format]);
   const frameLook = useMemo(
-    () => ({ style: styleById(look.styleId), palette: paletteById(look.paletteId), title: look.title }),
+    () => ({
+      style: styleById(look.styleId),
+      palette: paletteById(look.paletteId),
+      title: look.title,
+      camera: look.view === '3d' ? look.camera : null,
+    }),
     [look],
   );
   const draw = useCallback((ctx, t) => renderFrame(ctx, scene, { ...frameLook, t }), [scene, frameLook]);
