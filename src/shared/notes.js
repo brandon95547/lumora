@@ -1,6 +1,9 @@
 // The one shape every part of the app uses for a note:
 // { pitch: MIDI number, start: seconds, end: seconds, velocity: 0–1 }.
 
+/** Pitches from middle C up are played by the right hand (the treble staff), the rest by the left. */
+export const HAND_SPLIT = 60;
+
 const PIANO_LOW = 21; // A0
 const PIANO_HIGH = 108; // C8
 const SHORTEST = 0.03;

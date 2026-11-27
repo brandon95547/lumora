@@ -134,12 +134,12 @@ export function drawHeat(ctx, layout, heat, ramp) {
 const DEG = Math.PI / 180;
 
 /**
- * The camera following the fireball. 2D is a side-on shot (a far, flat camera); 3D looks from the
+ * The camera following the fireballs (between them, when there are two). 2D is a side-on shot (a far, flat camera); 3D looks from the
  * chosen angle. The ball sits a little left of center so more of the run ahead is in view.
  */
-export function fireView(scene, run, camera, t) {
+export function fireView(scene, runs, camera, t) {
   const { layout } = scene;
-  const pivot = followAt(run, t);
+  const pivot = followAt(runs, t);
   const scale = layout.portrait ? 58 : 50; // pixels per world unit at the pivot, at Distance 1
   const anchor = [layout.width * (layout.portrait ? 0.45 : 0.4), layout.height * 0.55];
   if (!camera) {

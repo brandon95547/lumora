@@ -1,8 +1,8 @@
-// Fire: the music as fire. Fireball Run bounces a ball of flame from note to note, side-on in 2D or
-// through space in 3D.
+// Fire: the music as fire. Fireball Run bounces a ball of flame from note to note; Two Hands gives
+// each hand its own. Side-on in 2D, through space in 3D.
 import { depthBackdrop } from '../backdrop.js';
 import { runOf } from './path.js';
-import { fireballRun } from './run.js';
+import { fireballRun, twoHands } from './run.js';
 import { fireView } from './stage.js';
 
 const FIRE_ANGLES = [
@@ -14,15 +14,15 @@ const FIRE_ANGLES = [
 
 function render(ctx, scene, t, animation, palette, camera) {
   ctx.drawImage(depthBackdrop(scene.layout, palette), 0, 0);
-  const run = runOf(scene);
-  animation.draw(ctx, scene, t, palette, fireView(scene, run, camera, t), run);
+  const runs = animation.hands.map((hand) => runOf(scene, hand));
+  animation.draw(ctx, scene, t, palette, fireView(scene, runs, camera, t), runs);
 }
 
 export const fireKind = {
   id: 'fire',
   name: 'Fire',
   description: 'The music as fire.',
-  animations: [fireballRun],
+  animations: [fireballRun, twoHands],
   angles: FIRE_ANGLES,
   defaultAngle: 'chase',
   turnRange: [-80, 80],

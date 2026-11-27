@@ -7,8 +7,14 @@ import { glowSprite, mixColors } from '../sprites.js';
 /** The palette's fire, hottest first: white core, its two colors, then dark smoke. */
 export function fireRamp(palette) {
   const twelve = palette.lit.length === 12;
-  const a = twelve ? palette.lit[3] : palette.lit[0];
-  const b = twelve ? palette.lit[0] : palette.lit[1];
+  return rampFrom(twelve ? palette.lit[3] : palette.lit[0], twelve ? palette.lit[0] : palette.lit[1]);
+}
+
+/** A teal-blue fire, whatever the palette: the right hand's in Two Hands. */
+export const TEAL_FIRE = rampFrom('#6ff3ff', '#1f7cff');
+
+/** A fire from a bright color `a` cooling to a deeper `b`, hottest first. */
+function rampFrom(a, b) {
   return [
     mixColors(a, '#ffffff', 0.78),
     mixColors(a, '#ffffff', 0.35),

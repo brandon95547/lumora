@@ -1,4 +1,5 @@
 // Where a MIDI pitch sits on a grand staff: its spelling, its clef and its line or space.
+import { HAND_SPLIT } from '../../notes.js';
 
 const SHARP_SPELLING = [
   [0, 0],
@@ -31,9 +32,6 @@ const FLAT_SPELLING = [
 
 /** Diatonic steps (octave × 7 + letter, C = 0) of each staff's bottom line: E4 and G2. */
 export const BOTTOM_LINE = { treble: 4 * 7 + 2, bass: 2 * 7 + 4 };
-
-/** Pitches from middle C up are read on the treble staff, the rest on the bass staff. */
-export const HAND_SPLIT = 60;
 
 /** Spells a MIDI pitch as a letter (C = 0 … B = 6), an octave and an accidental (-1, 0, 1). */
 export function spell(pitch, preferFlats = false) {

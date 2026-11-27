@@ -1,5 +1,5 @@
 {
-  "initialJs": 94.1,
+  "initialJs": 94.6,
   "initialCss": 4.6,
   "worker:assets/transcribe.worker": 271.1,
   "lazy:src/features/export/exportVideo.js": 60.1,

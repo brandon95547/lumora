@@ -62,9 +62,10 @@ finale burns hottest: bigger flames, a longer trail, more embers, a hotter sky. 
 side-on; in 3D the run winds through space: Chase, Side, High, Low. Ember gives classic fire;
 Midnight burns blue, Aurora green.
 
-| Animation    | What it does                                                             |
-| ------------ | ------------------------------------------------------------------------ |
-| Fireball Run | A fireball bounces on every note, and burns brighter as the song builds. |
+| Animation    | What it does                                                                                            |
+| ------------ | ------------------------------------------------------------------------------------------------------- |
+| Fireball Run | A fireball bounces on every note, and burns brighter as the song builds.                                |
+| Two Hands    | The right hand's fireball burns teal-blue, the left hand's in the palette's fire, each in its own lane. |
 
 ## Check it
 

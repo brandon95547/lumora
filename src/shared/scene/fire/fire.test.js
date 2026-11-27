@@ -36,7 +36,33 @@ describe('the run', () => {
   });
 
   it('gives the camera a smooth aim, the same each time', () => {
-    expect(followAt(run, 2.2)).toEqual(followAt(run, 2.2));
+    expect(followAt([run], 2.2)).toEqual(followAt([run], 2.2));
+  });
+});
+
+describe('two hands', () => {
+  const right = runOf(scene, 'right');
+  const left = runOf(scene, 'left');
+
+  it('gives each hand only its own notes', () => {
+    expect(right.landings.map((l) => l.time)).toEqual([1, 2]);
+    expect(left.landings.map((l) => l.time)).toEqual([3]);
+  });
+
+  it('keeps the hands in separate lanes, the right above the left', () => {
+    expect(Math.max(...right.landings.map((l) => l.y))).toBeLessThan(Math.min(...left.landings.map((l) => l.y)));
+  });
+
+  it('moves both hands forward on the same timeline as the whole run', () => {
+    const all = runOf(scene);
+    expect(right.landings[1].x).toBe(all.landings[1].x);
+    expect(left.landings[0].x).toBe(all.landings[2].x);
+  });
+
+  it('has no ball for a hand that never plays', () => {
+    const solo = prepareScene([{ pitch: 72, start: 1, end: 2, velocity: 1 }], { width: 1920, height: 1080 }, 2);
+    expect(ballAt(runOf(solo, 'left'), 1)).toBeNull();
+    expect(followAt([runOf(solo, 'right'), runOf(solo, 'left')], 1)).toEqual(followAt([runOf(solo, 'right')], 1));
   });
 });
 
