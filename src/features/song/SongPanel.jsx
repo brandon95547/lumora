@@ -1,8 +1,11 @@
-// Where a song comes in: one drop zone for MIDI files and MusicXML scores, and what was found in it.
+// Where a song comes in: one drop zone for MIDI files and MusicXML scores, what was found in it,
+// and the instrument that plays it.
 import { useState } from 'react';
+import { Choice } from '../../shared/ui/Choice.jsx';
 import { Icon } from '../../shared/ui/Icon.jsx';
 import { Panel } from '../../shared/ui/Panel.jsx';
 import { clock } from '../../shared/ui/time.js';
+import { instrumentById, INSTRUMENTS } from './instruments.js';
 
 const KEY_NAMES = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
 const SOURCE = {
@@ -19,7 +22,7 @@ function handsFrom(notes) {
   return 'Worked out from the notes';
 }
 
-function Status({ song }) {
+function Status({ song, instrument }) {
   if (song.status === 'reading' || song.status === 'loading')
     return (
       <p className="text-sm text-muted" role="status">
@@ -29,7 +32,10 @@ function Status({ song }) {
   if (song.status === 'voicing')
     return (
       <div className="flex flex-col gap-2" role="status">
-        <p className="text-sm text-muted">Preparing the piano sound… {Math.round(song.progress * 100)}%</p>
+        <p className="text-sm text-muted">
+          {song.step === 'instrument' ? `Loading the ${instrument.label}…` : 'Preparing the sound…'}{' '}
+          {Math.round(song.progress * 100)}%
+        </p>
         <div className="h-1.5 overflow-hidden rounded-full bg-raised">
           <div
             className="h-full origin-left bg-accent transition-transform"
@@ -47,7 +53,8 @@ function Status({ song }) {
   return null;
 }
 
-export function SongPanel({ song, scene, onFiles }) {
+export function SongPanel({ song, scene, onFiles, instrumentId, onInstrument }) {
+  const instrument = instrumentById(instrumentId);
   const [over, setOver] = useState(false);
   const busy = song.status === 'reading' || song.status === 'voicing';
 
@@ -84,7 +91,12 @@ export function SongPanel({ song, scene, onFiles }) {
         />
       </label>
 
-      <Status song={song} />
+      <div className="flex flex-col gap-1.5">
+        <Choice label="Instrument" variant="menu" options={INSTRUMENTS} value={instrumentId} onChange={onInstrument} />
+        <p className="text-caption text-faint">{instrument.credit}</p>
+      </div>
+
+      <Status song={song} instrument={instrument} />
 
       {song.status === 'ready' && (
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">

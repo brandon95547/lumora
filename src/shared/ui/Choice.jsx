@@ -1,5 +1,5 @@
-// One radio-group control for every "pick one" in the app. `variant` sets its look:
-// 'segmented' for a compact row of words, 'cards' for a grid of larger tiles.
+// One control for every "pick one" in the app. `variant` sets its look: 'segmented' for a compact
+// row of words, 'cards' for a grid of larger tiles (both radio groups), 'menu' for a dropdown.
 import { useId } from 'react';
 
 const LOOKS = {
@@ -17,6 +17,24 @@ const LOOKS = {
 
 export function Choice({ label, options, value, onChange, variant = 'segmented', render }) {
   const name = useId();
+  if (variant === 'menu') {
+    return (
+      <label className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-muted">{label}</span>
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-10 rounded-lg border border-line bg-raised px-3 text-ink focus:border-accent focus:outline-none"
+        >
+          {options.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </label>
+    );
+  }
   const look = LOOKS[variant];
   return (
     <fieldset>

@@ -1,12 +1,14 @@
-// A soft, piano-like voice that plays the song's notes (a MIDI file, a score, the demo).
+// Renders the song's notes through an instrument's voice into one piece of audio.
 //
 // Web Audio works on every scheduled note for the whole length of a render, so one render of a whole
 // song costs notes × length and a five-minute song takes minutes. Instead the song is rendered in
 // short sections, each holding only the notes that start in it (and their ringing tails), a few at a
 // time, and the sections are added into one buffer. The cost then grows with the song's length alone.
+//
+// A voice is `{ tail, connect(ctx, output) }`: `tail` is how long (seconds) a note sounds after it
+// ends, and `connect` returns `play(note, start, end)`, which schedules one note in that context.
 const RATE = 48000;
 const TAIL = 1.5;
-const RELEASE = 0.6; // seconds a note rings on after it ends
 const SECTION = 3; // seconds of note starts per section
 const AT_ONCE = 4; // sections rendered side by side (each renders on its own audio thread)
 
@@ -20,48 +22,36 @@ export function sectionsOf(notes) {
   return sections.map((list, k) => list && { from: k * SECTION, notes: list }).filter(Boolean);
 }
 
-function renderSection({ from, notes }) {
-  const until = notes.reduce((m, n) => Math.max(m, n.end), from) + RELEASE + 0.2;
+function renderSection({ from, notes }, voice) {
+  const until = notes.reduce((m, n) => Math.max(m, n.end), from) + voice.tail + 0.2;
   const ctx = new OfflineAudioContext(2, Math.ceil((until - from) * RATE), RATE);
+  // Keeps dense chords from clipping.
   const master = ctx.createDynamicsCompressor();
-  const tone = ctx.createBiquadFilter();
-  tone.type = 'lowpass';
-  tone.frequency.value = 4200;
-  tone.connect(master);
   master.connect(ctx.destination);
-
-  for (const note of notes) {
-    const start = note.start - from;
-    const end = note.end - from;
-    const freq = 440 * 2 ** ((note.pitch - 69) / 12);
-    const peak = 0.12 + 0.18 * note.velocity;
-    const decay = 0.35 + (108 - note.pitch) / 90; // low notes ring longer
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0, start);
-    gain.gain.linearRampToValueAtTime(peak, start + 0.006);
-    gain.gain.setTargetAtTime(peak * 0.25, start + 0.006, decay);
-    gain.gain.setTargetAtTime(0, end, 0.09);
-    gain.connect(tone);
-    for (const [type, mult, level] of [
-      ['triangle', 1, 1],
-      ['sine', 2, 0.35],
-      ['sine', 3, 0.12],
-    ]) {
-      const osc = ctx.createOscillator();
-      osc.type = type;
-      osc.frequency.value = freq * mult;
-      const partial = ctx.createGain();
-      partial.gain.value = level;
-      osc.connect(partial).connect(gain);
-      osc.start(start);
-      osc.stop(end + RELEASE);
-    }
-  }
+  const play = voice.connect(ctx, master);
+  for (const note of notes) play(note, note.start - from, note.end - from);
   return ctx.startRendering();
 }
 
-/** The song as audio. `onProgress(0–1)` is called as sections finish. */
-export async function synthesize(notes, onProgress = () => {}) {
+const PEAK = 0.9;
+
+/** Scales the song so its loudest moment peaks at PEAK: no clipping, and every instrument as loud. */
+function normalize(buffer) {
+  let peak = 0;
+  for (let c = 0; c < buffer.numberOfChannels; c++) {
+    const data = buffer.getChannelData(c);
+    for (let i = 0; i < data.length; i++) peak = Math.max(peak, Math.abs(data[i]));
+  }
+  if (!peak) return;
+  const k = PEAK / peak;
+  for (let c = 0; c < buffer.numberOfChannels; c++) {
+    const data = buffer.getChannelData(c);
+    for (let i = 0; i < data.length; i++) data[i] *= k;
+  }
+}
+
+/** The song as audio, played by `voice`. `onProgress(0–1)` is called as sections finish. */
+export async function synthesize(notes, voice, onProgress = () => {}) {
   const length = notes.reduce((m, n) => Math.max(m, n.end), 0) + TAIL;
   const out = new AudioBuffer({ numberOfChannels: 2, length: Math.ceil(length * RATE), sampleRate: RATE });
   const sections = sectionsOf(notes);
@@ -70,7 +60,7 @@ export async function synthesize(notes, onProgress = () => {}) {
   const worker = async () => {
     while (next < sections.length) {
       const section = sections[next++];
-      const audio = await renderSection(section);
+      const audio = await renderSection(section, voice);
       const offset = Math.round(section.from * RATE);
       for (let c = 0; c < 2; c++) {
         const into = out.getChannelData(c);
@@ -82,5 +72,6 @@ export async function synthesize(notes, onProgress = () => {}) {
     }
   };
   await Promise.all(Array.from({ length: AT_ONCE }, worker));
+  normalize(out);
   return out;
 }

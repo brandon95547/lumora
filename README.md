@@ -29,6 +29,10 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
    exactly two tracks, the higher one the right hand. The Song panel says where the hands came
    from.
 
+   **Instrument** picks what plays it: Grand Piano, Upright Piano, Rhodes Electric Piano (recordings
+   of real instruments, fetched the first time a song needs them) or the Soft Synth (made in the
+   browser).
+
 2. **Look.** Choose a style, **Staff**, **Piano** or **Fire**, and one of its animations. Then **2D** or
    **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a gentle drift
    keeps the camera alive. Then choose colors, the video's shape and its title.
@@ -112,21 +116,22 @@ and say why in the commit.
 
 ## How it is put together
 
-| Path                        | What it is                                                              |
-| --------------------------- | ----------------------------------------------------------------------- |
-| `src/App.jsx`               | The one screen: preview, and the Song, Look and Video panels.           |
-| `src/features/song/`        | Reading MIDI and MusicXML (each loaded when first used), demo, synth.   |
-| `src/features/look/`        | Style, color, shape and title choices.                                  |
-| `src/features/player/`      | The live preview and its transport.                                     |
-| `src/features/export/`      | Rendering and encoding the MP4 (loaded when first used).                |
-| `src/shared/scene/`         | What every scene shares: views and the camera, palettes, `renderFrame`. |
-| `src/shared/scene/kinds.js` | The styles (Staff, Piano) and their animations.                         |
-| `src/shared/scene/staff/`   | The staff: pitch math, layout, glyphs, its animations.                  |
-| `src/shared/scene/piano/`   | The piano: keyboard geometry, the instrument, its animations.           |
-| `src/shared/ui/`            | Buttons, choices, panels, icons.                                        |
-| `scripts/build-glyphs.mjs`  | Writes `src/shared/scene/staff/glyphs.js` from the Bravura font.        |
-| `scripts/check-budgets.mjs` | Size budgets, checked in CI against `budgets.json`.                     |
-| `docs/adr/`                 | Decisions and why.                                                      |
+| Path                            | What it is                                                              |
+| ------------------------------- | ----------------------------------------------------------------------- |
+| `src/App.jsx`                   | The one screen: preview, and the Song, Look and Video panels.           |
+| `src/features/song/`            | Reading MIDI and MusicXML (each loaded when first used), demo, synth.   |
+| `src/features/look/`            | Style, color, shape and title choices.                                  |
+| `src/features/player/`          | The live preview and its transport.                                     |
+| `src/features/export/`          | Rendering and encoding the MP4 (loaded when first used).                |
+| `src/shared/scene/`             | What every scene shares: views and the camera, palettes, `renderFrame`. |
+| `src/shared/scene/kinds.js`     | The styles (Staff, Piano) and their animations.                         |
+| `src/shared/scene/staff/`       | The staff: pitch math, layout, glyphs, its animations.                  |
+| `src/shared/scene/piano/`       | The piano: keyboard geometry, the instrument, its animations.           |
+| `src/shared/ui/`                | Buttons, choices, panels, icons.                                        |
+| `scripts/build-instruments.mjs` | Builds `public/instruments/<id>/` from a sample library (macOS).        |
+| `scripts/build-glyphs.mjs`      | Writes `src/shared/scene/staff/glyphs.js` from the Bravura font.        |
+| `scripts/check-budgets.mjs`     | Size budgets, checked in CI against `budgets.json`.                     |
+| `docs/adr/`                     | Decisions and why.                                                      |
 
 Features import only `src/shared/`, never each other; ESLint enforces it.
 
@@ -147,6 +152,13 @@ camera angles and `render`, added to `kinds.js`.
 **A new color scheme** is one entry in `src/shared/scene/palettes.js`.
 
 ## Credits
+
+- Grand Piano: [Salamander Grand Piano](https://github.com/sfzinstruments/SalamanderGrandPiano) by
+  Alexander Holm (CC BY 3.0).
+- Upright Piano: [Upright Piano KW](https://freepats.zenvoid.org/Piano/acoustic-grand-piano.html) by
+  FreePats (CC0).
+- Rhodes Electric Piano: [jRhodes3d](https://github.com/sfzinstruments/jlearman.jRhodes3d) by Jeff
+  Learman (CC BY 4.0).
 
 - Music glyphs: [Bravura](https://github.com/steinbergmedia/bravura) by Steinberg (SIL OFL 1.1).
 - Video encoding: [Mediabunny](https://mediabunny.dev) (MPL-2.0).

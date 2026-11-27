@@ -1,0 +1,335 @@
+{
+ "gain": 0.9,
+ "samples": [
+  {
+   "file": "21-85.523439d4f5.m4a",
+   "pitch": 21,
+   "layer": 0.85
+  },
+  {
+   "file": "21-45.ae91267007.m4a",
+   "pitch": 21,
+   "layer": 0.45
+  },
+  {
+   "file": "33-85.1dfbce2a88.m4a",
+   "pitch": 33,
+   "layer": 0.85
+  },
+  {
+   "file": "33-45.23b5b4f5af.m4a",
+   "pitch": 33,
+   "layer": 0.45
+  },
+  {
+   "file": "45-45.7fe0a59639.m4a",
+   "pitch": 45,
+   "layer": 0.45
+  },
+  {
+   "file": "57-85.7cb120d0ab.m4a",
+   "pitch": 57,
+   "layer": 0.85
+  },
+  {
+   "file": "57-45.f3b121b5c0.m4a",
+   "pitch": 57,
+   "layer": 0.45
+  },
+  {
+   "file": "69-85.1e8d8b4cf2.m4a",
+   "pitch": 69,
+   "layer": 0.85
+  },
+  {
+   "file": "69-45.1390b593f0.m4a",
+   "pitch": 69,
+   "layer": 0.45
+  },
+  {
+   "file": "81-85.4f0aa7a0df.m4a",
+   "pitch": 81,
+   "layer": 0.85
+  },
+  {
+   "file": "81-45.40837d4e22.m4a",
+   "pitch": 81,
+   "layer": 0.45
+  },
+  {
+   "file": "93-85.b3eb0afb38.m4a",
+   "pitch": 93,
+   "layer": 0.85
+  },
+  {
+   "file": "93-45.a106254cb0.m4a",
+   "pitch": 93,
+   "layer": 0.45
+  },
+  {
+   "file": "105-85.8a78d47bb8.m4a",
+   "pitch": 105,
+   "layer": 0.85
+  },
+  {
+   "file": "105-45.d67277b3b5.m4a",
+   "pitch": 105,
+   "layer": 0.45
+  },
+  {
+   "file": "23-85.57d63bba9f.m4a",
+   "pitch": 23,
+   "layer": 0.85
+  },
+  {
+   "file": "35-85.da576c99bc.m4a",
+   "pitch": 35,
+   "layer": 0.85
+  },
+  {
+   "file": "47-85.c8e8235ee8.m4a",
+   "pitch": 47,
+   "layer": 0.85
+  },
+  {
+   "file": "59-85.00956fa7ff.m4a",
+   "pitch": 59,
+   "layer": 0.85
+  },
+  {
+   "file": "71-85.5e89bf78f7.m4a",
+   "pitch": 71,
+   "layer": 0.85
+  },
+  {
+   "file": "83-85.f83bc91f12.m4a",
+   "pitch": 83,
+   "layer": 0.85
+  },
+  {
+   "file": "95-85.1397d0d586.m4a",
+   "pitch": 95,
+   "layer": 0.85
+  },
+  {
+   "file": "107-85.4f0f973c69.m4a",
+   "pitch": 107,
+   "layer": 0.85
+  },
+  {
+   "file": "24-85.c4031969a8.m4a",
+   "pitch": 24,
+   "layer": 0.85
+  },
+  {
+   "file": "24-45.2e41c3bd95.m4a",
+   "pitch": 24,
+   "layer": 0.45
+  },
+  {
+   "file": "36-85.9cb57eb962.m4a",
+   "pitch": 36,
+   "layer": 0.85
+  },
+  {
+   "file": "36-45.8108132263.m4a",
+   "pitch": 36,
+   "layer": 0.45
+  },
+  {
+   "file": "48-85.7c9e092bfd.m4a",
+   "pitch": 48,
+   "layer": 0.85
+  },
+  {
+   "file": "48-45.b7115ae900.m4a",
+   "pitch": 48,
+   "layer": 0.45
+  },
+  {
+   "file": "60-45.ac550cffa9.m4a",
+   "pitch": 60,
+   "layer": 0.45
+  },
+  {
+   "file": "72-85.66ae9d9066.m4a",
+   "pitch": 72,
+   "layer": 0.85
+  },
+  {
+   "file": "72-45.7c4ef08eb8.m4a",
+   "pitch": 72,
+   "layer": 0.45
+  },
+  {
+   "file": "84-85.ddd81277ab.m4a",
+   "pitch": 84,
+   "layer": 0.85
+  },
+  {
+   "file": "84-45.8b643949e5.m4a",
+   "pitch": 84,
+   "layer": 0.45
+  },
+  {
+   "file": "96-85.97bc4f0f14.m4a",
+   "pitch": 96,
+   "layer": 0.85
+  },
+  {
+   "file": "96-45.dd5c97cf84.m4a",
+   "pitch": 96,
+   "layer": 0.45
+  },
+  {
+   "file": "108-85.814e3df275.m4a",
+   "pitch": 108,
+   "layer": 0.85
+  },
+  {
+   "file": "108-45.bd272b8018.m4a",
+   "pitch": 108,
+   "layer": 0.45
+  },
+  {
+   "file": "27-85.4cda81b7af.m4a",
+   "pitch": 27,
+   "layer": 0.85
+  },
+  {
+   "file": "27-45.82789475d9.m4a",
+   "pitch": 27,
+   "layer": 0.45
+  },
+  {
+   "file": "39-85.d9ac566627.m4a",
+   "pitch": 39,
+   "layer": 0.85
+  },
+  {
+   "file": "39-45.aff8550529.m4a",
+   "pitch": 39,
+   "layer": 0.45
+  },
+  {
+   "file": "51-85.ef350f87dd.m4a",
+   "pitch": 51,
+   "layer": 0.85
+  },
+  {
+   "file": "51-45.3ba0d56afa.m4a",
+   "pitch": 51,
+   "layer": 0.45
+  },
+  {
+   "file": "63-85.196ddb579b.m4a",
+   "pitch": 63,
+   "layer": 0.85
+  },
+  {
+   "file": "63-45.9a78248121.m4a",
+   "pitch": 63,
+   "layer": 0.45
+  },
+  {
+   "file": "75-85.0d8c126a16.m4a",
+   "pitch": 75,
+   "layer": 0.85
+  },
+  {
+   "file": "75-45.57bd8d964e.m4a",
+   "pitch": 75,
+   "layer": 0.45
+  },
+  {
+   "file": "87-85.9b58651c1b.m4a",
+   "pitch": 87,
+   "layer": 0.85
+  },
+  {
+   "file": "87-45.0a9ad0bdaa.m4a",
+   "pitch": 87,
+   "layer": 0.45
+  },
+  {
+   "file": "99-85.048e3ef88c.m4a",
+   "pitch": 99,
+   "layer": 0.85
+  },
+  {
+   "file": "99-45.79e10e4492.m4a",
+   "pitch": 99,
+   "layer": 0.45
+  },
+  {
+   "file": "30-85.c25f89877c.m4a",
+   "pitch": 30,
+   "layer": 0.85
+  },
+  {
+   "file": "30-45.5aa858f159.m4a",
+   "pitch": 30,
+   "layer": 0.45
+  },
+  {
+   "file": "42-85.586a50abcf.m4a",
+   "pitch": 42,
+   "layer": 0.85
+  },
+  {
+   "file": "42-45.9c87da6444.m4a",
+   "pitch": 42,
+   "layer": 0.45
+  },
+  {
+   "file": "54-85.dffa2cb2e9.m4a",
+   "pitch": 54,
+   "layer": 0.85
+  },
+  {
+   "file": "54-45.d8951e82e2.m4a",
+   "pitch": 54,
+   "layer": 0.45
+  },
+  {
+   "file": "66-85.c15f67d7dd.m4a",
+   "pitch": 66,
+   "layer": 0.85
+  },
+  {
+   "file": "66-45.f4e60deaa0.m4a",
+   "pitch": 66,
+   "layer": 0.45
+  },
+  {
+   "file": "78-85.68c45b7c88.m4a",
+   "pitch": 78,
+   "layer": 0.85
+  },
+  {
+   "file": "78-45.168d87cf29.m4a",
+   "pitch": 78,
+   "layer": 0.45
+  },
+  {
+   "file": "90-85.15443e70bb.m4a",
+   "pitch": 90,
+   "layer": 0.85
+  },
+  {
+   "file": "90-45.debd36fff4.m4a",
+   "pitch": 90,
+   "layer": 0.45
+  },
+  {
+   "file": "102-85.fd2845eba6.m4a",
+   "pitch": 102,
+   "layer": 0.85
+  },
+  {
+   "file": "102-45.452ff7f77b.m4a",
+   "pitch": 102,
+   "layer": 0.45
+  }
+ ]
+}
