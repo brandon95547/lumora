@@ -27,17 +27,20 @@ function drawProgress(ctx, layout, palette, t, duration) {
   ctx.fillRect(x0, y, w * Math.min(1, Math.max(0, t / duration)), 4);
 }
 
-/** `animation` carries its kind; `camera` is null for 2D; `titleFont` must already be loaded. */
+/**
+ * `animation` carries its kind; `camera` is null for 2D, where `flatZoom` (for a kind with a
+ * `flatZoomRange`) comes in closer; `titleFont` must already be loaded.
+ */
 export function renderFrame(
   ctx,
   scene,
-  { t, animation, palette, title, titleFont = CLEAN_FONT, titleScale = 1, camera },
+  { t, animation, palette, title, titleFont = CLEAN_FONT, titleScale = 1, camera, flatZoom = 1 },
 ) {
   const { layout } = scene;
   ctx.save();
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = 'source-over';
-  animation.kind.render(ctx, scene, t, animation, palette, camera);
+  animation.kind.render(ctx, scene, t, animation, palette, camera, flatZoom);
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = 'source-over';
   drawTitle(ctx, layout, palette, title, titleFont, titleScale);

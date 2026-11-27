@@ -12,9 +12,9 @@ const PIANO_ANGLES = [
   { id: 'overhead', label: 'Overhead', turn: 0, tilt: 72, zoom: 1.9 },
 ];
 
-function render(ctx, scene, t, animation, palette, camera) {
+function render(ctx, scene, t, animation, palette, camera, flatZoom) {
   ctx.drawImage(depthBackdrop(scene.layout, palette), 0, 0);
-  const view = pianoView(scene, camera, t);
+  const view = pianoView(scene, camera, t, flatZoom);
   animation.draw(ctx, scene, t, palette, view, pianoOf(scene));
 }
 
@@ -28,5 +28,6 @@ export const pianoKind = {
   turnRange: [-60, 60],
   tiltRange: [4, 85],
   zoomRange: [0.7, 3.6],
+  flatZoomRange: [1, 4],
   render,
 };

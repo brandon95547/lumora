@@ -38,7 +38,7 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
    look-ahead limiter keeping peaks under **−1 dBTP**. The Song panel shows the result, and the
    video carries it.
 
-2. **Style.** Choose **Staff** (Marble Walk) or **Piano** (Falling Notes). Then
+2. **Style.** Choose **Staff** (Marble Walk), **Piano** (Falling Notes) or **Planets** (Solar System). Then
    **2D** or **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a
    gentle drift keeps the camera alive. **Save this angle** keeps the camera as it is under a name,
    in this browser, beside the ready-made angles.
@@ -75,7 +75,20 @@ In 2D you look straight down at the floor.
 **Piano:** in **Falling Notes** bars of light run to a grand piano's 88 keys and press them as they
 land; the keys are solid and tip down when played. In 2D the camera looks straight down at the keys
 the song uses, like a lesson video; in 3D it films from an angle (Player, Side or Overhead)
-and follows the music along the keyboard.
+and follows the music along the keyboard. In 2D, **Zoom** comes in on the keys (up to 4×) and the
+camera follows the music along them.
+
+**Planets:** in **Solar System** the song plays the solar system, and pitch is distance from the sun.
+The right hand plays the four rocky planets (its highest notes on Mercury, nearest the sun), the left
+hand the four giants (its lowest on Neptune, farthest out); the asteroid belt between them is where
+the hands meet. Each hand's notes are shared evenly over its four planets by pitch. Every note steps
+its planet forward along its orbit, so the music turns the system. A struck planet flares in its
+hand's color, the sun sends it a ray and a ripple spreads across the orbit plane; a held note paints
+the stretch of orbit its planet travels. A chord of three notes or more lines its planets up with the
+sun; both hands striking together set the asteroid belt sparkling; a fast right-hand run (six notes
+in 1.2 seconds, at most one every 10 seconds) sends a comet through; and the sun's corona grows as
+the song builds. Earth has its moon and Jupiter four. In 2D you look straight down on the orbits, like
+a star chart, and Zoom comes in toward the sun; in 3D the angles are Orbit, Edge, Above and Inner.
 
 **Which hand plays a note** comes from the file when it says (a score's staff, a MIDI track).
 Otherwise it is worked out from the music (`src/shared/hands.js`), not from a fixed line at middle
@@ -104,9 +117,10 @@ and say why in the commit.
 | `src/features/player/`          | The live preview and its transport.                                     |
 | `src/features/export/`          | Rendering and encoding the MP4 (loaded when first used).                |
 | `src/shared/scene/`             | What every scene shares: views and the camera, palettes, `renderFrame`. |
-| `src/shared/scene/kinds.js`     | The styles (Staff, Piano) and their animations.                         |
+| `src/shared/scene/kinds.js`     | The styles (Staff, Piano, Planets) and their animations.                |
 | `src/shared/scene/staff/`       | The staff: pitch math, layout, glyphs, the marble floor, Marble Walk.   |
 | `src/shared/scene/piano/`       | The piano: keyboard geometry, the keys, Falling Notes.                  |
+| `src/shared/scene/planets/`     | The solar system: which planet plays each note, the bodies, the orbits. |
 | `src/shared/ui/`                | Buttons, choices, panels, icons.                                        |
 | `scripts/build-instruments.mjs` | Builds `public/instruments/<id>/` from a sample library (macOS).        |
 | `scripts/build-glyphs.mjs`      | Writes `src/shared/scene/staff/glyphs.js` from the Bravura font.        |
@@ -126,7 +140,8 @@ draws with the helpers in `staff/common.js`; a piano animation gets the model to
 work in 2D and 3D because every helper projects through the view. Keep it a pure function of `t`.
 
 **A new style** is a folder beside `staff/` and `piano/` whose `index.js` gives its animations,
-camera angles and `render`, added to `kinds.js`.
+camera angles and `render`, added to `kinds.js`. A style whose 2D view can come closer gives a
+`flatZoomRange`, and its `render` takes the zoom after the camera.
 
 **A new color scheme** is one entry in `src/shared/scene/palettes.js`.
 

@@ -91,18 +91,21 @@ const FRAME = 55.6;
  * The camera on the piano. With no camera (2D) it looks straight down at the keys the song uses,
  * like an overhead lesson shot. In 3D it follows the music along the keys; `zoom` 1 frames a grand
  * piano's width of them. The keys sit low in the frame, leaving room for the notes coming in.
+ * `flatZoom` comes in on the overhead shot: past 1 it frames fewer keys and follows the music along
+ * them, the key fronts staying where they are.
  */
-export function pianoView(scene, camera, t) {
+export function pianoView(scene, camera, t, flatZoom = 1) {
   const { layout } = scene;
   const model = pianoOf(scene);
-  const keysY = runwayOf(scene).keyFront - KEY.length * model.flatFit;
+  const { keyFront } = runwayOf(scene);
   const keysZ = KEY.length;
   if (!camera) {
+    const framed = model.span.whites / flatZoom;
     return perspective({
-      pivot: [model.span.center, 0, keysZ],
-      anchor: [layout.width / 2, keysY],
+      pivot: [flatZoom > 1 ? followX(scene, t, framed) : model.span.center, 0, keysZ],
+      anchor: [layout.width / 2, keyFront - KEY.length * model.flatFit * flatZoom],
       distance: model.span.whites * 12, // far and long: nearly flat
-      zoom: model.flatFit,
+      zoom: model.flatFit * flatZoom,
       yaw: 0,
       pitch: 90 * DEG,
       fogFrom: 3,
@@ -115,7 +118,7 @@ export function pianoView(scene, camera, t) {
   const framed = FRAME / zoom;
   return perspective({
     pivot: [followX(scene, t, framed), 0, keysZ],
-    anchor: [layout.width / 2, keysY],
+    anchor: [layout.width / 2, keyFront - KEY.length * model.flatFit],
     distance: Math.max(30, framed * 1.3),
     zoom: ((layout.width * 0.92) / FRAME) * zoom,
     yaw,

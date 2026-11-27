@@ -5,6 +5,7 @@ import { titleFontById, TITLE_FONTS, titleSizeById, TITLE_SIZES } from '../../sh
 import { animationById, defaultCamera, KINDS, rigOf } from '../../shared/scene/kinds.js';
 import { Choice } from '../../shared/ui/Choice.jsx';
 import { Panel } from '../../shared/ui/Panel.jsx';
+import { Slider } from '../../shared/ui/Slider.jsx';
 import { CameraControls } from './CameraControls.jsx';
 
 const VIEWS = [
@@ -38,7 +39,7 @@ export function LookPanel({ look, onChange }) {
   // A new style starts on its first animation, with its own camera.
   const setKind = (id) => {
     const next = KINDS.find((k) => k.id === id);
-    onChange({ ...look, animationId: next.animations[0].id, camera: defaultCamera(next) });
+    onChange({ ...look, animationId: next.animations[0].id, camera: defaultCamera(next), flatZoom: 1 });
   };
   return (
     <>
@@ -67,6 +68,17 @@ export function LookPanel({ look, onChange }) {
         </div>
         <Choice label="View" options={VIEWS} value={look.view} onChange={set('view')} />
         {camera && <CameraControls rig={rig} camera={camera} onChange={set('camera')} />}
+        {!camera && kind.flatZoomRange && (
+          <Slider
+            label="Zoom"
+            value={look.flatZoom}
+            min={kind.flatZoomRange[0]}
+            max={kind.flatZoomRange[1]}
+            step={0.05}
+            onChange={set('flatZoom')}
+            format={(v) => `${v.toFixed(1)}×`}
+          />
+        )}
       </Panel>
 
       <Panel title="Colors" summary={palette.name}>

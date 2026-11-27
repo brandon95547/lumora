@@ -54,4 +54,12 @@ describe('piano scene', () => {
     expect(right.x - left.x).toBeGreaterThan(1000);
     expect(view.project(25, 0, 0).y).toBeGreaterThan(view.project(25, 0, 6).y); // key fronts nearer the bottom
   });
+
+  it('comes in closer in 2D with zoom, the key fronts staying put', () => {
+    const near = pianoView(portrait, null, 0, 2);
+    const far = pianoView(portrait, null, 0);
+    const width = (view) => view.project(21, 0, 0).x - view.project(20, 0, 0).x;
+    expect(width(near) / width(far)).toBeCloseTo(2, 1);
+    expect(near.project(25, 0, 0).y).toBeCloseTo(far.project(25, 0, 0).y, 0);
+  });
 });

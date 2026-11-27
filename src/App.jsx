@@ -21,6 +21,7 @@ const START_LOOK = {
   titleFontId: 'grenze',
   titleSizeId: 'large',
   camera: defaultCamera(KINDS[0]),
+  flatZoom: 1, // how close the 2D view comes, in styles that zoom in 2D
 };
 
 export function App() {
@@ -52,6 +53,7 @@ export function App() {
       titleFont,
       titleScale: titleSizeById(look.titleSizeId).scale,
       camera: look.view === '3d' ? look.camera : null,
+      flatZoom: look.flatZoom,
     }),
     [look, titleFont],
   );
