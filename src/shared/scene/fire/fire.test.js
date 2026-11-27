@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { prepareScene } from '../scene.js';
-import { energyAt } from './energy.js';
+import { energyAt } from '../energy.js';
 import { ballAt, followAt, landingBefore, runOf } from './path.js';
 
 const notes = [

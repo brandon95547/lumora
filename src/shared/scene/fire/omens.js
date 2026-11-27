@@ -1,7 +1,7 @@
 // The Gothic omens: lightning on the mightiest landings, bats scattering from them, ash falling
 // and mist hanging over the floor. All seeded from the song, so every frame is the same each time.
 import { noise } from '../envelope.js';
-import { energyAt } from './energy.js';
+import { energyAt } from '../energy.js';
 
 const strikesOf = new WeakMap();
 

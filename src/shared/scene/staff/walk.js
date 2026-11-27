@@ -1,6 +1,7 @@
 // Marble Walk: the staff lies on a marble floor and runs on ahead. A glass ball for each hand hops
 // along it from note to note, landing on every note as it sounds, while the floor, the staff and
-// the notes travel past underneath, as if the balls were walking across the floor.
+// the notes travel past underneath, as if the balls were walking across the floor. Ghosts fly across
+// the stage, and now and then the floor heats up under a faint mist (haunt.js).
 import { burst, held } from '../envelope.js';
 import { litColor } from '../palettes.js';
 import { glowSprite, sphereSprite } from '../sprites.js';
@@ -8,6 +9,7 @@ import { onPlane } from '../view.js';
 import { ballAt, bouncePath } from './bounce.js';
 import { drawAccidental, drawGlow, drawLedgers, drawRing, drawSpot, scrollPlacement } from './common.js';
 import { FLOOR_RIG } from './floor.js';
+import { drawGhosts, drawHeat, drawMist, heatAt } from './haunt.js';
 
 const HANDS = ['left', 'right'];
 
@@ -74,13 +76,15 @@ function drawShadow(ctx, scene, view, ball) {
 export const marbleWalk = {
   id: 'marble-walk',
   name: 'Marble Walk',
-  description: 'The staff lies on a marble floor; a ball for each hand hops from note to note.',
+  description: 'A ball for each hand hops along a marble floor; ghosts drift by as it heats up.',
   motion: 'scroll',
   stage: 'floor',
   rig: FLOOR_RIG,
   draw(ctx, scene, t, palette, view) {
     const { layout } = scene;
     const r = layout.radius;
+    const heat = heatAt(scene, t);
+    drawHeat(ctx, view, layout, palette, heat);
     const { notes } = scrollPlacement(scene, t, view);
     for (const { note, x, alpha } of notes) {
       if (alpha <= 0) continue;
@@ -98,14 +102,17 @@ export const marbleWalk = {
       drawGlow(ctx, view, palette, x, note.y, r * (3.5 + 5 * b), color, alpha * (0.3 + 0.7 * Math.max(b, on * 0.45)));
       drawSpot(ctx, view, x, note.y, r * (0.9 + 0.3 * b), color, alpha * (0.5 + 0.5 * Math.max(on, b)));
     }
+    drawMist(ctx, view, layout, t, heat);
     const balls = ballsAt(scene, t);
     for (const ball of balls) drawShadow(ctx, scene, view, ball);
     // The nearer ball last, so it passes in front.
     const depth = (ball) => (view.depth ? view.depthOf(layout.playheadX, ball.y, -ball.height) : 0);
     for (const ball of balls.sort((a, b) => depth(b) - depth(a))) drawBall(ctx, scene, t, palette, view, ball);
+    drawGhosts(ctx, view, layout, palette, scene, t);
   },
-  /** Only what is off the floor (the balls), for its reflection. */
+  /** Only what is off the floor (the balls and ghosts), for its reflection. */
   drawRaised(ctx, scene, t, palette, view) {
     for (const ball of ballsAt(scene, t)) drawBall(ctx, scene, t, palette, view, ball);
+    drawGhosts(ctx, view, scene.layout, palette, scene, t);
   },
 };

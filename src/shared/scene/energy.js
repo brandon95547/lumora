@@ -1,6 +1,7 @@
-// How fiercely the fire burns at t, 0–1. It follows the music (how many notes, how hard) and climbs
-// across the song, so a quiet bridge cools the fire and the finale burns hottest. Worked out once
-// per song at 20 samples a second; frames read it back.
+// How much energy the song has at t, 0–1: how fiercely the fire burns, how hot the marble floor
+// gets. It follows the music (how many notes, how hard) and climbs across the song, so a quiet
+// bridge cools things down and the finale is the hottest. Worked out once per song at 20 samples a
+// second; frames read it back.
 
 const RATE = 20;
 const MEMORY = 1.2; // seconds a note keeps adding heat
