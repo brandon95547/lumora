@@ -9,18 +9,26 @@ function call(message, transfer, onProgress) {
   const run = () =>
     new Promise((resolve, reject) => {
       worker.onmessage = ({ data }) => {
-        if (data.type === 'progress') onProgress?.(data.progress);
+        if (data.type === 'progress') onProgress?.(data.progress, data.slow);
         else if (data.type === 'notes') resolve(data.notes);
         else if (data.type === 'error') reject(new Error(data.message));
       };
-      worker.onerror = (event) => reject(new Error(event.message || 'The note finder stopped.'));
+      worker.onerror = (event) => {
+        // A worker that crashed is no use for the next file; start a fresh one then.
+        worker.terminate();
+        worker = null;
+        reject(new Error(event.message || 'The note finder stopped.'));
+      };
       worker.postMessage(message, transfer);
     });
   busy = busy.then(run, run);
   return busy;
 }
 
-/** Runs the model over mono 22.05 kHz samples and returns raw notes. */
+/**
+ * Runs the model over mono 22.05 kHz samples and returns raw notes. `onProgress(fraction, slow)`:
+ * `slow` is true once it has fallen back to the processor.
+ */
 export function transcribe(samples, thresholds, onProgress) {
   return call({ type: 'transcribe', samples, thresholds }, [samples.buffer], onProgress);
 }

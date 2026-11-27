@@ -15,6 +15,7 @@ const EMPTY = {
   notes: [],
   notesFrom: null, // 'demo' | 'audio' | 'midi'
   progress: 0,
+  slow: false, // the note finder is on the processor, not the graphics card
   error: '',
 };
 
@@ -99,8 +100,8 @@ export function useSong() {
         step = 'listen';
         if (load.current !== id) return;
         setSong((s) => ({ ...s, status: 'transcribing', progress: 0 }));
-        const raw = await transcribe(samples, sensitivityById(sensitivity), (progress) => {
-          if (load.current === id) setSong((s) => ({ ...s, progress }));
+        const raw = await transcribe(samples, sensitivityById(sensitivity), (progress, slow) => {
+          if (load.current === id) setSong((s) => ({ ...s, progress, slow }));
         });
         if (load.current !== id) return;
         setSong({

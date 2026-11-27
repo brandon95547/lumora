@@ -19,7 +19,10 @@ function Status({ song }) {
   if (song.status === 'transcribing')
     return (
       <div className="flex flex-col gap-2" role="status">
-        <p className="text-sm text-muted">Listening for notes… {Math.round(song.progress * 100)}%</p>
+        <p className="text-sm text-muted">
+          Listening for notes… {Math.round(song.progress * 100)}%
+          {song.slow && ' (slower mode: this browser’s graphics weren’t available)'}
+        </p>
         <div className="h-1.5 overflow-hidden rounded-full bg-raised">
           <div className="h-full origin-left bg-accent" style={{ transform: `scaleX(${song.progress})` }} />
         </div>
