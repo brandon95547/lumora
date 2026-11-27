@@ -21,7 +21,7 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
    music). If it finds too many or too few, change **Notes to find**. For exact notes, drop a MIDI
    file too, with the recording or after it. A MIDI file on its own plays with a built-in piano
    voice.
-2. **Look.** Choose a style, **Staff** or **Piano**, and one of its animations. Then **2D** or
+2. **Look.** Choose a style, **Staff**, **Piano** or **Fire**, and one of its animations. Then **2D** or
    **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a gentle drift
    keeps the camera alive. Then choose colors, the video's shape and its title.
 3. **Video.** Choose 30 or 60 fps and press **Make the video**. It renders faster than real time;
@@ -54,6 +54,18 @@ instrument to close on the keys; close in, the camera follows the music along th
 | Live          | A grand piano playing itself, as if filmed in concert.     |
 | Falling Notes | Bars of light run to the keys and press them as they land. |
 
+**Fire:** the music as fire. In Fireball Run a ball of flame bounces from ledge to ledge, landing
+exactly on every note (a chord or a quick run is one landing; higher notes sit on higher ledges).
+Each landing throws up a pillar of flame and sparks and leaves the stone glowing like lava. The
+fire follows the music's energy, cooling in quiet passages and growing across the song, so the
+finale burns hottest: bigger flames, a longer trail, more embers, a hotter sky. 2D follows it
+side-on; in 3D the run winds through space: Chase, Side, High, Low. Ember gives classic fire;
+Midnight burns blue, Aurora green.
+
+| Animation    | What it does                                                             |
+| ------------ | ------------------------------------------------------------------------ |
+| Fireball Run | A fireball bounces on every note, and burns brighter as the song builds. |
+
 ## Check it
 
 ```bash
@@ -84,7 +96,7 @@ and say why in the commit.
 
 Features import only `src/shared/`, never each other; ESLint enforces it.
 
-**A new animation** is one file in its style's folder (`src/shared/scene/staff/` or `piano/`),
+**A new animation** is one file in its style's folder (`src/shared/scene/staff/`, `piano/` or `fire/`),
 listed in that folder's `index.js`. A staff animation has `id`, `name`, `description`, `motion`
 (`'scroll'` or `'page'`) and `draw(ctx, scene, t, palette, view)`, and draws only with the helpers
 in `staff/common.js`; a piano animation has `falling` and `draw(ctx, scene, t, palette, view, model)`

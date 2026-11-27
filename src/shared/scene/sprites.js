@@ -62,3 +62,12 @@ export function sphereSprite(color) {
   spheres.set(color, sprite);
   return sprite;
 }
+
+/** Two '#rrggbb' colors mixed: k = 0 gives a, 1 gives b. */
+export function mixColors(a, b, k) {
+  const pa = parseInt(a.slice(1), 16);
+  const pb = parseInt(b.slice(1), 16);
+  const ch = (n, shift) => (n >> shift) & 255;
+  const c = [16, 8, 0].map((shift) => Math.round(ch(pa, shift) + (ch(pb, shift) - ch(pa, shift)) * k));
+  return `#${c.map((v) => v.toString(16).padStart(2, '0')).join('')}`;
+}
