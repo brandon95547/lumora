@@ -6,11 +6,12 @@ import { DEMO_TITLE, demoNotes } from './demo.js';
 import { synthesize } from './synth.js';
 
 const EMPTY = {
-  status: 'loading', // loading | reading | ready | error
+  status: 'loading', // loading | reading | voicing (making the piano sound) | ready | error
   title: '',
   audio: null,
   notes: [],
   notesFrom: null, // 'demo' | 'midi' | 'score'
+  progress: 0, // 0–1 while voicing
   error: '',
 };
 
@@ -37,7 +38,10 @@ export function useSong() {
   const play = useCallback(async (id, raw, title, notesFrom) => {
     const notes = normalizeNotes(raw);
     if (!notes.length) throw new Error('no notes');
-    const audio = await synthesize(notes);
+    if (load.current === id) setSong((s) => ({ ...s, status: 'voicing', progress: 0 }));
+    const audio = await synthesize(notes, (progress) => {
+      if (load.current === id) setSong((s) => ({ ...s, progress }));
+    });
     if (load.current === id) setSong({ ...EMPTY, status: 'ready', title, audio, notes, notesFrom });
   }, []);
 

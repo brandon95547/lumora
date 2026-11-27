@@ -26,6 +26,18 @@ function Status({ song }) {
         Reading the file…
       </p>
     );
+  if (song.status === 'voicing')
+    return (
+      <div className="flex flex-col gap-2" role="status">
+        <p className="text-sm text-muted">Preparing the piano sound… {Math.round(song.progress * 100)}%</p>
+        <div className="h-1.5 overflow-hidden rounded-full bg-raised">
+          <div
+            className="h-full origin-left bg-accent transition-transform"
+            style={{ transform: `scaleX(${song.progress})` }}
+          />
+        </div>
+      </div>
+    );
   if (song.status === 'error')
     return (
       <p className="text-sm text-danger" role="alert">
@@ -37,7 +49,7 @@ function Status({ song }) {
 
 export function SongPanel({ song, scene, onFiles }) {
   const [over, setOver] = useState(false);
-  const busy = song.status === 'reading';
+  const busy = song.status === 'reading' || song.status === 'voicing';
 
   return (
     <Panel title="Song">
