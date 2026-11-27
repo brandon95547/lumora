@@ -33,8 +33,9 @@ function Status({ song, instrument }) {
     return (
       <div className="flex flex-col gap-2" role="status">
         <p className="text-sm text-muted">
-          {song.step === 'instrument' ? `Loading the ${instrument.label}…` : 'Preparing the sound…'}{' '}
-          {Math.round(song.progress * 100)}%
+          {song.step === 'master'
+            ? 'Mastering the sound to −14 LUFS…'
+            : `${song.step === 'instrument' ? `Loading the ${instrument.label}…` : 'Preparing the sound…'} ${Math.round(song.progress * 100)}%`}
         </p>
         <div className="h-1.5 overflow-hidden rounded-full bg-raised">
           <div
@@ -112,6 +113,15 @@ export function SongPanel({ song, scene, onFiles, instrumentId, onInstrument }) 
           </dd>
           <dt className="text-faint">Length</dt>
           <dd>{clock(scene.duration)}</dd>
+          {song.loudness && Number.isFinite(song.loudness.lufs) && (
+            <>
+              <dt className="text-faint">Loudness</dt>
+              <dd>
+                {song.loudness.lufs.toFixed(1)} LUFS · peaks {song.loudness.truePeak.toFixed(1)} dB, mastered for
+                TikTok, Reels and YouTube
+              </dd>
+            </>
+          )}
         </dl>
       )}
     </Panel>

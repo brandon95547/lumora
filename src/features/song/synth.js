@@ -33,23 +33,6 @@ function renderSection({ from, notes }, voice) {
   return ctx.startRendering();
 }
 
-const PEAK = 0.9;
-
-/** Scales the song so its loudest moment peaks at PEAK: no clipping, and every instrument as loud. */
-function normalize(buffer) {
-  let peak = 0;
-  for (let c = 0; c < buffer.numberOfChannels; c++) {
-    const data = buffer.getChannelData(c);
-    for (let i = 0; i < data.length; i++) peak = Math.max(peak, Math.abs(data[i]));
-  }
-  if (!peak) return;
-  const k = PEAK / peak;
-  for (let c = 0; c < buffer.numberOfChannels; c++) {
-    const data = buffer.getChannelData(c);
-    for (let i = 0; i < data.length; i++) data[i] *= k;
-  }
-}
-
 /** The song as audio, played by `voice`. `onProgress(0–1)` is called as sections finish. */
 export async function synthesize(notes, voice, onProgress = () => {}) {
   const length = notes.reduce((m, n) => Math.max(m, n.end), 0) + TAIL;
@@ -72,6 +55,5 @@ export async function synthesize(notes, voice, onProgress = () => {}) {
     }
   };
   await Promise.all(Array.from({ length: AT_ONCE }, worker));
-  normalize(out);
   return out;
 }

@@ -4,6 +4,7 @@ import { normalizeNotes } from '../../shared/notes.js';
 import { kindOf, titleFromFile } from './decode.js';
 import { DEMO_TITLE, demoNotes } from './demo.js';
 import { instrumentById, voiceFor } from './instruments.js';
+import { master } from './master.js';
 import { synthesize } from './synth.js';
 
 const EMPTY = {
@@ -12,8 +13,9 @@ const EMPTY = {
   audio: null,
   notes: [],
   notesFrom: null, // 'demo' | 'midi' | 'score'
-  step: null, // while voicing: 'instrument' (fetching its samples) or 'sound' (rendering)
+  step: null, // while voicing: 'instrument' (fetching its samples), 'sound' (rendering), 'master'
   progress: 0, // 0–1 through the step
+  loudness: null, // { lufs, truePeak } of the mastered sound
   error: '',
 };
 
@@ -61,7 +63,10 @@ export function useSong() {
     });
     progress('sound')(0);
     const audio = await synthesize(notes, voice, progress('sound'));
-    if (load.current === id) setSong({ ...EMPTY, status: 'ready', title, audio, notes, notesFrom });
+    progress('master')(0);
+    await new Promise((resolve) => setTimeout(resolve, 30)); // let the panel say so before the work
+    const loudness = master(audio); // to the platforms' loudness; see master.js
+    if (load.current === id) setSong({ ...EMPTY, status: 'ready', title, audio, notes, notesFrom, loudness });
   }, []);
 
   useEffect(() => {
