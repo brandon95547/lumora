@@ -13,6 +13,7 @@ import { flatView } from './view.js';
 
 /** Ready-made angles on the floor. Turn 90 looks straight down the staff, 0 across it. */
 export const FLOOR_RIG = {
+  id: 'staff-floor',
   angles: [
     { id: 'walk', label: 'Walk', turn: 74, tilt: 22, zoom: 1 },
     { id: 'behind', label: 'Behind', turn: 90, tilt: 30, zoom: 0.9 },

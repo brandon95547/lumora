@@ -18,7 +18,8 @@ export const kindById = (id) => KINDS.find((k) => k.id === id) ?? KINDS[0];
 
 /**
  * The camera choices for an animation: its own (Marble Walk's floor angles) or its kind's. A rig has
- * `angles`, `defaultAngle`, `turnRange`, `tiltRange` and `zoomRange`.
+ * an `id` (a kind's rig is the kind itself), `angles`, `defaultAngle`, `turnRange`, `tiltRange` and
+ * `zoomRange`.
  */
 export const rigOf = (kind, animation) => animation?.rig ?? kind;
 

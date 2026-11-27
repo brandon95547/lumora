@@ -33,9 +33,16 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
    of real instruments, fetched the first time a song needs them) or the Soft Synth (made in the
    browser).
 
+   Every song is **mastered** for the video platforms: raised or lowered to **−14 LUFS** integrated
+   loudness (ITU-R BS.1770, EBU R128 gating; what TikTok, Reels and YouTube play at) with a
+   look-ahead limiter keeping peaks under **−1 dBTP**. The Song panel shows the result, and the
+   video carries it.
+
 2. **Look.** Choose a style, **Staff**, **Piano** or **Fire**, and one of its animations. Then **2D** or
    **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a gentle drift
-   keeps the camera alive. Then choose colors, the video's shape and its title.
+   keeps the camera alive. **Save this angle** keeps the camera as it is under a name, in this
+   browser, beside the ready-made angles. Then choose colors, the video's shape and its title: the title sits at the top in a **Title
+   font** (Grenze Gotisch, Fraktur, Pirata One, New Rocker or Clean) and **Title size**.
 3. **Video.** Choose 30 or 60 fps and press **Make the video**. It renders faster than real time;
    then download the MP4.
 
@@ -160,6 +167,8 @@ camera angles and `render`, added to `kinds.js`.
   Alexander Holm (CC BY 3.0).
 - Upright Piano: [Upright Piano KW](https://freepats.zenvoid.org/Piano/acoustic-grand-piano.html) by
   FreePats (CC0).
+- Title fonts (SIL Open Font License, each license beside its file in `src/shared/scene/fonts/`):
+  Grenze Gotisch (subset to Latin), UnifrakturMaguntia, Pirata One, New Rocker.
 - Rhodes Electric Piano: [jRhodes3d](https://github.com/sfzinstruments/jlearman.jRhodes3d) by Jeff
   Learman (CC BY 4.0).
 
