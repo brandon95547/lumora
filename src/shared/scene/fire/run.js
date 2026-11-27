@@ -3,7 +3,7 @@
 // Every landing throws up a pillar of flame and sparks and leaves its ledge glowing; the fire grows
 // with the music and burns hottest at the end.
 import { energyAt } from '../energy.js';
-import { drawAirEmbers, drawBall, drawBurst, drawEmbersOn, drawTrail, fireRamp, TEAL_FIRE } from './flames.js';
+import { drawAirEmbers, drawBall, drawBurst, drawEmbersOn, drawTrail, fireRamp, TEAL_FIRE } from '../flames.js';
 import { ballAt, landingBefore } from './path.js';
 import { BALL, drawHeat, drawLedge, warmthOf } from './stage.js';
 

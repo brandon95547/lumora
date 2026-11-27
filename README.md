@@ -59,7 +59,9 @@ hand's bottom note), with its shadow and reflection on the floor below. The floo
 staff and the lit notes travel toward the camera with the music, so the balls seem to walk across
 the floor. The clefs pass by as the song begins. As the song goes on, translucent ghosts fly across the stage,
 more often as it builds; and at its most energetic moments (never two within 8 seconds) the floor
-heats up with an ember glow and a faint mist rises off it. Its own angles: Walk, Behind, Beside,
+heats up with an ember glow and a faint mist rises off it. The balls catch fire about a fifth of the
+way in and burn hotter as the song builds, and on a big chord (three notes or more, at most one beam
+every 3 seconds per ball) a beam of light shoots up through the ball. Its own angles: Walk, Behind, Beside,
 Overhead.
 In 2D you look straight down at the floor.
 
@@ -67,13 +69,13 @@ In the other animations the staff stands upright in 3D on a reflective floor who
 the music, and lit notes become glass balls sending up beams of light. Angles: Front, Angled, Low,
 Lane.
 
-| Animation     | What it does                                                       |
-| ------------- | ------------------------------------------------------------------ |
-| Marble Walk   | Balls hop along a marble floor; ghosts fly by, the floor heats up. |
-| Glow Lane     | Notes glide toward a playhead and flare as they sound.             |
-| Ripple Pages  | A page of notes waits on the staff; each one ripples as it plays.  |
-| Constellation | Played notes turn to stars and join into constellations.           |
-| Ribbon        | Every note draws a ribbon of light as long as it is held.          |
+| Animation     | What it does                                                      |
+| ------------- | ----------------------------------------------------------------- |
+| Marble Walk   | Balls hop along a marble floor and catch fire; ghosts fly by.     |
+| Glow Lane     | Notes glide toward a playhead and flare as they sound.            |
+| Ripple Pages  | A page of notes waits on the staff; each one ripples as it plays. |
+| Constellation | Played notes turn to stars and join into constellations.          |
+| Ribbon        | Every note draws a ribbon of light as long as it is held.         |
 
 **Piano:** a grand piano plays the song. In Live it is the whole instrument: a lacquered case
 with its curved side, the lid propped open, the gold plate and strings inside, music desk, legs and

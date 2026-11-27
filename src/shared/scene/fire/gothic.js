@@ -5,7 +5,7 @@
 import { BALL } from './stage.js';
 import { candleItems, drawCandleFlames, drawNaveFloor, drawRoseWindow, naveItems, pedestalItems } from './cathedral.js';
 import { energyAt } from '../energy.js';
-import { CRIMSON_FIRE, drawBall, drawBurst, drawEmbersOn, drawTrail, TEAL_FIRE } from './flames.js';
+import { CRIMSON_FIRE, drawBall, drawBurst, drawEmbersOn, drawTrail, TEAL_FIRE } from '../flames.js';
 import { drawAsh, drawBats, drawLightning, drawMist, lightningAt, strikes } from './omens.js';
 import { ballAt, followAt, landingBefore } from './path.js';
 import { warmthOf } from './stage.js';

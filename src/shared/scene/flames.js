@@ -1,8 +1,9 @@
 // Fire drawn from soft lights: many small glows, each a color from white-hot to smoke, added
 // together. Every flame, spark and ember is placed from its birth time and a fixed random seed,
-// so the same moment always burns the same way.
-import { noise } from '../envelope.js';
-import { glowSprite, mixColors } from '../sprites.js';
+// so the same moment always burns the same way. The Fire style's runs and Marble Walk's burning
+// balls both draw with it.
+import { noise } from './envelope.js';
+import { glowSprite, mixColors } from './sprites.js';
 
 /** The palette's fire, hottest first: white core, its two colors, then dark smoke. */
 export function fireRamp(palette) {
@@ -17,7 +18,7 @@ export const TEAL_FIRE = rampFrom('#6ff3ff', '#1f7cff');
 export const CRIMSON_FIRE = rampFrom('#ff6a4a', '#a3001c');
 
 /** A fire from a bright color `a` cooling to a deeper `b`, hottest first. */
-function rampFrom(a, b) {
+export function rampFrom(a, b) {
   return [
     mixColors(a, '#ffffff', 0.78),
     mixColors(a, '#ffffff', 0.35),

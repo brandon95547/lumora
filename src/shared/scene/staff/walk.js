@@ -1,11 +1,13 @@
 // Marble Walk: the staff lies on a marble floor and runs on ahead. A glass ball for each hand hops
 // along it from note to note, landing on every note as it sounds, while the floor, the staff and
 // the notes travel past underneath, as if the balls were walking across the floor. Ghosts fly across
-// the stage, and now and then the floor heats up under a faint mist (haunt.js).
+// the stage, and now and then the floor heats up under a faint mist (haunt.js). As the song builds
+// the balls catch fire, and big chords send a beam of light up through them (blaze.js).
 import { burst, held } from '../envelope.js';
 import { litColor } from '../palettes.js';
 import { glowSprite, sphereSprite } from '../sprites.js';
 import { onPlane } from '../view.js';
+import { ballPlace, beamAt, beamsOf, drawBallFire, drawBeam, fireAt } from './blaze.js';
 import { ballAt, bouncePath } from './bounce.js';
 import { drawAccidental, drawGlow, drawLedgers, drawRing, drawSpot, scrollPlacement } from './common.js';
 import { FLOOR_RIG } from './floor.js';
@@ -41,6 +43,7 @@ function drawBall(ctx, scene, t, palette, view, ball) {
     ctx.globalAlpha = 0.16 * (1 - k / 6) * p.fog * view.opacity;
     ctx.drawImage(glowSprite(color), p.x - size / 2, p.y - size / 2, size, size);
   }
+  drawBallFire(ctx, view, ballPlace(scene, ball.hand, t), t, fireAt(scene, t), r, color, palette);
   const p = point(ball.y, ball.height);
   if (!p) return;
   const a = p.fog * view.opacity;
@@ -51,6 +54,8 @@ function drawBall(ctx, scene, t, palette, view, ball) {
   const size = 2 * r * p.s;
   ctx.globalAlpha = a;
   ctx.drawImage(sphereSprite(color), p.x - size / 2, p.y - size / 2, size, size);
+  const beam = beamAt(beamsOf(scene, ball.hand), t);
+  drawBeam(ctx, view, layout, palette, [x, ball.y, -(ball.height + r * 1.8)], r, color, beam);
 }
 
 /** The ball's shadow on the floor: tight and dark on landing, wide and faint at the top of a hop. */

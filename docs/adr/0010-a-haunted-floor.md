@@ -25,3 +25,12 @@ the stage heating up now and then under a faint mist.
 ## Consequences
 
 - Marble Walk frames cost about 4–11 ms on the Intel Mac it was built on.
+
+## Later: burning balls and chord beams
+
+- The balls catch fire from 22% of the song and are fully alight by 75%, flaring with the music's
+  energy (`staff/blaze.js`). They burn with the Fire style's flame drawing, which moved from `fire/`
+  to `scene/flames.js` so both styles draw fire one way. Its flames work in their own units with up
+  as -y; a small view adapter scales them to the ball and turns their up into the floor's.
+- A big chord (3 notes or more in one landing, at most one every 3 s per ball) sends a beam of light
+  up through the ball, flashing and fading over 1.3 s.
