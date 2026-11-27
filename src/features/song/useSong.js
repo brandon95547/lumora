@@ -18,6 +18,13 @@ const EMPTY = {
   error: '',
 };
 
+const AUDIO_FAILURES = {
+  open: 'This browser couldn’t open that file as audio. It may be damaged or in an unusual format; try saving it as MP3 or WAV.',
+  prepare:
+    'The recording opened but couldn’t be prepared for listening. It may be too long for this browser; try a shorter file.',
+  listen: 'The note finder stopped in this browser. Try Chrome or Edge, or drop in a MIDI file of the song.',
+};
+
 export function useSong() {
   const [song, setSong] = useState(EMPTY);
   const [sensitivity, setSensitivityId] = useState('balanced');
@@ -82,10 +89,14 @@ export function useSong() {
         return;
       }
 
+      // Which step failed decides what to tell the person.
+      let step = 'open';
       try {
         setSong((s) => ({ ...s, status: 'decoding', error: '', progress: 0 }));
         const audio = await decodeAudio(audioFile);
+        step = 'prepare';
         const samples = await modelInput(audio);
+        step = 'listen';
         if (load.current !== id) return;
         setSong((s) => ({ ...s, status: 'transcribing', progress: 0 }));
         const raw = await transcribe(samples, sensitivityById(sensitivity), (progress) => {
@@ -102,7 +113,7 @@ export function useSong() {
           notesFrom: 'audio',
         });
       } catch (error) {
-        fail(id, 'That recording could not be read. Try an MP3 or WAV file.', error);
+        fail(id, AUDIO_FAILURES[step], error);
       }
     },
     [sensitivity, fail],
