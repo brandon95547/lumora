@@ -2,6 +2,7 @@
 // colors, shape and title.
 import { FORMATS } from '../../shared/scene/formats.js';
 import { PALETTES } from '../../shared/scene/palettes.js';
+import { TITLE_FONTS, TITLE_SIZES } from '../../shared/scene/titles.js';
 import { animationById, defaultCamera, KINDS, rigOf } from '../../shared/scene/kinds.js';
 import { Choice } from '../../shared/ui/Choice.jsx';
 import { Panel } from '../../shared/ui/Panel.jsx';
@@ -109,6 +110,22 @@ export function LookPanel({ look, scene, onChange }) {
           className="h-10 rounded-lg border border-line bg-raised px-3 text-ink placeholder:text-faint focus:border-accent focus:outline-none"
         />
       </label>
+      <div className="grid grid-cols-2 gap-3">
+        <Choice
+          label="Title font"
+          variant="menu"
+          options={TITLE_FONTS}
+          value={look.titleFontId}
+          onChange={set('titleFontId')}
+        />
+        <Choice
+          label="Title size"
+          variant="menu"
+          options={TITLE_SIZES}
+          value={look.titleSizeId}
+          onChange={set('titleSizeId')}
+        />
+      </div>
     </Panel>
   );
 }

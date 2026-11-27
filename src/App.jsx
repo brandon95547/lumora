@@ -1,5 +1,5 @@
 // The one screen: the preview on one side, the song, look and video panels on the other.
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ExportPanel } from './features/export/ExportPanel.jsx';
 import { LookPanel } from './features/look/LookPanel.jsx';
 import { Player } from './features/player/Player.jsx';
@@ -9,6 +9,7 @@ import { formatById } from './shared/scene/formats.js';
 import { paletteById } from './shared/scene/palettes.js';
 import { renderFrame } from './shared/scene/render.js';
 import { prepareScene } from './shared/scene/scene.js';
+import { CLEAN_FONT, loadTitleFont, titleFontById, titleSizeById } from './shared/scene/titles.js';
 import { animationById, defaultCamera, KINDS } from './shared/scene/kinds.js';
 
 const START_LOOK = {
@@ -16,6 +17,8 @@ const START_LOOK = {
   paletteId: 'midnight',
   formatId: 'portrait',
   view: '3d', // the first animation, Marble Walk, is meant to be seen on its floor
+  titleFontId: 'grenze',
+  titleSizeId: 'large',
   camera: defaultCamera(KINDS[0]),
 };
 
@@ -34,6 +37,21 @@ export function App() {
     [title, song.title],
   );
 
+  // The title's face is drawn once its file has arrived; the clean face stands in until then, so
+  // the preview and the video never draw a face the canvas doesn't have.
+  const [loadedFont, setLoadedFont] = useState(CLEAN_FONT);
+  useEffect(() => {
+    let current = true;
+    loadTitleFont(titleFontById(look.titleFontId)).then(
+      (font) => current && setLoadedFont(font),
+      (error) => console.error(error),
+    );
+    return () => {
+      current = false;
+    };
+  }, [look.titleFontId]);
+  const titleFont = loadedFont.id === look.titleFontId ? loadedFont : CLEAN_FONT;
+
   const format = formatById(look.formatId);
   const scene = useMemo(() => prepareScene(song.notes, format, song.audio?.duration), [song.notes, song.audio, format]);
   const frameLook = useMemo(
@@ -41,9 +59,11 @@ export function App() {
       animation: animationById(look.animationId),
       palette: paletteById(look.paletteId),
       title: look.title,
+      titleFont,
+      titleScale: titleSizeById(look.titleSizeId).scale,
       camera: look.view === '3d' ? look.camera : null,
     }),
-    [look],
+    [look, titleFont],
   );
   const draw = useCallback((ctx, t) => renderFrame(ctx, scene, { ...frameLook, t }), [scene, frameLook]);
   const ready = song.status === 'ready' && song.audio && scene.items.length > 0;

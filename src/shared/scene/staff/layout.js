@@ -36,7 +36,8 @@ export function layoutFor({ width, height }) {
     pixelsPerSecond: portrait ? 260 : 330,
     // Page styles: a page of notes is laid out, then lit as the sweep passes.
     pageSeconds: portrait ? 3.6 : 6,
-    titleY: portrait ? height * 0.17 : height * 0.13,
-    titleSize: portrait ? 64 : 58,
+    // The title sits at the top: its top edge here, at this size (Medium; the size menu scales it).
+    titleTop: height * (portrait ? 0.065 : 0.05),
+    titleSize: portrait ? 92 : 76,
   };
 }
