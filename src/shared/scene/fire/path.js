@@ -2,10 +2,14 @@
 // per song. Between landings a ball flies a parabola, so a frame depends only on its time.
 // World units: about one ball across. x runs forward along the run, y downward, z to the side.
 //
-// A run follows all the notes ('both'), or one hand's: 'right' (middle C and up) or 'left' (below).
-// Every run shares one timeline, so the two hands' fireballs travel forward side by side.
+// A run follows all the notes ('both') or one hand's ('right', 'left'; see shared/hands.js). Every run
+// shares one timeline, so the two hands' fireballs travel forward side by side.
+//
+// Two layouts: 'run' weaves its ledges through space, one hand above the other; 'nave' sends the
+// hands down either side of a cathedral nave, each placed across by pitch (lower notes further out),
+// so the left hand burns on the left and the right hand on the right.
 
-import { HAND_SPLIT } from '../../notes.js';
+import { assignHands } from '../../hands.js';
 
 const MIN_GAP = 0.11; // notes closer than this share one landing
 const STEP = 5; // forward distance per landing, at least
@@ -21,7 +25,18 @@ const LANES = {
   left: { y: 4, z: 3.5, height: 4 },
 };
 
-const inHand = { both: () => true, right: (n) => n.pitch >= HAND_SPLIT, left: (n) => n.pitch < HAND_SPLIT };
+// The nave: each hand's aisle, from the middle out. Seen down the nave, +z is on the left.
+const AISLE = { inner: 2.5, outer: 9, octaves: 3 };
+const NAVE_Y = { right: -1.5, left: 1.5 };
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+/** Across the nave for a landing: the right hand climbs outward to the right, the left hand descends outward to the left. */
+function acrossNave(hand, g) {
+  const reach = AISLE.outer - AISLE.inner;
+  const semis = AISLE.octaves * 12;
+  if (hand === 'right') return -(AISLE.inner + (reach * clamp(g.top - 60, 0, semis)) / semis);
+  return AISLE.inner + (reach * clamp(60 - g.bottom, 0, semis)) / semis;
+}
 
 /** Notes grouped into landings: a chord, or a quick run of notes, is one landing. */
 function landingsOf(notes) {
@@ -30,10 +45,11 @@ function landingsOf(notes) {
     const last = groups[groups.length - 1];
     if (last && note.start - last.time < MIN_GAP) {
       last.top = Math.max(last.top, note.pitch);
+      last.bottom = Math.min(last.bottom, note.pitch);
       last.force = Math.max(last.force, note.velocity);
       last.notes.push(note);
     } else {
-      groups.push({ time: note.start, top: note.pitch, force: note.velocity, notes: [note] });
+      groups.push({ time: note.start, top: note.pitch, bottom: note.pitch, force: note.velocity, notes: [note] });
     }
   }
   return groups;
@@ -62,28 +78,38 @@ function timelineOf(scene) {
 
 const runs = new WeakMap();
 
-/** A run's landings and ledges, worked out once per scene and hand. */
-export function runOf(scene, hand = 'both') {
+/** A run's landings and ledges, worked out once per scene, hand and layout. */
+export function runOf(scene, hand = 'both', layout = 'run') {
   let cached = runs.get(scene);
-  if (!cached) runs.set(scene, (cached = { xAt: timelineOf(scene) }));
-  if (cached[hand]) return cached[hand];
+  if (!cached) {
+    const hands = assignHands(scene.items);
+    runs.set(scene, (cached = { xAt: timelineOf(scene), handOf: (note) => hands[note.index] }));
+  }
+  const key = `${layout}:${hand}`;
+  if (cached[key]) return cached[key];
   const lane = LANES[hand];
-  const groups = landingsOf(scene.items.filter(inHand[hand]));
+  const groups = landingsOf(hand === 'both' ? scene.items : scene.items.filter((n) => cached.handOf(n) === hand));
   const pitches = groups.map((g) => g.top).sort((a, b) => a - b);
   const middle = pitches.length ? pitches[pitches.length >> 1] : 60;
   const landings = groups.map((g, i) => {
     const gap = i ? g.time - groups[i - 1].time : 1;
+    const place =
+      layout === 'nave'
+        ? { y: NAVE_Y[hand] + clamp(-(g.top - middle) * 0.06, -1.5, 1.5), z: acrossNave(hand, g) }
+        : {
+            y: lane.y + clamp(-(g.top - middle) * PITCH_RISE, -lane.height, lane.height),
+            z: lane.z + WEAVE * Math.sin(i * 0.42) * Math.min(1, i / 6),
+          };
     return {
       ...g,
+      ...place,
       index: i,
       x: cached.xAt(g.time),
-      y: lane.y + Math.max(-lane.height, Math.min(lane.height, -(g.top - middle) * PITCH_RISE)),
-      z: lane.z + WEAVE * Math.sin(i * 0.42) * Math.min(1, i / 6),
-      size: 3.4 + Math.min(gap, 1.5) * 1.4, // longer notes, bigger ledges
+      size: (layout === 'nave' ? 2.8 : 3.4) + Math.min(gap, 1.5) * 1.4, // longer notes, bigger ledges
     };
   });
-  cached[hand] = { hand, landings };
-  return cached[hand];
+  cached[key] = { hand, landings };
+  return cached[key];
 }
 
 /** Index of the last landing at or before t (-1 before the first). */

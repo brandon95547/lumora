@@ -62,10 +62,22 @@ finale burns hottest: bigger flames, a longer trail, more embers, a hotter sky. 
 side-on; in 3D the run winds through space: Chase, Side, High, Low. Ember gives classic fire;
 Midnight burns blue, Aurora green.
 
+**Which hand plays a note** is worked out from the music (`src/shared/hands.js`), not from a fixed
+line at middle C: each hand's position is followed through the song, and every chord is divided
+between the hands by how close each note is to where that hand has just been, how far a hand can
+stretch and how many notes it can hold. A left hand that climbs above middle C stays the left hand.
+
+In **Gothic** the camera looks down a cathedral nave (the Nave angle). The left hand's crimson
+hellfire runs down the left aisle and the right hand's teal soulfire down the right, each placed
+across its aisle by pitch, lower notes further out. The fire is the only warm light on the stone;
+candles kindle as it passes, the rose window burns brighter with the music, and the mightiest
+landings call down lightning and scatter bats.
+
 | Animation    | What it does                                                                                            |
 | ------------ | ------------------------------------------------------------------------------------------------------- |
 | Fireball Run | A fireball bounces on every note, and burns brighter as the song builds.                                |
 | Two Hands    | The right hand's fireball burns teal-blue, the left hand's in the palette's fire, each in its own lane. |
+| Gothic       | Teal and crimson fire race down a moonlit cathedral nave, each hand on its own side.                    |
 
 ## Check it
 

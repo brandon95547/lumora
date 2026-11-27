@@ -16,9 +16,10 @@ export const animationById = (id) => ANIMATIONS.find((a) => a.id === id) ?? ANIM
 
 export const kindById = (id) => KINDS.find((k) => k.id === id) ?? KINDS[0];
 
-/** A kind's starting angle, with the gentle drift on. */
-export const defaultCamera = (kind) => {
-  const { turn, tilt, zoom } = kind.angles.find((a) => a.id === kind.defaultAngle);
+/** The starting camera for an animation (its own angle if it has one, else its kind's), drift on. */
+export const defaultCamera = (kind, animation = kind.animations[0]) => {
+  const id = animation.defaultAngle ?? kind.defaultAngle;
+  const { turn, tilt, zoom } = kind.angles.find((a) => a.id === id);
   return { turn, tilt, zoom, drift: true };
 };
 

@@ -10,8 +10,11 @@ export function fireRamp(palette) {
   return rampFrom(twelve ? palette.lit[3] : palette.lit[0], twelve ? palette.lit[0] : palette.lit[1]);
 }
 
-/** A teal-blue fire, whatever the palette: the right hand's in Two Hands. */
+/** A teal-blue fire, whatever the palette: the right hand's in Two Hands and Gothic. */
 export const TEAL_FIRE = rampFrom('#6ff3ff', '#1f7cff');
+
+/** A crimson hellfire: the left hand's in Gothic. */
+export const CRIMSON_FIRE = rampFrom('#ff6a4a', '#a3001c');
 
 /** A fire from a bright color `a` cooling to a deeper `b`, hottest first. */
 function rampFrom(a, b) {

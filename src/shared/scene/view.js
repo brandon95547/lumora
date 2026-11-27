@@ -142,8 +142,7 @@ export function facesCamera(view, normal, point) {
 const PIECES = 10; // a long line in 3D is drawn in pieces, each as clear as its distance allows
 
 /** Strokes a straight world line, fading with distance in 3D. */
-export function strokeWorld(ctx, view, from, to, width, color, alpha) {
-  const pieces = view.depth ? PIECES : 1;
+export function strokeWorld(ctx, view, from, to, width, color, alpha, pieces = view.depth ? PIECES : 1) {
   ctx.strokeStyle = color;
   ctx.lineCap = 'butt';
   for (let i = 0; i < pieces; i++) {

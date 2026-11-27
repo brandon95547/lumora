@@ -52,7 +52,11 @@ export function LookPanel({ look, scene, onChange }) {
         variant="cards"
         options={kind.animations}
         value={look.animationId}
-        onChange={set('animationId')}
+        onChange={(id) => {
+          // An animation with its own best angle (Gothic looks down the nave) starts there.
+          const next = animationById(id);
+          onChange({ ...look, animationId: id, camera: next.defaultAngle ? defaultCamera(kind, next) : look.camera });
+        }}
         render={(animation) => (
           <>
             <AnimationThumb animation={animation} scene={scene} paletteId={look.paletteId} camera={camera} />

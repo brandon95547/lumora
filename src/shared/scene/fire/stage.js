@@ -143,7 +143,11 @@ export function fireView(scene, runs, camera, t) {
   const scale = layout.portrait ? 58 : 50; // pixels per world unit at the pivot, at Distance 1
   const anchor = [layout.width * (layout.portrait ? 0.45 : 0.4), layout.height * 0.55];
   if (!camera) {
-    return perspective({ pivot, anchor, distance: 4000, zoom: scale, yaw: 0, pitch: 0, fogFrom: 50, fogTo: 60 });
+    // `flat` marks the side-on 2D shot, for pieces that are placed differently in it.
+    return {
+      flat: true,
+      ...perspective({ pivot, anchor, distance: 4000, zoom: scale, yaw: 0, pitch: 0, fogFrom: 50, fogTo: 60 }),
+    };
   }
   const { yaw, pitch } = aim(camera, t);
   const turned = Math.min(1, Math.abs(yaw) / (60 * DEG));
