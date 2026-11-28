@@ -47,11 +47,22 @@ export function perspective({ pivot, anchor, distance, zoom, yaw, pitch, fogFrom
     return { x: anchor[0] + x1 * s, y: anchor[1] + y2 * s, s, fog: fog * close, depth };
   };
 
+  /** The world point drawn at screen (sx, sy) that lies `depth` from the camera: project's inverse. */
+  const unproject = (sx, sy, depth) => {
+    const s = focal / depth;
+    const x1 = (sx - anchor[0]) / s;
+    const y2 = (sy - anchor[1]) / s;
+    const z1 = (depth - distance) * cosP - y2 * sinP;
+    const dy = y2 * cosP + (depth - distance) * sinP;
+    return [px + x1 * cosY + z1 * sinY, py + dy, pz - x1 * sinY + z1 * cosY];
+  };
+
   return {
     depth: true,
     opacity: 1,
     glow: 1.35, // lights read smaller in depth, so they bloom a little more
     project,
+    unproject,
     depthOf,
     near,
     // Where the camera is, in the world.

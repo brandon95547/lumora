@@ -1,5 +1,5 @@
-// Galaxy: a keyboard floating in space, and the song's notes are stars far out in the sky that shoot
-// down onto its keys (Shooting Stars). In 3D the camera stands behind the keyboard looking out into
+// Galaxy: a keyboard floating in space, and the song's notes are stars born in a spiral galaxy far
+// out in the sky that fly in onto its keys (Shooting Stars). In 3D the camera stands behind the keyboard looking out into
 // the galaxy, and can follow the keys being played; in 2D it looks straight down, the stars coming in
 // from the top of the frame.
 import { followX, keysDown, pianoOf } from '../piano/model.js';
@@ -7,6 +7,7 @@ import { drawInstrument } from '../piano/instrument.js';
 import { aim, perspective, placed } from '../view.js';
 import { KEYBOARD_ORIGIN, keyboardToWorld } from './layout.js';
 import { drawSpace } from './space.js';
+import { drawGalaxy } from './spiral.js';
 import { drawShootingStars } from './stars.js';
 
 const DEG = Math.PI / 180;
@@ -62,26 +63,44 @@ export function galaxyView(scene, camera, t) {
   });
 }
 
+/**
+ * Where the galaxy hangs at t: a point high in the frame (right of center in 16:9), far out beyond the
+ * keyboard, and its radius, about four tenths of the frame.
+ */
+export function galaxyAt(scene, camera, t) {
+  const { layout } = scene;
+  const view = galaxyView(scene, camera, t);
+  const pivot = camera ? pivotOf(scene, camera, t) : [0, 0, 55];
+  const depth = view.depthOf(...pivot) * (camera ? 5 : 1);
+  const center = view.unproject(layout.width * (layout.portrait ? 0.55 : 0.68), layout.height * 0.27, depth);
+  return {
+    center,
+    radius: (Math.min(layout.width, layout.height) * (layout.portrait ? 0.4 : 0.32)) / view.project(...center).s,
+  };
+}
+
 export const shootingStars = {
   id: 'galaxy-shooting-stars',
   name: 'Shooting Stars',
   description:
     'Each note is a star in the sky that shoots down and lands on its key as the note sounds, each hand in its own color.',
-  draw(ctx, scene, t, palette, view) {
+  draw(ctx, scene, t, palette, view, camera) {
     const model = pianoOf(scene);
+    const galaxyOf = (time) => galaxyAt(scene, camera, time);
+    drawGalaxy(ctx, view, galaxyOf(t), t, palette);
     drawInstrument(ctx, placed(view, 0, KEYBOARD_ORIGIN), model, keysDown(scene, t), palette, {
       tint: 0.55,
       light: 0.6,
       lightAtBack: true,
       base: true,
     });
-    drawShootingStars(ctx, view, scene, model, t, palette);
+    drawShootingStars(ctx, view, scene, model, t, palette, galaxyOf);
   },
 };
 
 function render(ctx, scene, t, animation, palette, camera) {
   drawSpace(ctx, scene.layout, palette, t, camera?.turn ?? 0);
-  animation.draw(ctx, scene, t, palette, galaxyView(scene, camera, t));
+  animation.draw(ctx, scene, t, palette, galaxyView(scene, camera, t), camera);
 }
 
 export const galaxyKind = {

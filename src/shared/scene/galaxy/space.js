@@ -1,12 +1,11 @@
-// Deep space around the keyboard: a dark sky, clouds of nebula in the palette's colors, a spiral
-// galaxy, and stars, painted once per format and palette; then a few brighter stars that twinkle
+// Deep space around the keyboard: a dark sky, clouds of nebula in the palette's colors and stars,
+// painted once per format and palette (the spiral galaxy is in the scene itself, spiral.js); then a few brighter stars that twinkle
 // and drift a little as the camera turns.
 import { cachedLayer } from '../backdrop.js';
 import { noise } from '../envelope.js';
 import { glowSprite, mixColors } from '../sprites.js';
 
 const STARS = 650;
-const ARM_STARS = 1400;
 const TWINKLES = 36;
 
 function paintSky(ctx, layout, palette) {
@@ -28,27 +27,6 @@ function paintSky(ctx, layout, palette) {
     const y = h * (0.75 - 0.6 * k) + (noise(i, 3) - 0.5) * h * 0.3;
     ctx.globalAlpha = 0.06 + 0.1 * noise(i, 4);
     ctx.drawImage(glowSprite(tints[i % tints.length]), x - size / 2, y - size / 2, size, size);
-  }
-
-  // A spiral galaxy, tilted, high on one side.
-  const [gx, gy] = [w * 0.74, h * 0.2];
-  const radius = Math.min(w, h) * 0.32;
-  const tilt = 0.42;
-  const turn = -0.5;
-  const core = radius * 0.9;
-  ctx.globalAlpha = 0.55;
-  ctx.drawImage(glowSprite('#ffe2b8'), gx - core / 2, gy - core / 2, core, core);
-  for (let i = 0; i < ARM_STARS; i++) {
-    const arm = i % 2;
-    const u = noise(i, 11) ** 0.7;
-    const theta = u * Math.PI * 3.2 + arm * Math.PI + (noise(i, 12) - 0.5) * 0.6;
-    const r = radius * u + (noise(i, 13) - 0.5) * radius * 0.08;
-    const [ex, ey] = [Math.cos(theta) * r, Math.sin(theta) * r * tilt];
-    const x = gx + ex * Math.cos(turn) - ey * Math.sin(turn);
-    const y = gy + ex * Math.sin(turn) + ey * Math.cos(turn);
-    ctx.globalAlpha = (1 - u) * 0.7 + 0.15;
-    ctx.fillStyle = noise(i, 14) < 0.3 ? '#ffd9b0' : '#c9d8ff';
-    ctx.fillRect(x, y, 1.6, 1.6);
   }
 
   // Stars, a few of them large.

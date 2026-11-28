@@ -1,15 +1,17 @@
-// Shooting Stars: every note is a star far out in the sky. It shows a few seconds before its note,
-// brightens as its time comes, then shoots in a curve toward its key, faster as it falls, trailing
-// light, and lands exactly as the note sounds, scattering sparkles; the key glows while the note is
+// Shooting Stars: every note is a star in the spiral galaxy far out in the sky (spiral.js). It shines
+// there a few seconds before its note, brightens as its time comes, then leaves the galaxy and flies
+// in a curve all the way to its key, faster as it comes, trailing light, and lands exactly as the
+// note sounds, scattering sparkles; the key glows while the note is
 // held. Each hand's stars burn in its own color.
 import { burst, held, noise } from '../envelope.js';
 import { litColor } from '../palettes.js';
 import { notesBetween } from '../scene.js';
 import { glowSprite, mixColors } from '../sprites.js';
-import { landingOf, starOf } from './layout.js';
+import { landingOf } from './layout.js';
+import { starOf } from './spiral.js';
 
-export const FLIGHT = 1.5; // seconds a star takes to reach its key
-const SHOW = 3.5; // seconds a star shows in the sky before it shoots
+export const FLIGHT = 2; // seconds a star takes to fly from the galaxy to its key
+const SHOW = 3.5; // seconds a star shines in the galaxy before it leaves
 const WAKE = 0.5; // seconds it brightens before it shoots
 const SPARK_LIFE = 0.8;
 const SPARKS = 10;
@@ -69,8 +71,12 @@ function drawSparkles(ctx, view, at, age, seed, color, force) {
   }
 }
 
-/** Every star near its time: waiting in the sky, shooting, or landed and sparkling. */
-export function drawShootingStars(ctx, view, scene, model, t, palette) {
+/**
+ * Every star near its time: waiting in the galaxy, shooting, or landed and sparkling. `galaxyAt(time)`
+ * says where the galaxy is at a moment, so a star leaves from where the galaxy was when it set off.
+ */
+export function drawShootingStars(ctx, view, scene, model, t, palette, galaxyAt) {
+  const galaxy = galaxyAt(t);
   ctx.globalCompositeOperation = 'lighter';
   const shooting = [];
   for (const n of notesBetween(scene, t - SPARK_LIFE, t + FLIGHT + SHOW)) {
@@ -78,14 +84,22 @@ export function drawShootingStars(ctx, view, scene, model, t, palette) {
     if (t < launch - SHOW) continue;
     const color = litColor(palette, n);
     const white = mixColors('#ffffff', color, 0.35);
-    const from = starOf(n.pitch, n.index);
+    const from = starOf(t < launch ? galaxy : galaxyAt(launch), n, launch);
     const to = landingOf(model, n.pitch);
     if (t < launch) {
-      // Waiting: fading in, twinkling, then brightening as its time comes.
+      // Waiting in the galaxy, turning with it: fading in, twinkling, then brightening as its time comes.
       const shown = Math.min(1, (t - (launch - SHOW)) / 1.2);
       const wake = Math.max(0, 1 - (launch - t) / WAKE);
       const twinkle = 0.75 + 0.25 * Math.sin(t * (3 + 3 * noise(n.index, 44)) + n.index);
-      const p = glow(ctx, view, from, 3 + 5 * wake, 4 + 8 * wake, color, shown * (0.45 * twinkle + 0.55 * wake));
+      const p = glow(
+        ctx,
+        view,
+        starOf(galaxy, n, t),
+        3 + 5 * wake,
+        4 + 8 * wake,
+        color,
+        shown * (0.45 * twinkle + 0.55 * wake),
+      );
       if (p && wake > 0.05) glint(ctx, p, p.size * 0.9, white, wake);
     } else if (t < n.start) {
       shooting.push({ n, from, to, color, white, depth: view.depthOf(...shootingStarAt(from, to, n.start, t)) });

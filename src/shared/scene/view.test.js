@@ -26,6 +26,12 @@ describe('perspective', () => {
     expect(view.project(0, -100).y).toBeLessThan(view.project(0, 100).y);
   });
 
+  it('finds the world point behind a screen point at a given depth', () => {
+    const point = [120, -40, 900];
+    const p = view.project(...point);
+    view.unproject(p.x, p.y, p.depth).forEach((v, i) => expect(v).toBeCloseTo(point[i]));
+  });
+
   it('drops points behind the camera, and cuts segments there', () => {
     const [ex, ey, ez] = view.eye;
     const behind = [ex - (0 - ex) * 0.5, ey - (0 - ey) * 0.5, ez - (0 - ez) * 0.5];

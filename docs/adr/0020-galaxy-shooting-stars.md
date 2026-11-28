@@ -28,3 +28,16 @@ shooting down and landing on the keys.
 ## Consequences
 
 - The marble, fire and fireball code is deleted; the shared flame drawing stays for Marble Walk.
+
+## Update: the stars come from the galaxy
+
+- The spiral galaxy is now in the scene (`galaxy/spiral.js`), slowly turning, not painted on the
+  sky. Each note's star is born in it: the left hand's along one arm, the right hand's along the
+  other, each arm faintly in its hand's color. It shines there before its note, brightens, then
+  flies 2 s from the galaxy to its key.
+- **The galaxy hangs at a fixed place in the frame** (high, right of center in 16:9), far out beyond
+  the keyboard: `galaxyAt` finds that point in the world from the camera at each moment
+  (`unproject`, the inverse of `project`, added to `view.js`). Fixed in the world, it fell out of
+  frame at some angles. A star leaves from where the galaxy was when it set off, so every frame is
+  still a pure function of t.
+- The wide band of note stars across the sky is gone.

@@ -78,15 +78,16 @@ the song uses, like a lesson video; in 3D it films from an angle (Player, Side o
 and follows the music along the keyboard. In 2D, **Zoom** comes in on the keys (up to 4×) and the
 camera follows the music along them.
 
-**Galaxy:** in **Shooting Stars** a keyboard floats in space, with a spiral galaxy, nebula clouds in
-the palette's colors and stars all around. Every note is a star far out in the sky, low notes to the
-left and high notes to the right as on the keys. It shows a few seconds before its note, twinkling,
-brightens as its time comes, then shoots in a curve toward its key, faster as it falls, trailing
-light, and lands exactly as the note sounds, scattering sparkles; the key glows while the note is
-held. Each hand's stars are its own color. In 3D the angles are Player, Side, Keys (close on the keys)
-and Wide. **Follow the keys being played** moves the camera along the keyboard to where the music is,
-so you can stay zoomed in close (Distance goes up to 4×). In 2D the camera looks straight down, the
-stars coming in from the top of the frame.
+**Galaxy:** in **Shooting Stars** a keyboard floats in space, under a slowly turning spiral galaxy
+with nebula clouds in the palette's colors and stars all around. The galaxy is where the notes come
+from: the left hand's stars live along one spiral arm and the right hand's along the other, each arm
+faintly in its hand's color. A few seconds before its note a star shows in its arm, twinkling, and
+brightens as its time comes; then it leaves the galaxy and flies in a curve all the way to its key,
+faster and bigger as it comes, trailing light, and lands exactly as the note sounds, scattering
+sparkles; the key glows while the note is held. The galaxy always hangs high in the frame, whatever
+the angle. In 3D the angles are Player, Side, Keys (close on the keys) and Wide. **Follow the keys
+being played** moves the camera along the keyboard to where the music is, so you can stay zoomed in
+close (Distance goes up to 4×). In 2D the camera looks straight down, the galaxy at the top.
 
 **Which hand plays a note** comes from the file when it says (a score's staff, a MIDI track).
 Otherwise it is worked out from the music (`src/shared/hands.js`), not from a fixed line at middle
