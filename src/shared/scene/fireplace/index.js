@@ -13,14 +13,14 @@ import { drawFireplace, drawStage, drawStand } from './hearth.js';
 import { drawSpace } from './space.js';
 
 const DEG = Math.PI / 180;
-const FRAME = 72; // world units across the frame at the pivot, at zoom 1
+const FRAME = 84; // world units across the frame at the pivot, at zoom 1
 
 /** Ready-made camera angles. Turn swings around the fireplace; tilt raises the camera. */
 const FIREPLACE_ANGLES = [
-  { id: 'player', label: 'Player', turn: 6, tilt: 26, zoom: 1 },
-  { id: 'keys', label: 'Keys', turn: -6, tilt: 42, zoom: 1.7 },
-  { id: 'hearth', label: 'Hearth', turn: -24, tilt: 16, zoom: 1.1 },
-  { id: 'wide', label: 'Wide', turn: 18, tilt: 20, zoom: 0.55 },
+  { id: 'player', label: 'Player', turn: -30, tilt: 20, zoom: 1 }, // from the side, the flight shows
+  { id: 'front', label: 'Front', turn: 0, tilt: 24, zoom: 1 },
+  { id: 'keys', label: 'Keys', turn: -14, tilt: 38, zoom: 1.7 },
+  { id: 'wide', label: 'Wide', turn: 20, tilt: 22, zoom: 0.6 },
 ];
 
 export function fireplaceView(layout, camera, t) {
@@ -28,9 +28,9 @@ export function fireplaceView(layout, camera, t) {
   if (!camera) {
     // From above: the keyboard near the bottom, the fire at the top.
     // The keyboard and the fireplace fill the frame; the stage runs on past them.
-    const scale = Math.min((layout.width * 0.94) / 96, (layout.height * 0.8) / 72);
+    const scale = Math.min((layout.width * 0.94) / 96, (layout.height * 0.8) / 92);
     return perspective({
-      pivot: [FIRE_X, 0, 70],
+      pivot: [FIRE_X, 0, 56],
       anchor: [layout.width / 2, layout.height * 0.55],
       distance: 4000,
       zoom: scale,
@@ -42,7 +42,7 @@ export function fireplaceView(layout, camera, t) {
   }
   const { yaw, pitch } = aim(camera, t);
   return perspective({
-    pivot: [FIRE_X, 0, 62],
+    pivot: [FIRE_X, 0, 48],
     anchor: [layout.width / 2, layout.height * (layout.portrait ? 0.5 : 0.52)],
     distance: (FRAME * 1.6) / Math.sqrt(camera.zoom),
     zoom: (fit / FRAME) * camera.zoom,

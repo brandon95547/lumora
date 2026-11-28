@@ -26,3 +26,6 @@ too far back.
 
 - The keyboard is now centered on the fireplace: its middle sits in front of the fire's middle, still
   turned 4°, and the camera centers on both.
+- The keyboard stands well out from the fire (about 64 units, 1.5 m, in front of the fireplace), so the fireballs' flight shows; they arc higher (24–36 units). The
+  stage runs further forward to hold it. Player now looks from the side (turned −30°), where the arc
+  reads best; Front is the straight-on view; Hearth is gone.

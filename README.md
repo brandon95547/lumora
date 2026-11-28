@@ -81,12 +81,13 @@ camera follows the music along them.
 **Fireplace:** in **Embers** a keyboard on a slim X stand stands before a fireplace, all in dark marble
 glass with pale veins and gold trim, adrift in a galaxy (nebula clouds in the palette's colors, a spiral galaxy,
 stars). The fireplace is raised on a marble dais, so its fire shows over the keys; the keyboard faces
-you, turned a little and centered on the fire. The fire grows and flickers as the song
+you, turned a little and centered on the fire, well out from it so the fireballs' flight shows. The fire grows and flickers as the song
 builds and glows in the marble, and the polished marble mirrors the fire, the fireballs and the keyboard.
 Every note is an ember fireball that leaps out of the fire 1.4 seconds early, arcs toward you and
 lands on its key exactly as the note sounds, bursting into sparks; the key smolders while the note is
 held. Each hand's fireballs burn in its own color (the Ember colors look most like fire). In 3D the
-angles are Player, Keys (close on the keys with the fire behind), Hearth and Wide; in 2D the camera
+angles are Player (from the side, where the fireballs' flight shows best), Front, Keys (close on the
+keys with the fire behind) and Wide; in 2D the camera
 looks straight down, the fire at the top of the frame and the keyboard below.
 
 **Which hand plays a note** comes from the file when it says (a score's staff, a MIDI track).

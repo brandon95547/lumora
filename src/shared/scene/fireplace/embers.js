@@ -24,7 +24,7 @@ function rampOf(color) {
 /** Where note `seed`'s fireball is at `t` on its way from `from` to `to`: a high arc, landing at u = 1. */
 export function emberAt(from, to, start, t, seed) {
   const u = Math.max(0, Math.min(1, (t - (start - FLIGHT)) / FLIGHT));
-  const height = 12 + 8 * noise(seed, 23);
+  const height = 24 + 12 * noise(seed, 23);
   return [
     from[0] + (to[0] - from[0]) * u,
     from[1] + (to[1] - from[1]) * u - height * 4 * u * (1 - u),

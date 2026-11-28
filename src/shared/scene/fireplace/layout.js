@@ -14,12 +14,12 @@ export const FIRE_X = 34; // the fireplace's middle
 export const OPENING = { half: 21, top: HEARTH_Y - 31 }; // the firebox opening: 42 wide, 31 high
 export const BREAST = { half: 34, front: WALL_Z - 6 }; // the stone surround
 export const MANTEL = { half: 41, top: HEARTH_Y - 40, bottom: HEARTH_Y - 37, front: WALL_Z - 11 };
-export const STAGE = { x: [-34, 102], z: [22, WALL_Z + 8] }; // the marble floor
+export const STAGE = { x: [-34, 102], z: [-4, WALL_Z + 8] }; // the marble floor
 export const DAIS_SPAN = { x: [FIRE_X - 48, FIRE_X + 48], z: [WALL_Z - 24, WALL_Z + 6] };
 
 // The keyboard: centered on the fireplace, turned 4° so its treble end sits a little further back.
 export const KEYBOARD_ANGLE = (4 * Math.PI) / 180;
-const MIDDLE = [FIRE_X, 0, 47.5];
+const MIDDLE = [FIRE_X, 0, 22]; // well out from the fire, so the fireballs' flight shows
 const HALF = 26; // half of the 52 white keys
 
 /** The keyboard's left end (its lowest key's front corner), from its middle. */
