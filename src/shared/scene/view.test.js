@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mirrored, perspective, segment } from './view.js';
+import { fillPolygon, mirrored, perspective, placed, segment } from './view.js';
 
 const view = perspective({
   pivot: [0, 0, 0],
@@ -33,6 +33,33 @@ describe('perspective', () => {
     const cut = segment(view, behind, [0, 0, 0]);
     expect(cut[0]).not.toBeNull();
     expect(cut[1]).not.toBeNull();
+  });
+
+  it('places a thing turned and moved in the world, seen from where the camera really is', () => {
+    const turned = placed(view, Math.PI / 2, [100, 0, 50]);
+    expect(turned.toWorld(10, 5, 0)).toEqual([100 + 10 * Math.cos(Math.PI / 2), 5, 50 + 10]);
+    expect(turned.project(0, 0, 0)).toEqual(view.project(100, 0, 50));
+    const back = turned.toWorld(...turned.eye);
+    view.eye.forEach((v, i) => expect(back[i]).toBeCloseTo(v));
+  });
+
+  it('fills the part of a polygon in front of the camera, cutting it there', () => {
+    const calls = [];
+    const ctx = new Proxy(
+      {},
+      { get: (_, k) => (k === 'lineTo' || k === 'moveTo' ? (x, y) => calls.push([x, y]) : () => {}), set: () => true },
+    );
+    const [ex, , ez] = view.eye;
+    const far = [-ex, 0, -ez];
+    const behind = [ex * 1.5, 0, ez * 1.5];
+    const points = fillPolygon(
+      ctx,
+      view,
+      [far, [far[0] + 50, 0, far[2]], [behind[0] + 50, 0, behind[2]], behind],
+      '#000',
+    );
+    expect(points).not.toBeNull();
+    expect(points.every((p) => p)).toBe(true);
   });
 
   it('mirrors across a floor or an upright panel', () => {

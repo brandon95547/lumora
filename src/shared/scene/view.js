@@ -75,6 +75,24 @@ export function mirrored(view, axis, at, opacity) {
 }
 
 /**
+ * The same view for something placed in the world turned by `angle` (radians, about the vertical)
+ * and moved to `origin`: drawing at local (x, y, z) lands at that place in the world. Used to stand
+ * the piano's keyboard at an angle in a room.
+ */
+export function placed(view, angle, [ox, oy, oz]) {
+  const [c, s] = [Math.cos(angle), Math.sin(angle)];
+  const toWorld = (x, y, z = 0) => [ox + x * c - z * s, oy + y, oz + x * s + z * c];
+  const toLocal = ([x, y, z]) => [(x - ox) * c + (z - oz) * s, y - oy, -(x - ox) * s + (z - oz) * c];
+  return {
+    ...view,
+    project: (x, y, z) => view.project(...toWorld(x, y, z)),
+    depthOf: (x, y, z) => view.depthOf(...toWorld(x, y, z)),
+    eye: view.eye && toLocal(view.eye),
+    toWorld,
+  };
+}
+
+/**
  * Projects a straight world segment, cut where it passes behind the camera.
  * Returns [a, b] screen points, or null when none of it is in front.
  */
@@ -108,12 +126,29 @@ export function onPlane(ctx, view, x, y) {
   return true;
 }
 
+/** A world polygon cut where it passes behind the camera (as `segment` cuts a line). */
+function clipNear(view, corners) {
+  if (!view.depth || !view.depthOf) return corners;
+  const near = view.near * 1.01;
+  const d = corners.map((c) => view.depthOf(...c));
+  if (d.every((v) => v >= near)) return corners;
+  const out = [];
+  corners.forEach((a, i) => {
+    const j = (i + 1) % corners.length;
+    if (d[i] >= near) out.push(a);
+    if (d[i] >= near !== d[j] >= near) out.push(lerp3(a, corners[j], (near - d[i]) / (d[j] - d[i])));
+  });
+  return out;
+}
+
 /**
- * Fills a flat polygon given by world corners; skipped if any corner is behind the camera.
+ * Fills a flat polygon given by world corners, cut where it passes behind the camera.
  * `seal` also strokes its edge in the same color, so neighboring faces meet without a hairline.
  */
 export function fillPolygon(ctx, view, corners, fill, alpha = 1, seal = false) {
-  const points = corners.map((c) => view.project(...c));
+  const visible = clipNear(view, corners);
+  if (visible.length < 3) return null;
+  const points = visible.map((c) => view.project(...c));
   if (points.some((p) => !p)) return null;
   const fog = Math.min(...points.map((p) => p.fog));
   const a = alpha * fog * view.opacity;
