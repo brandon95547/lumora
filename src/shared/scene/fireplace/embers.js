@@ -24,7 +24,7 @@ function rampOf(color) {
 /** Where note `seed`'s fireball is at `t` on its way from `from` to `to`: a high arc, landing at u = 1. */
 export function emberAt(from, to, start, t, seed) {
   const u = Math.max(0, Math.min(1, (t - (start - FLIGHT)) / FLIGHT));
-  const height = 26 + 14 * noise(seed, 23);
+  const height = 12 + 8 * noise(seed, 23);
   return [
     from[0] + (to[0] - from[0]) * u,
     from[1] + (to[1] - from[1]) * u - height * 4 * u * (1 - u),
@@ -80,4 +80,17 @@ export function drawEmbers(ctx, view, scene, model, t, palette, heat) {
   }
   ctx.globalCompositeOperation = 'source-over';
   ctx.globalAlpha = 1;
+}
+
+/** The fireballs and the lit keys as the polish below mirrors them: just their glow, no trails. */
+export function drawEmberReflections(ctx, mirror, scene, model, t, palette) {
+  ctx.globalCompositeOperation = 'lighter';
+  for (const n of notesBetween(scene, t - SPARK_LIFE, t + FLIGHT)) {
+    if (n.start - FLIGHT > t) continue;
+    const ramp = rampOf(litColor(palette, n));
+    const to = landingOf(model, n.pitch);
+    if (t < n.start) drawBall(ctx, mirror, emberAt(launchOf(n.index), to, n.start, t, n.index), t, 0.3, RADIUS, ramp);
+    else glow(ctx, mirror, to, 4 + 3 * burst(n, t), ramp[2], (held(n, t) * 0.55 + burst(n, t) * 0.6) * mirror.opacity);
+  }
+  ctx.globalCompositeOperation = 'source-over';
 }

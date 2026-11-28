@@ -44,6 +44,6 @@ describe('fireballs', () => {
 
   it('arc high on the way', () => {
     const middle = emberAt(from, to, 1, 1 - FLIGHT / 2, 3);
-    expect(middle[1]).toBeLessThan(Math.min(from[1], to[1]) - 10); // y runs downward
+    expect(middle[1]).toBeLessThan(Math.min(from[1], to[1]) - 5); // y runs downward
   });
 });

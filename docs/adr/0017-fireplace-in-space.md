@@ -2,6 +2,8 @@
 
 Date: 2026-11-27
 
+Where the keyboard stands, and the hearth, are replaced by [ADR 18](0018-fireplace-marble-stage.md).
+
 ## Context
 
 In ADR 16's Fireplace, the keyboard's wooden console stood between the camera and the fire and

@@ -1,13 +1,16 @@
-// The fireplace, standing on its own in space: a stone hearth, a stone surround with its dark firebox
-// and a short chimney, and a wooden mantel; and the keyboard's stand. Built from flat faces through
-// the camera, so it is the same in 2D (from above) and in 3D.
+// The stage and the fireplace, standing in space: a floor of dark marble glass, a marble dais with the
+// fireplace on it (a stone surround with its dark firebox, a short chimney and a wooden mantel), and
+// the keyboard's stand. Built from flat faces through the camera, so it is the same in 2D (from above)
+// and in 3D.
 import { facesCamera, fillPolygon, strokeWorld } from '../view.js';
 import { KEY } from '../piano/keyboard.js';
-import { BREAST, FIRE_X, FLOOR, HEARTH, MANTEL, OPENING, WALL_Z } from './layout.js';
+import { BREAST, DAIS_SPAN, FIRE_X, FLOOR, HEARTH_Y, MANTEL, OPENING, STAGE, WALL_Z } from './layout.js';
+import { drawMarbleSides, drawMarbleTop } from './marble.js';
 
 const L = KEY.length;
-const TOP = -38; // the stone surround's top
-const CHIMNEY = { half: 12, top: -72 };
+const TOP = HEARTH_Y - 69; // the stone surround's top
+const CHIMNEY = { half: 12, top: HEARTH_Y - 103 };
+const THICK = 4; // the stage floor's thickness
 
 const center = (corners) => [0, 1, 2].map((i) => corners.reduce((s, c) => s + c[i], 0) / corners.length);
 
@@ -90,22 +93,21 @@ const washFrom = (ctx, glowAt, reach, warm, dark) => () => {
 
 const STONE = { top: '#3e322a', side: '#2a211b', back: '#1f1914' }; // its front is lit by the fire
 const WOOD = { front: '#4a2a17', top: '#6a3e22', side: '#3a2012' };
-const HEARTHSTONE = { front: '#3a2f29', top: '#4e4036', side: '#30261f' };
 
-/** The fireplace, its stone warmer as `glow` (0–1) rises. Returns the firebox opening on screen. */
+/** The marble stage and dais. `reflect(mirror, y)` draws what shows in a top at height y. */
+export function drawStage(ctx, view, reflect) {
+  drawMarbleTop(ctx, view, STAGE.x, FLOOR, STAGE.z, 3, (mirror) => reflect(mirror, FLOOR));
+  drawMarbleSides(ctx, view, STAGE.x, [FLOOR, FLOOR + THICK], STAGE.z);
+  drawMarbleTop(ctx, view, DAIS_SPAN.x, HEARTH_Y, DAIS_SPAN.z, 41, (mirror) => reflect(mirror, HEARTH_Y));
+  drawMarbleSides(ctx, view, DAIS_SPAN.x, [HEARTH_Y, FLOOR], DAIS_SPAN.z);
+}
+
+/** The fireplace on the dais, its stone warmer as `glow` (0–1) rises. Returns the firebox on screen. */
 export function drawFireplace(ctx, view, layout, glow) {
-  const fire = view.project(FIRE_X, FLOOR - 10, WALL_Z - 4);
+  const fire = view.project(FIRE_X, HEARTH_Y - 10, WALL_Z - 4);
   const reach = Math.max(layout.width, layout.height) * (0.5 + 0.2 * glow);
   const lit = (warm, dark) => (fire ? washFrom(ctx, fire, reach, warm, dark) : dark);
 
-  slab(
-    ctx,
-    view,
-    [FIRE_X - HEARTH.half, FIRE_X + HEARTH.half],
-    [FLOOR - 1.2, FLOOR + 2],
-    [HEARTH.front, WALL_Z + 2],
-    HEARTHSTONE,
-  );
   slab(
     ctx,
     view,
@@ -114,7 +116,7 @@ export function drawFireplace(ctx, view, layout, glow) {
     [BREAST.front + 2, WALL_Z - 1],
     STONE,
   );
-  slab(ctx, view, [FIRE_X - BREAST.half, FIRE_X + BREAST.half], [TOP, FLOOR - 1.2], [BREAST.front, WALL_Z], {
+  slab(ctx, view, [FIRE_X - BREAST.half, FIRE_X + BREAST.half], [TOP, HEARTH_Y], [BREAST.front, WALL_Z], {
     ...STONE,
     front: lit('#6e5848', '#221a15'),
   });
@@ -124,8 +126,8 @@ export function drawFireplace(ctx, view, layout, glow) {
     [
       [FIRE_X - OPENING.half, OPENING.top, BREAST.front - 0.05],
       [FIRE_X + OPENING.half, OPENING.top, BREAST.front - 0.05],
-      [FIRE_X + OPENING.half, FLOOR - 1.2, BREAST.front - 0.05],
-      [FIRE_X - OPENING.half, FLOOR - 1.2, BREAST.front - 0.05],
+      [FIRE_X + OPENING.half, HEARTH_Y, BREAST.front - 0.05],
+      [FIRE_X - OPENING.half, HEARTH_Y, BREAST.front - 0.05],
     ],
     '#0c0503',
   );

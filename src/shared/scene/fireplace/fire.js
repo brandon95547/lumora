@@ -5,7 +5,7 @@ import { noise } from '../envelope.js';
 import { rampFrom } from '../flames.js';
 import { glowSprite } from '../sprites.js';
 import { strokeWorld } from '../view.js';
-import { FIRE_X, FLOOR, OPENING, WALL_Z } from './layout.js';
+import { FIRE_X, HEARTH_Y, OPENING, WALL_Z } from './layout.js';
 
 const HEARTH_FIRE = rampFrom('#ffc35a', '#ff4a12');
 const BED_Z = WALL_Z - 3.5;
@@ -36,15 +36,15 @@ export function drawFire(ctx, view, t, heat, opening) {
   }
   ctx.globalCompositeOperation = 'lighter';
   for (let k = 0; k < 9; k++) {
-    glow(ctx, view, [FIRE_X + (k - 4) * 3.2, FLOOR - 2, BED_Z], 9, '#ff5a1a', 0.35 * heat);
+    glow(ctx, view, [FIRE_X + (k - 4) * 3.2, HEARTH_Y - 2, BED_Z], 9, '#ff5a1a', 0.35 * heat);
   }
   ctx.globalCompositeOperation = 'source-over';
   ctx.lineCap = 'round';
   strokeWorld(
     ctx,
     view,
-    [FIRE_X - 13, FLOOR - 2.6, BED_Z - 1],
-    [FIRE_X + 11, FLOOR - 2.2, BED_Z + 1],
+    [FIRE_X - 13, HEARTH_Y - 2.6, BED_Z - 1],
+    [FIRE_X + 11, HEARTH_Y - 2.2, BED_Z + 1],
     3.4,
     '#2b160b',
     1,
@@ -53,8 +53,8 @@ export function drawFire(ctx, view, t, heat, opening) {
   strokeWorld(
     ctx,
     view,
-    [FIRE_X - 9, FLOOR - 3.2, BED_Z + 1.5],
-    [FIRE_X + 14, FLOOR - 3.6, BED_Z - 1.5],
+    [FIRE_X - 9, HEARTH_Y - 3.2, BED_Z + 1.5],
+    [FIRE_X + 14, HEARTH_Y - 3.6, BED_Z - 1.5],
     3,
     '#3a1e0f',
     1,
@@ -63,8 +63,8 @@ export function drawFire(ctx, view, t, heat, opening) {
   strokeWorld(
     ctx,
     view,
-    [FIRE_X - 4, FLOOR - 5.6, BED_Z],
-    [FIRE_X + 6, FLOOR - 5.2, BED_Z + 0.5],
+    [FIRE_X - 4, HEARTH_Y - 5.6, BED_Z],
+    [FIRE_X + 6, HEARTH_Y - 5.2, BED_Z + 0.5],
     2.6,
     '#24120a',
     1,
@@ -84,7 +84,7 @@ export function drawFire(ctx, view, t, heat, opening) {
     const rise = (9 + 10 * heat) * age + 4 * age * age;
     const point = [
       FIRE_X + spread * (1 - 0.5 * u) + Math.sin(t * 3 + k) * 1.2 * u,
-      FLOOR - 4 - rise * 1.8,
+      HEARTH_Y - 4 - rise * 1.8,
       BED_Z + (noise(k, 2) - 0.5) * 3,
     ];
     const size = (5 + 7 * heat) * (1 - 0.55 * u) * (0.75 + 0.5 * noise(k, 3));
@@ -95,7 +95,7 @@ export function drawFire(ctx, view, t, heat, opening) {
 
 /** The fire's light thrown around it, over everything, breathing with the flicker. */
 export function drawFirelight(ctx, view, layout, heat) {
-  const p = view.project(FIRE_X, OPENING.top + (FLOOR - OPENING.top) * 0.6, WALL_Z - 6);
+  const p = view.project(FIRE_X, OPENING.top + (HEARTH_Y - OPENING.top) * 0.6, WALL_Z - 6);
   if (!p) return;
   const r = Math.max(layout.width, layout.height) * (0.55 + 0.2 * heat);
   const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
@@ -106,5 +106,13 @@ export function drawFirelight(ctx, view, layout, heat) {
   ctx.globalAlpha = 1;
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, layout.width, layout.height);
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+/** The fire as a polished surface below mirrors it: a warm glow where the flames are. */
+export function drawFireGlow(ctx, view, heat) {
+  ctx.globalCompositeOperation = 'lighter';
+  glow(ctx, view, [FIRE_X, HEARTH_Y - 8, WALL_Z - 4], 34 * heat, '#ff7a2a', 0.5 * view.opacity * heat);
+  glow(ctx, view, [FIRE_X, HEARTH_Y - 5, WALL_Z - 4], 16 * heat, '#ffd27a', 0.7 * view.opacity * heat);
   ctx.globalCompositeOperation = 'source-over';
 }

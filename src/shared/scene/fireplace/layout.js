@@ -1,21 +1,25 @@
-// Where things stand around the fireplace, in the keyboard's world units (one white key's width,
-// about 2.35 cm). y runs downward with the key tops at 0 and the stand's feet below them; z runs from
-// the camera toward the fireplace. The keyboard stands off to the side, turned toward the fire, so
-// the fire shows past it.
+// Where things stand, in the keyboard's world units (one white key's width, about 2.35 cm). y runs
+// downward with the key tops at 0; z runs from the camera toward the fireplace. Everything stands on
+// a stage of dark marble glass: the keyboard on its floor, and behind it the fireplace raised on a
+// dais, so its fire shows over the keys. The keyboard faces the camera, turned a little, and stands
+// a little left of the fire, so the fireballs fly toward the player and land on the keys head-on.
 import { noise } from '../envelope.js';
 import { isBlack, KEY } from '../piano/keyboard.js';
 
-export const FLOOR = 31; // key tops stand about 73 cm off the floor
+export const FLOOR = 31; // the stage's floor: key tops stand about 73 cm above it
+export const DAIS = 12; // how high the fireplace is raised
+export const HEARTH_Y = FLOOR - DAIS; // the fire's floor, the dais top
 export const WALL_Z = 92; // the fireplace's back
 export const FIRE_X = 34; // the fireplace's middle
-export const OPENING = { half: 21, top: 0 }; // the firebox opening: 42 wide, up from the floor to y = 0
-export const BREAST = { half: 34, front: WALL_Z - 6 }; // the chimney breast standing out from the wall
-export const MANTEL = { half: 41, top: -9, bottom: -6, front: WALL_Z - 11 };
-export const HEARTH = { half: 44, front: WALL_Z - 22 };
+export const OPENING = { half: 21, top: HEARTH_Y - 31 }; // the firebox opening: 42 wide, 31 high
+export const BREAST = { half: 34, front: WALL_Z - 6 }; // the stone surround
+export const MANTEL = { half: 41, top: HEARTH_Y - 40, bottom: HEARTH_Y - 37, front: WALL_Z - 11 };
+export const STAGE = { x: [-34, 102], z: [22, WALL_Z + 8] }; // the marble floor
+export const DAIS_SPAN = { x: [FIRE_X - 48, FIRE_X + 48], z: [WALL_Z - 24, WALL_Z + 6] };
 
-// The keyboard: to the left of the fire, turned 50° so its treble end reaches toward it.
-export const KEYBOARD_ANGLE = (50 * Math.PI) / 180;
-const MIDDLE = [-13, 0, 26];
+// The keyboard: turned 14° (its treble end a little further back), left of the fire's middle.
+export const KEYBOARD_ANGLE = (14 * Math.PI) / 180;
+const MIDDLE = [20, 0, 52];
 const HALF = 26; // half of the 52 white keys
 
 export const KEYBOARD_ORIGIN = [
@@ -41,5 +45,5 @@ export function landingOf(model, pitch) {
 
 /** Where fireball `seed` leaves the fire: somewhere across the burning logs, low in the firebox. */
 export function launchOf(seed) {
-  return [FIRE_X + (noise(seed, 21) - 0.5) * 22, FLOOR - 7 - 4 * noise(seed, 22), WALL_Z - 3];
+  return [FIRE_X + (noise(seed, 21) - 0.5) * 22, HEARTH_Y - 7 - 4 * noise(seed, 22), WALL_Z - 3];
 }
