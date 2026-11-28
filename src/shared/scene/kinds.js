@@ -1,10 +1,10 @@
-// The kinds of scene (Staff, Piano, Fireplace) and their animations. Every animation knows its kind, which
+// The kinds of scene (Staff, Piano, Galaxy) and their animations. Every animation knows its kind, which
 // draws its stage; the Look panel picks a kind, then one of its animations.
-import { fireplaceKind } from './fireplace/index.js';
+import { galaxyKind } from './galaxy/index.js';
 import { pianoKind } from './piano/index.js';
 import { staffKind } from './staff/index.js';
 
-export const KINDS = [staffKind, pianoKind, fireplaceKind].map((source) => {
+export const KINDS = [staffKind, pianoKind, galaxyKind].map((source) => {
   const kind = { ...source };
   kind.animations = source.animations.map((animation) => ({ ...animation, kind }));
   return kind;

@@ -1,4 +1,4 @@
-// Deep space behind the fireplace: a dark sky, clouds of nebula in the palette's colors, a spiral
+// Deep space around the keyboard: a dark sky, clouds of nebula in the palette's colors, a spiral
 // galaxy, and stars, painted once per format and palette; then a few brighter stars that twinkle
 // and drift a little as the camera turns.
 import { cachedLayer } from '../backdrop.js';

@@ -1,5 +1,5 @@
 // Camera angles the person saves, kept in this browser, one list per rig (each set of ready-made
-// angles: Marble Walk's floor, the upright staff, the piano, the fire).
+// angles: Marble Walk's floor, the piano, the galaxy).
 import { useCallback, useState } from 'react';
 
 const KEY = 'lumora:camera-presets';

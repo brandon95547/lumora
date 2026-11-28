@@ -2,6 +2,8 @@
 
 Date: 2026-11-27
 
+The Fireplace style is replaced by Galaxy: [ADR 20](0020-galaxy-shooting-stars.md).
+
 Where the keyboard stands, and the hearth, are replaced by [ADR 18](0018-fireplace-marble-stage.md).
 
 ## Context

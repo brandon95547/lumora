@@ -38,7 +38,7 @@ Then open <http://localhost:5180>. A short demo is loaded so you can try every s
    look-ahead limiter keeping peaks under **−1 dBTP**. The Song panel shows the result, and the
    video carries it.
 
-2. **Style.** Choose **Staff** (Marble Walk), **Piano** (Falling Notes) or **Fireplace** (Embers). Then
+2. **Style.** Choose **Staff** (Marble Walk), **Piano** (Falling Notes) or **Galaxy** (Shooting Stars). Then
    **2D** or **3D**: in 3D, pick a camera angle and fine-tune it with Turn, Tilt and Distance; a
    gentle drift keeps the camera alive. **Save this angle** keeps the camera as it is under a name,
    in this browser, beside the ready-made angles.
@@ -78,18 +78,15 @@ the song uses, like a lesson video; in 3D it films from an angle (Player, Side o
 and follows the music along the keyboard. In 2D, **Zoom** comes in on the keys (up to 4×) and the
 camera follows the music along them.
 
-**Fireplace:** in **Embers** a keyboard on a slim X stand stands before a fireplace, all in dark marble
-glass with pale veins and gold trim, adrift in a galaxy (nebula clouds in the palette's colors, a spiral galaxy,
-stars). The fireplace is raised on a marble dais, so its fire shows over the keys; the keyboard faces
-you, turned a little and centered on the fire, well out from it so the fireballs' flight shows. The fire grows and flickers as the song
-builds and glows in the marble, and the polished marble mirrors the fire, the fireballs and the keyboard.
-Every note is an ember fireball that leaps out of the fire 1.4 seconds early, arcs toward you and
-lands on its key exactly as the note sounds, bursting into sparks; the key smolders while the note is
-held. Each hand's fireballs burn in its own color (the Ember colors look most like fire). In 3D the
-angles are Player (from the side, where the fireballs' flight shows best), Front, Keys (close on the
-keys with the fire behind) and Wide. **Follow the keys being played** moves the camera along the keyboard to
-where the music is, so you can stay zoomed in close (Distance goes up to 4×); in 2D the camera
-looks straight down, the fire at the top of the frame and the keyboard below.
+**Galaxy:** in **Shooting Stars** a keyboard floats in space, with a spiral galaxy, nebula clouds in
+the palette's colors and stars all around. Every note is a star far out in the sky, low notes to the
+left and high notes to the right as on the keys. It shows a few seconds before its note, twinkling,
+brightens as its time comes, then shoots in a curve toward its key, faster as it falls, trailing
+light, and lands exactly as the note sounds, scattering sparkles; the key glows while the note is
+held. Each hand's stars are its own color. In 3D the angles are Player, Side, Keys (close on the keys)
+and Wide. **Follow the keys being played** moves the camera along the keyboard to where the music is,
+so you can stay zoomed in close (Distance goes up to 4×). In 2D the camera looks straight down, the
+stars coming in from the top of the frame.
 
 **Which hand plays a note** comes from the file when it says (a score's staff, a MIDI track).
 Otherwise it is worked out from the music (`src/shared/hands.js`), not from a fixed line at middle
@@ -118,10 +115,10 @@ and say why in the commit.
 | `src/features/player/`          | The live preview and its transport.                                     |
 | `src/features/export/`          | Rendering and encoding the MP4 (loaded when first used).                |
 | `src/shared/scene/`             | What every scene shares: views and the camera, palettes, `renderFrame`. |
-| `src/shared/scene/kinds.js`     | The styles (Staff, Piano, Fireplace) and their animations.              |
+| `src/shared/scene/kinds.js`     | The styles (Staff, Piano, Galaxy) and their animations.                 |
 | `src/shared/scene/staff/`       | The staff: pitch math, layout, glyphs, the marble floor, Marble Walk.   |
 | `src/shared/scene/piano/`       | The piano: keyboard geometry, the keys, Falling Notes.                  |
-| `src/shared/scene/fireplace/`   | The fireplace, its fire, space, and the fireballs (the piano's keys).   |
+| `src/shared/scene/galaxy/`      | Space, and the stars that shoot onto the keys (the piano's keys).       |
 | `src/shared/ui/`                | Buttons, choices, panels, icons.                                        |
 | `scripts/build-instruments.mjs` | Builds `public/instruments/<id>/` from a sample library (macOS).        |
 | `scripts/build-glyphs.mjs`      | Writes `src/shared/scene/staff/glyphs.js` from the Bravura font.        |

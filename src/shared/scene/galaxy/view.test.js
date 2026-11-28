@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { normalizeNotes } from '../../notes.js';
 import { pianoOf } from '../piano/model.js';
 import { prepareScene } from '../scene.js';
-import { fireplaceView } from './index.js';
+import { galaxyView } from './index.js';
 import { landingOf } from './layout.js';
 
 // A low passage at the start, a high one later, both clear of the keyboard's ends (where the camera
@@ -16,7 +16,7 @@ const scene = prepareScene(normalizeNotes(notes), { width: 1080, height: 1920 })
 const model = pianoOf(scene);
 const close = { turn: 0, tilt: 26, zoom: 3, drift: false };
 const offCenter = (camera, t, pitch) =>
-  Math.abs(fireplaceView(scene, camera, t).project(...landingOf(model, pitch)).x - 540);
+  Math.abs(galaxyView(scene, camera, t).project(...landingOf(model, pitch)).x - 540);
 
 describe('following the keys', () => {
   it('keeps the keys being played in the middle of a close camera', () => {
@@ -27,6 +27,6 @@ describe('following the keys', () => {
   });
 
   it('stays put when following is off', () => {
-    expect(fireplaceView(scene, close, 3).project(0, 0, 0)).toEqual(fireplaceView(scene, close, 15).project(0, 0, 0));
+    expect(galaxyView(scene, close, 3).project(0, 0, 0)).toEqual(galaxyView(scene, close, 15).project(0, 0, 0));
   });
 });

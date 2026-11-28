@@ -2,6 +2,8 @@
 
 Date: 2026-11-27
 
+The Fireplace style is replaced by Galaxy: [ADR 20](0020-galaxy-shooting-stars.md).
+
 ## Context
 
 After ADR 18 the fireplace's stone surround still read as brown, and the keyboard's right end sat

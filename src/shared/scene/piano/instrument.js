@@ -200,12 +200,18 @@ function drawKeyLights(ctx, view, model, down, palette, strength, atBack) {
 
 /**
  * The keyboard, open behind for the falling notes. `tint` and `light`: how strongly played keys take
- * on the palette's color and glow.
+ * on the palette's color and glow. `base` adds a slim body under and behind the keys, for a keyboard
+ * that stands on its own.
  */
-export function drawInstrument(ctx, view, model, down, palette, { tint, light, lightAtBack = false }) {
+export function drawInstrument(ctx, view, model, down, palette, { tint, light, lightAtBack = false, base = false }) {
   const W = model.whites;
   const left = -CHEEK - 0.05;
   const right = W + CHEEK + 0.05;
+
+  if (base) {
+    box(ctx, view, [left, right], [-0.6, 3.4], [L + 0.4, L + 2.2], LACQUER);
+    box(ctx, view, [left, right], [1.6, 3.4], [-0.65, L + 0.4], LACQUER);
+  }
 
   // The dark bed the keys sit in, seen through the gaps.
   face(

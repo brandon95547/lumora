@@ -2,6 +2,8 @@
 
 Date: 2026-11-27
 
+The Fireplace style is replaced by Galaxy: [ADR 20](0020-galaxy-shooting-stars.md).
+
 The room is replaced by space, and the keyboard moved beside the fire: [ADR 17](0017-fireplace-in-space.md).
 
 ## Context
