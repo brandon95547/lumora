@@ -78,11 +78,11 @@ the song uses, like a lesson video; in 3D it films from an angle (Player, Side o
 and follows the music along the keyboard. In 2D, **Zoom** comes in on the keys (up to 4×) and the
 camera follows the music along them.
 
-**Fireplace:** in **Embers** a keyboard on a slim X stand stands before a stone fireplace on a stage
-of dark marble glass, adrift in a galaxy (nebula clouds in the palette's colors, a spiral galaxy,
+**Fireplace:** in **Embers** a keyboard on a slim X stand stands before a fireplace, all in dark marble
+glass with pale veins and gold trim, adrift in a galaxy (nebula clouds in the palette's colors, a spiral galaxy,
 stars). The fireplace is raised on a marble dais, so its fire shows over the keys; the keyboard faces
 you, turned a little and standing a little left of the fire. The fire grows and flickers as the song
-builds and lights the stone, and the polished marble mirrors the fire, the fireballs and the keyboard.
+builds and glows in the marble, and the polished marble mirrors the fire, the fireballs and the keyboard.
 Every note is an ember fireball that leaps out of the fire 1.4 seconds early, arcs toward you and
 lands on its key exactly as the note sounds, bursting into sparks; the key smolders while the note is
 held. Each hand's fireballs burn in its own color (the Ember colors look most like fire). In 3D the

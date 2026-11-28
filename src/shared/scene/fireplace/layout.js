@@ -17,16 +17,11 @@ export const MANTEL = { half: 41, top: HEARTH_Y - 40, bottom: HEARTH_Y - 37, fro
 export const STAGE = { x: [-34, 102], z: [22, WALL_Z + 8] }; // the marble floor
 export const DAIS_SPAN = { x: [FIRE_X - 48, FIRE_X + 48], z: [WALL_Z - 24, WALL_Z + 6] };
 
-// The keyboard: turned 14° (its treble end a little further back), left of the fire's middle.
-export const KEYBOARD_ANGLE = (14 * Math.PI) / 180;
-const MIDDLE = [20, 0, 52];
+// The keyboard: its left end (the lowest key) here, turned 4° so its treble end sits a little
+// further back, left of the fire's middle.
+export const KEYBOARD_ANGLE = (4 * Math.PI) / 180;
+export const KEYBOARD_ORIGIN = [-5.2, 0, 45.7];
 const HALF = 26; // half of the 52 white keys
-
-export const KEYBOARD_ORIGIN = [
-  MIDDLE[0] - HALF * Math.cos(KEYBOARD_ANGLE),
-  0,
-  MIDDLE[2] - HALF * Math.sin(KEYBOARD_ANGLE),
-];
 
 /** A point on the keyboard (its own x along the keys, z back from the key fronts) in the world. */
 export function keyboardToWorld(x, y, z) {

@@ -1,11 +1,11 @@
-// The stage and the fireplace, standing in space: a floor of dark marble glass, a marble dais with the
-// fireplace on it (a stone surround with its dark firebox, a short chimney and a wooden mantel), and
+// The stage and the fireplace, standing in space, all in dark marble glass: a floor, a dais with the
+// fireplace on it (a surround with its dark firebox trimmed in gold, a short chimney and a mantel), and
 // the keyboard's stand. Built from flat faces through the camera, so it is the same in 2D (from above)
 // and in 3D.
 import { facesCamera, fillPolygon, strokeWorld } from '../view.js';
 import { KEY } from '../piano/keyboard.js';
 import { BREAST, DAIS_SPAN, FIRE_X, FLOOR, HEARTH_Y, MANTEL, OPENING, STAGE, WALL_Z } from './layout.js';
-import { drawMarbleSides, drawMarbleTop } from './marble.js';
+import { drawMarble, drawMarbleSides, drawMarbleTop } from './marble.js';
 
 const L = KEY.length;
 const TOP = HEARTH_Y - 69; // the stone surround's top
@@ -83,16 +83,23 @@ export function slab(ctx, view, [x0, x1], [y0, y1], [z0, z1], { front, top, side
   );
 }
 
-/** A radial wash lit from screen point `glowAt`, from `warm` there to `dark` far off. */
-const washFrom = (ctx, glowAt, reach, warm, dark) => () => {
-  const g = ctx.createRadialGradient(glowAt.x, glowAt.y, 0, glowAt.x, glowAt.y, reach);
-  g.addColorStop(0, warm);
-  g.addColorStop(1, dark);
-  return g;
-};
+const DARK = { top: '#15131b', side: '#0b0a0f', back: '#09080c' }; // marble seen edge-on
+const MANTEL_MARBLE = { front: '#14121a', top: '#26222e', side: '#0e0d12' };
+const GOLD = '#b8976a';
 
-const STONE = { top: '#3e322a', side: '#2a211b', back: '#1f1914' }; // its front is lit by the fire
-const WOOD = { front: '#4a2a17', top: '#6a3e22', side: '#3a2012' };
+/** The fire's warm light caught in a polished face, around screen point `fire`. */
+function sheen(ctx, fire, reach, glow) {
+  if (!fire) return;
+  const g = ctx.createRadialGradient(fire.x, fire.y, 0, fire.x, fire.y, reach);
+  g.addColorStop(0, `rgba(255, 140, 60, ${0.3 * glow})`);
+  g.addColorStop(0.5, `rgba(255, 110, 40, ${0.07 * glow})`);
+  g.addColorStop(1, 'rgba(255, 110, 40, 0)');
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = g;
+  ctx.fillRect(fire.x - reach, fire.y - reach, 2 * reach, 2 * reach);
+  ctx.globalCompositeOperation = 'source-over';
+}
 
 /** The marble stage and dais. `reflect(mirror, y)` draws what shows in a top at height y. */
 export function drawStage(ctx, view, reflect) {
@@ -102,11 +109,11 @@ export function drawStage(ctx, view, reflect) {
   drawMarbleSides(ctx, view, DAIS_SPAN.x, [HEARTH_Y, FLOOR], DAIS_SPAN.z);
 }
 
-/** The fireplace on the dais, its stone warmer as `glow` (0–1) rises. Returns the firebox on screen. */
-export function drawFireplace(ctx, view, layout, glow) {
+/** The fireplace on the dais, in dark marble glass that catches the fire's light as `glow` (0–1) rises. */
+export function drawFireplace(ctx, view, glow) {
   const fire = view.project(FIRE_X, HEARTH_Y - 10, WALL_Z - 4);
-  const reach = Math.max(layout.width, layout.height) * (0.5 + 0.2 * glow);
-  const lit = (warm, dark) => (fire ? washFrom(ctx, fire, reach, warm, dark) : dark);
+  const reach = fire ? BREAST.half * fire.s * (1.1 + 0.3 * glow) : 0; // the glow spreads over the surround, not the frame
+  const [left, right] = [FIRE_X - BREAST.half, FIRE_X + BREAST.half];
 
   slab(
     ctx,
@@ -114,12 +121,32 @@ export function drawFireplace(ctx, view, layout, glow) {
     [FIRE_X - CHIMNEY.half, FIRE_X + CHIMNEY.half],
     [CHIMNEY.top, TOP],
     [BREAST.front + 2, WALL_Z - 1],
-    STONE,
+    DARK,
   );
-  slab(ctx, view, [FIRE_X - BREAST.half, FIRE_X + BREAST.half], [TOP, HEARTH_Y], [BREAST.front, WALL_Z], {
-    ...STONE,
-    front: lit('#6e5848', '#221a15'),
-  });
+  drawMarble(
+    ctx,
+    view,
+    [
+      [FIRE_X - CHIMNEY.half, CHIMNEY.top, BREAST.front + 2],
+      [FIRE_X + CHIMNEY.half, CHIMNEY.top, BREAST.front + 2],
+      [FIRE_X + CHIMNEY.half, TOP, BREAST.front + 2],
+      [FIRE_X - CHIMNEY.half, TOP, BREAST.front + 2],
+    ],
+    71,
+  );
+  slab(ctx, view, [left, right], [TOP, HEARTH_Y], [BREAST.front, WALL_Z], DARK);
+  drawMarble(
+    ctx,
+    view,
+    [
+      [left, TOP, BREAST.front],
+      [right, TOP, BREAST.front],
+      [right, HEARTH_Y, BREAST.front],
+      [left, HEARTH_Y, BREAST.front],
+    ],
+    57,
+    () => sheen(ctx, fire, reach, glow),
+  );
   const opening = fillPolygon(
     ctx,
     view,
@@ -131,13 +158,41 @@ export function drawFireplace(ctx, view, layout, glow) {
     ],
     '#0c0503',
   );
+  // A thin gold trim around the firebox.
+  const z = BREAST.front - 0.1;
+  const [ox0, ox1] = [FIRE_X - OPENING.half, FIRE_X + OPENING.half];
+  for (const [a, b] of [
+    [
+      [ox0, HEARTH_Y, z],
+      [ox0, OPENING.top, z],
+    ],
+    [
+      [ox0, OPENING.top, z],
+      [ox1, OPENING.top, z],
+    ],
+    [
+      [ox1, OPENING.top, z],
+      [ox1, HEARTH_Y, z],
+    ],
+  ]) {
+    strokeWorld(ctx, view, a, b, 0.5, GOLD, 0.8, 4);
+  }
   slab(
     ctx,
     view,
     [FIRE_X - MANTEL.half, FIRE_X + MANTEL.half],
     [MANTEL.top, MANTEL.bottom],
     [MANTEL.front, BREAST.front],
-    WOOD,
+    MANTEL_MARBLE,
+  );
+  strokeWorld(
+    ctx,
+    view,
+    [FIRE_X - MANTEL.half, MANTEL.top, MANTEL.front],
+    [FIRE_X + MANTEL.half, MANTEL.top, MANTEL.front],
+    0.35,
+    GOLD,
+    0.7,
   );
   return opening; // the firebox's corners on screen, for the fire to burn inside
 }

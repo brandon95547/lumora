@@ -97,7 +97,7 @@ export function drawFire(ctx, view, t, heat, opening) {
 export function drawFirelight(ctx, view, layout, heat) {
   const p = view.project(FIRE_X, OPENING.top + (HEARTH_Y - OPENING.top) * 0.6, WALL_Z - 6);
   if (!p) return;
-  const r = Math.max(layout.width, layout.height) * (0.55 + 0.2 * heat);
+  const r = 70 * p.s * (0.8 + 0.25 * heat); // the light reaches about as far as the stage
   const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
   g.addColorStop(0, `rgba(255, 150, 70, ${0.22 * heat})`);
   g.addColorStop(0.4, `rgba(255, 120, 50, ${0.08 * heat})`);

@@ -2,6 +2,8 @@
 
 Date: 2026-11-27
 
+The keyboard's angle and the fireplace's stone are replaced by [ADR 19](0019-fireplace-all-marble.md).
+
 ## Context
 
 With the keyboard turned 50° beside the fire (ADR 17), the fireballs flew across the keys

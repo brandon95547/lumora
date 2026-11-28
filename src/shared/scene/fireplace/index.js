@@ -74,7 +74,7 @@ export const embers = {
       }
       drawEmberReflections(ctx, mirror, scene, model, t, palette);
     });
-    const opening = drawFireplace(ctx, view, layout, heat);
+    const opening = drawFireplace(ctx, view, heat);
     drawFire(ctx, view, t, heat, opening);
     drawStand(ctx, keyboard, model);
     drawInstrument(ctx, keyboard, model, down, palette, keys);
