@@ -2,6 +2,8 @@
 
 Date: 2026-11-27
 
+The Planets style is removed by [ADR 15](0015-planets-removed.md).
+
 ## Context
 
 In Solar System a note showed up only as it sounded: its planet flared and the sun sent it a ray.

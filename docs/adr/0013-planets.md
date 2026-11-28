@@ -2,6 +2,8 @@
 
 Date: 2026-11-27
 
+The Planets style is removed by [ADR 15](0015-planets-removed.md).
+
 The sun's rays to struck planets are replaced by starlight from the keys: [ADR 14](0014-keys-as-stars.md).
 
 ## Context
