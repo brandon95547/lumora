@@ -29,3 +29,7 @@ too far back.
 - The keyboard stands well out from the fire (about 64 units, 1.5 m, in front of the fireplace), so the fireballs' flight shows; they arc higher (24–36 units). The
   stage runs further forward to hold it. Player now looks from the side (turned −30°), where the arc
   reads best; Front is the straight-on view; Hearth is gone.
+- **Follow the keys being played** (a switch beside the camera drift, `camera.follow`, for a rig with
+  `follows`): the camera moves along the keyboard to where the music is, gliding with the piano's own
+  `followX`, and stops at the keyboard's ends. Distance now reaches 4×, so it can stay close. Off by
+  default.

@@ -19,7 +19,7 @@ export const kindById = (id) => KINDS.find((k) => k.id === id) ?? KINDS[0];
 /**
  * The camera choices for an animation: its own (Marble Walk's floor angles) or its kind's. A rig has
  * an `id` (a kind's rig is the kind itself), `angles`, `defaultAngle`, `turnRange`, `tiltRange` and
- * `zoomRange`.
+ * `zoomRange`; `follows` when the camera can follow the keys being played (`camera.follow`).
  */
 export const rigOf = (kind, animation) => animation?.rig ?? kind;
 
@@ -28,7 +28,7 @@ export const defaultCamera = (kind, animation = kind.animations[0]) => {
   const rig = rigOf(kind, animation);
   const id = animation.defaultAngle ?? rig.defaultAngle;
   const { turn, tilt, zoom } = rig.angles.find((a) => a.id === id);
-  return { turn, tilt, zoom, drift: true };
+  return { turn, tilt, zoom, drift: true, follow: false };
 };
 
 /** The angle a camera matches, or null once it has been turned by hand. */

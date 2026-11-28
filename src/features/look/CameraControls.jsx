@@ -85,6 +85,9 @@ export function CameraControls({ rig, camera, onChange }) {
         format={(v) => (v >= far - third ? 'Close' : v <= near + third ? 'Far' : 'Middle')}
       />
       <Switch label="Gentle camera drift" checked={camera.drift} onChange={set('drift')} />
+      {rig.follows && (
+        <Switch label="Follow the keys being played" checked={camera.follow ?? false} onChange={set('follow')} />
+      )}
       {naming ? (
         <SaveAngle onSave={(name) => save(name, camera)} onDone={() => setNaming(false)} />
       ) : (

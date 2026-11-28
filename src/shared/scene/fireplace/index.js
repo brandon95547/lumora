@@ -3,12 +3,12 @@
 // (Embers). In 3D the camera looks over the keys to the fire; in 2D it looks straight down, the fire
 // at the top of the frame.
 import { energyAt } from '../energy.js';
-import { pianoOf, keysDown } from '../piano/model.js';
+import { followX, keysDown, pianoOf } from '../piano/model.js';
 import { drawInstrument } from '../piano/instrument.js';
 import { aim, perspective, placed } from '../view.js';
 import { drawEmberReflections, drawEmbers } from './embers.js';
 import { drawFire, drawFireGlow, drawFirelight, flickerAt } from './fire.js';
-import { FIRE_X, FLOOR, KEYBOARD_ANGLE, KEYBOARD_ORIGIN } from './layout.js';
+import { FIRE_X, FLOOR, KEYBOARD_ANGLE, KEYBOARD_ORIGIN, keyboardToWorld } from './layout.js';
 import { drawFireplace, drawStage, drawStand } from './hearth.js';
 import { drawSpace } from './space.js';
 
@@ -23,7 +23,22 @@ const FIREPLACE_ANGLES = [
   { id: 'wide', label: 'Wide', turn: 20, tilt: 22, zoom: 0.6 },
 ];
 
-export function fireplaceView(layout, camera, t) {
+/**
+ * Where the camera looks: between the keys and the fire, centered on the fireplace, or, with
+ * `camera.follow`, moved along the keyboard to where the music is being played, so a close camera
+ * keeps the played keys in frame. It glides there (`followX` averages the notes around t).
+ */
+function pivotOf(scene, camera, t) {
+  const resting = [FIRE_X, 0, 48];
+  if (!camera.follow) return resting;
+  const framed = FRAME / camera.zoom; // world units across the frame at the pivot: about that many white keys
+  const middle = keyboardToWorld(26, 0, 0);
+  const played = keyboardToWorld(followX(scene, t, framed), 0, 0);
+  return [resting[0] + played[0] - middle[0], 0, resting[2] + played[2] - middle[2]];
+}
+
+export function fireplaceView(scene, camera, t) {
+  const { layout } = scene;
   const fit = Math.min(layout.width, layout.height * (layout.portrait ? 0.85 : 1.25)) * 0.92;
   if (!camera) {
     // From above: the keyboard near the bottom, the fire at the top.
@@ -42,7 +57,7 @@ export function fireplaceView(layout, camera, t) {
   }
   const { yaw, pitch } = aim(camera, t);
   return perspective({
-    pivot: [FIRE_X, 0, 48],
+    pivot: pivotOf(scene, camera, t),
     anchor: [layout.width / 2, layout.height * (layout.portrait ? 0.5 : 0.52)],
     distance: (FRAME * 1.6) / Math.sqrt(camera.zoom),
     zoom: (fit / FRAME) * camera.zoom,
@@ -85,7 +100,7 @@ export const embers = {
 
 function render(ctx, scene, t, animation, palette, camera) {
   drawSpace(ctx, scene.layout, palette, t, camera?.turn ?? 0);
-  animation.draw(ctx, scene, t, palette, fireplaceView(scene.layout, camera, t));
+  animation.draw(ctx, scene, t, palette, fireplaceView(scene, camera, t));
 }
 
 export const fireplaceKind = {
@@ -97,6 +112,7 @@ export const fireplaceKind = {
   defaultAngle: 'player',
   turnRange: [-60, 60],
   tiltRange: [4, 70],
-  zoomRange: [0.5, 2.6],
+  zoomRange: [0.5, 4],
+  follows: true, // the camera can follow the keys being played
   render,
 };

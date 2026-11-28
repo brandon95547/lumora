@@ -87,7 +87,8 @@ Every note is an ember fireball that leaps out of the fire 1.4 seconds early, ar
 lands on its key exactly as the note sounds, bursting into sparks; the key smolders while the note is
 held. Each hand's fireballs burn in its own color (the Ember colors look most like fire). In 3D the
 angles are Player (from the side, where the fireballs' flight shows best), Front, Keys (close on the
-keys with the fire behind) and Wide; in 2D the camera
+keys with the fire behind) and Wide. **Follow the keys being played** moves the camera along the keyboard to
+where the music is, so you can stay zoomed in close (Distance goes up to 4×); in 2D the camera
 looks straight down, the fire at the top of the frame and the keyboard below.
 
 **Which hand plays a note** comes from the file when it says (a score's staff, a MIDI track).
