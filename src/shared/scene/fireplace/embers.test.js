@@ -23,6 +23,10 @@ describe('the scene', () => {
     expect(high[2]).toBeGreaterThan(low[2]); // the treble end sits nearer the fire
   });
 
+  it('centers the keyboard on the fireplace', () => {
+    expect(keyboardToWorld(26, 0, 0)[0]).toBeCloseTo(FIRE_X);
+  });
+
   it('starts every fireball inside the firebox', () => {
     for (let seed = 0; seed < 20; seed++) {
       const [x, y, z] = launchOf(seed);

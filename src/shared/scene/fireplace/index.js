@@ -8,7 +8,7 @@ import { drawInstrument } from '../piano/instrument.js';
 import { aim, perspective, placed } from '../view.js';
 import { drawEmberReflections, drawEmbers } from './embers.js';
 import { drawFire, drawFireGlow, drawFirelight, flickerAt } from './fire.js';
-import { FLOOR, KEYBOARD_ANGLE, KEYBOARD_ORIGIN } from './layout.js';
+import { FIRE_X, FLOOR, KEYBOARD_ANGLE, KEYBOARD_ORIGIN } from './layout.js';
 import { drawFireplace, drawStage, drawStand } from './hearth.js';
 import { drawSpace } from './space.js';
 
@@ -30,7 +30,7 @@ export function fireplaceView(layout, camera, t) {
     // The keyboard and the fireplace fill the frame; the stage runs on past them.
     const scale = Math.min((layout.width * 0.94) / 96, (layout.height * 0.8) / 72);
     return perspective({
-      pivot: [32, 0, 70],
+      pivot: [FIRE_X, 0, 70],
       anchor: [layout.width / 2, layout.height * 0.55],
       distance: 4000,
       zoom: scale,
@@ -42,7 +42,7 @@ export function fireplaceView(layout, camera, t) {
   }
   const { yaw, pitch } = aim(camera, t);
   return perspective({
-    pivot: [26, 0, 62],
+    pivot: [FIRE_X, 0, 62],
     anchor: [layout.width / 2, layout.height * (layout.portrait ? 0.5 : 0.52)],
     distance: (FRAME * 1.6) / Math.sqrt(camera.zoom),
     zoom: (fit / FRAME) * camera.zoom,

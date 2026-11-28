@@ -21,3 +21,8 @@ too far back.
 ## Consequences
 
 - Close or far, nothing in the scene reads brown; the warm color comes only from the fire.
+
+## Update
+
+- The keyboard is now centered on the fireplace: its middle sits in front of the fire's middle, still
+  turned 4°, and the camera centers on both.
