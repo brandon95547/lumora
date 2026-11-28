@@ -1,5 +1,5 @@
 // Ember fireballs: every note leaps out of the fire FLIGHT seconds before it sounds, arcs across the
-// room and lands on its key exactly as the note sounds, bursting into sparks; the key then smolders
+// dark and lands on its key exactly as the note sounds, bursting into sparks; the key then smolders
 // for as long as the note is held. Each hand's fireballs burn in its own color.
 import { burst, held, noise } from '../envelope.js';
 import { drawBall, drawTrail, rampFrom } from '../flames.js';

@@ -2,6 +2,8 @@
 
 Date: 2026-11-27
 
+The room is replaced by space, and the keyboard moved beside the fire: [ADR 17](0017-fireplace-in-space.md).
+
 ## Context
 
 A third style was wanted: a 3D keyboard standing at an angle to a fireplace in a warm room, the

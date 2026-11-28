@@ -3,7 +3,7 @@ import { normalizeNotes } from '../../notes.js';
 import { pianoOf } from '../piano/model.js';
 import { prepareScene } from '../scene.js';
 import { emberAt, FLIGHT } from './embers.js';
-import { FIRE_X, KEYBOARD_ORIGIN, keyboardToRoom, landingOf, launchOf, OPENING, WALL_Z } from './layout.js';
+import { FIRE_X, KEYBOARD_ORIGIN, keyboardToWorld, landingOf, launchOf, OPENING, WALL_Z } from './layout.js';
 
 const scene = prepareScene(
   normalizeNotes([
@@ -14,9 +14,9 @@ const scene = prepareScene(
 );
 const model = pianoOf(scene);
 
-describe('the room', () => {
+describe('the scene', () => {
   it('stands the keyboard turned toward the fire, low keys at its left', () => {
-    expect(keyboardToRoom(0, 0, 0)).toEqual(KEYBOARD_ORIGIN);
+    expect(keyboardToWorld(0, 0, 0)).toEqual(KEYBOARD_ORIGIN);
     const low = landingOf(model, 40);
     const high = landingOf(model, 76);
     expect(low[0]).toBeLessThan(high[0]);
@@ -42,7 +42,7 @@ describe('fireballs', () => {
     emberAt(from, to, 1, 1, 3).forEach((v, i) => expect(v).toBeCloseTo(to[i]));
   });
 
-  it('arc high over the room on the way', () => {
+  it('arc high on the way', () => {
     const middle = emberAt(from, to, 1, 1 - FLIGHT / 2, 3);
     expect(middle[1]).toBeLessThan(Math.min(from[1], to[1]) - 10); // y runs downward
   });

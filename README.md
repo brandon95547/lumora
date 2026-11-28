@@ -78,13 +78,14 @@ the song uses, like a lesson video; in 3D it films from an angle (Player, Side o
 and follows the music along the keyboard. In 2D, **Zoom** comes in on the keys (up to 4×) and the
 camera follows the music along them.
 
-**Fireplace:** in **Embers** a keyboard stands on a rug, turned toward the fireplace of a warm
-room: plank floor, a stone chimney breast with a wooden mantel and hearth, and a fire that grows and
-flickers as the song builds and lights the room. Every note is an ember fireball that leaps out of the
-fire 1.4 seconds early, arcs across the room and lands on its key exactly as the note sounds, bursting
-into sparks; the key smolders while the note is held. Each hand's fireballs burn in its own color
-(the Ember colors look most like fire). In 3D the angles are Player, Hearth, Keys and Room; in 2D the
-camera looks straight down, the fire at the top of the frame and the keyboard below.
+**Fireplace:** in **Embers** a keyboard on a slim X stand floats beside a stone fireplace, both adrift
+in a galaxy: a dark sky, nebula clouds in the palette's colors and a spiral galaxy. The keyboard stands
+off to the left, turned toward the fire, so the fire shows past it; the fire grows and flickers as the
+song builds and lights the stone. Every note is an ember fireball that leaps out of the fire 1.4
+seconds early, arcs over and lands on its key exactly as the note sounds, bursting into sparks; the
+key smolders while the note is held. Each hand's fireballs burn in its own color (the Ember colors
+look most like fire). In 3D the angles are Player, Hearth, Keys and Wide; in 2D the camera looks
+straight down, the fire at the top of the frame and the keyboard below.
 
 **Which hand plays a note** comes from the file when it says (a score's staff, a MIDI track).
 Otherwise it is worked out from the music (`src/shared/hands.js`), not from a fixed line at middle
@@ -116,7 +117,7 @@ and say why in the commit.
 | `src/shared/scene/kinds.js`     | The styles (Staff, Piano, Fireplace) and their animations.              |
 | `src/shared/scene/staff/`       | The staff: pitch math, layout, glyphs, the marble floor, Marble Walk.   |
 | `src/shared/scene/piano/`       | The piano: keyboard geometry, the keys, Falling Notes.                  |
-| `src/shared/scene/fireplace/`   | The room, its fire, and the ember fireballs (draws the piano's keys).   |
+| `src/shared/scene/fireplace/`   | The fireplace, its fire, space, and the fireballs (the piano's keys).   |
 | `src/shared/ui/`                | Buttons, choices, panels, icons.                                        |
 | `scripts/build-instruments.mjs` | Builds `public/instruments/<id>/` from a sample library (macOS).        |
 | `scripts/build-glyphs.mjs`      | Writes `src/shared/scene/staff/glyphs.js` from the Bravura font.        |

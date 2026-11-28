@@ -1,5 +1,5 @@
 // The fire in the firebox: logs on a bed of embers, flames rising from them, and the warm light the
-// fire throws into the room. Flames are soft lights placed from their birth time and a fixed seed,
+// fire throws around it. Flames are soft lights placed from their birth time and a fixed seed,
 // so a moment always burns the same way; the fire grows and flickers more as the song builds.
 import { noise } from '../envelope.js';
 import { rampFrom } from '../flames.js';
@@ -93,7 +93,7 @@ export function drawFire(ctx, view, t, heat, opening) {
   ctx.restore();
 }
 
-/** The fire's light thrown into the room, over everything, breathing with the flicker. */
+/** The fire's light thrown around it, over everything, breathing with the flicker. */
 export function drawFirelight(ctx, view, layout, heat) {
   const p = view.project(FIRE_X, OPENING.top + (FLOOR - OPENING.top) * 0.6, WALL_Z - 6);
   if (!p) return;
