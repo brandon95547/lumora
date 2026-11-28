@@ -82,9 +82,13 @@ camera follows the music along them.
 The right hand plays the four rocky planets (its highest notes on Mercury, nearest the sun), the left
 hand the four giants (its lowest on Neptune, farthest out); the asteroid belt between them is where
 the hands meet. Each hand's notes are shared evenly over its four planets by pitch. Every note steps
-its planet forward along its orbit, so the music turns the system. A struck planet flares in its
-hand's color, the sun sends it a ray and a ripple spreads across the orbit plane; a held note paints
-the stretch of orbit its planet travels. A chord of three notes or more lines its planets up with the
+its planet forward along its orbit, so the music turns the system. Each of the 88 keys is a star in
+an arch over the system, the lowest key at the left and every C a little brighter. About a second
+before a note sounds, its star fires a mote of light at the note's planet; it strikes exactly as the
+note sounds and glances off into space. The star lights with the note in its hand's color: sharp
+four-pointed sparkles for the right hand, soft swelling glows for the left, bigger for harder notes,
+lit while the note is held. A struck planet flares in its hand's color and a ripple spreads across
+the orbit plane; a held note paints the stretch of orbit its planet travels. A chord of three notes or more lines its planets up with the
 sun; both hands striking together set the asteroid belt sparkling; a fast right-hand run (six notes
 in 1.2 seconds, at most one every 10 seconds) sends a comet through; and the sun's corona grows as
 the song builds. Earth has its moon and Jupiter four. In 2D you look straight down on the orbits, like

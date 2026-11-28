@@ -11,6 +11,9 @@ export const PLANET_ANGLES = [
   { id: 'inner', label: 'Inner', turn: -25, tilt: 32, zoom: 2.4 },
 ];
 
+/** Where the sun sits in the frame. */
+export const anchorOf = (layout) => [layout.width / 2, layout.height * (layout.portrait ? 0.56 : 0.57)];
+
 /** `flatZoom` comes in on the 2D chart, toward the sun. */
 export function planetView(layout, camera, t, flatZoom = 1) {
   const { yaw, pitch } = camera ? aim(camera, t) : { yaw: 0, pitch: Math.PI / 2 };
@@ -20,7 +23,7 @@ export function planetView(layout, camera, t, flatZoom = 1) {
   const fit = Math.min(layout.width * (layout.portrait ? 0.52 : 0.47), (layout.height * 0.36) / tall) / OUTER;
   return perspective({
     pivot: [0, 0, 0],
-    anchor: [layout.width / 2, layout.height * (layout.portrait ? 0.56 : 0.57)],
+    anchor: anchorOf(layout),
     distance: camera ? OUTER * 2.8 : OUTER * 40, // 2D: far and long, nearly flat
     zoom: fit * (camera ? camera.zoom : flatZoom),
     yaw,

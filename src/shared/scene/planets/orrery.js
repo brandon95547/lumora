@@ -1,6 +1,7 @@
-// Solar System: the song moves the planets. Each note steps its planet along its orbit; the sun sends
-// it a ray of light, the planet flares in its hand's color and sends a ripple out across the orbit
-// plane, and while the note is held the planet paints its path. Chords line the struck planets up
+// Solar System: the song moves the planets. Each note's star in the sky (stars.js) fires a mote of
+// light that strikes its planet as the note sounds and glances off; the planet steps along its orbit,
+// flares in its hand's color and sends a ripple out across the orbit plane, and while the note is
+// held the planet paints its path. Chords line the struck planets up
 // with the sun, both hands together set the asteroid belt sparkling, fast right-hand runs bring a
 // comet through, and the sun burns brighter as the song builds.
 import { activity } from '../ambient.js';
@@ -8,8 +9,9 @@ import { energyAt } from '../energy.js';
 import { burst, held, noise } from '../envelope.js';
 import { litColor } from '../palettes.js';
 import { notesBetween } from '../scene.js';
-import { glowSprite, mixColors, withAlpha } from '../sprites.js';
+import { glowSprite, mixColors } from '../sprites.js';
 import { drawMoon, drawPlanet, drawRings, drawSun } from './bodies.js';
+import { drawKeyStars, drawStarlight } from './stars.js';
 import { BELT, cometAt, PLANETS, planetAngle, planetAt, SUN, systemOf } from './system.js';
 
 const RIPPLE = 0.9; // seconds a ripple spreads
@@ -111,8 +113,8 @@ function drawPaths(ctx, view, scene, t, palette, states) {
   ctx.globalCompositeOperation = 'source-over';
 }
 
-/** Rays from the sun to each struck planet, and ripples spreading from it across the orbit plane. */
-function drawStrikes(ctx, view, scene, t, palette, states, places, sun) {
+/** Ripples spreading across the orbit plane from each struck planet. */
+function drawRipples(ctx, view, t, palette, states, places) {
   ctx.globalCompositeOperation = palette.blend;
   states.forEach((s, k) => {
     const [x, , z] = places[k];
@@ -121,13 +123,6 @@ function drawStrikes(ctx, view, scene, t, palette, states, places, sun) {
     for (const n of s.notes) {
       const age = t - n.start;
       const color = litColor(palette, n);
-      const b = burst(n, t);
-      if (b > 0.02) {
-        const ray = ctx.createLinearGradient(sun.x, sun.y, p.x, p.y);
-        ray.addColorStop(0, withAlpha(color, 0));
-        ray.addColorStop(1, withAlpha(color, 1));
-        strokePoints(ctx, [sun, p], Math.max(1.5, 0.12 * p.s), ray, b * 0.8);
-      }
       if (age < RIPPLE) {
         const u = age / RIPPLE;
         const radius = PLANETS[k].size * (1.3 + 3.5 * u);
@@ -176,15 +171,16 @@ export const solarSystem = {
   id: 'solar-system',
   name: 'Solar System',
   description:
-    'The right hand plays the rocky planets near the sun, the left hand the giants beyond the asteroid belt; every note moves its planet along its orbit.',
+    'Each key is a star; its light strikes a planet as the note sounds. The right hand plays the rocky planets, the left hand the giants, and every note moves its planet along its orbit.',
   draw(ctx, scene, t, palette, view) {
     const { states, together } = planetStates(scene, t, palette);
     const places = PLANETS.map((_, k) => planetAt(scene, k, t));
     const sun = view.project(0, 0, 0);
+    drawKeyStars(ctx, scene.layout, palette);
     drawOrbits(ctx, view, palette, states);
     drawBelt(ctx, view, palette, t, together);
     drawPaths(ctx, view, scene, t, palette, states);
-    drawStrikes(ctx, view, scene, t, palette, states, places, sun);
+    drawRipples(ctx, view, t, palette, states, places);
     drawAlignments(ctx, view, scene, t, palette, places, sun);
 
     // The bodies, farthest first, so nearer ones pass in front.
@@ -231,6 +227,7 @@ export const solarSystem = {
     }
     bodies.sort((a, b) => view.depthOf(...b.at) - view.depthOf(...a.at));
     for (const body of bodies) body.draw();
+    drawStarlight(ctx, scene, t, palette, view, places);
     ctx.globalAlpha = 1;
   },
 };

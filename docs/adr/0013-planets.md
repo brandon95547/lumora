@@ -2,6 +2,8 @@
 
 Date: 2026-11-27
 
+The sun's rays to struck planets are replaced by starlight from the keys: [ADR 14](0014-keys-as-stars.md).
+
 ## Context
 
 A third style was wanted beside Staff and Piano: the solar system, with the two hands animating in
